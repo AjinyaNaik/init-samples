@@ -2,6 +2,9 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import sequelize from "./config/databse";
+
+import "./models/association";
+
 import authRoutes from "./routes/auth.routes";
 import sellerRequestRoutes from "./routes/sellerRequest.routes";
 
