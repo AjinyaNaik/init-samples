@@ -90,6 +90,7 @@ export async function loginUser(email: string, password: string) {
       email: user.email,
       role: user.role,
       status: user.status,
+      is_seller: user.is_seller
     },
   };
 }

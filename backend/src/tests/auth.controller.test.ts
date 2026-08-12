@@ -1,15 +1,19 @@
 import { Request, Response } from "express";
-import { register,login } from "../controller/auth.controller";
-import { registerUser , loginUser} from "../service/auth.service";
+import { register, login } from "../controller/auth.controller";
+import {
+  registerUser,
+  loginUser,
+} from "../service/auth.service";
 
 jest.mock("../service/auth.service", () => ({
-   registerUser: jest.fn(),
+  registerUser: jest.fn(),
   loginUser: jest.fn(),
 }));
 
 const mockedRegisterUser = registerUser as jest.MockedFunction<
   typeof registerUser
 >;
+
 const mockedLoginUser = loginUser as jest.MockedFunction<
   typeof loginUser
 >;
@@ -42,7 +46,8 @@ describe("Auth Controller - register", () => {
       id: 1,
       username: "john",
       email: "john@example.com",
-      role: "BUYER",
+      role: "USER",
+      is_seller: false,
       status: "ACTIVE",
     } as any);
 
@@ -62,7 +67,8 @@ describe("Auth Controller - register", () => {
         id: 1,
         username: "john",
         email: "john@example.com",
-        role: "BUYER",
+        role: "USER",
+        is_seller: false,
         status: "ACTIVE",
       },
     });
@@ -207,7 +213,8 @@ describe("Auth Controller - login", () => {
         id: 1,
         username: "john",
         email: "john@example.com",
-        role: "BUYER",
+        role: "USER",
+        is_seller: false,
         status: "ACTIVE",
       },
     });
@@ -228,7 +235,8 @@ describe("Auth Controller - login", () => {
         id: 1,
         username: "john",
         email: "john@example.com",
-        role: "BUYER",
+        role: "USER",
+        is_seller: false,
         status: "ACTIVE",
       },
     });
