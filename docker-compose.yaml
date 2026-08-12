@@ -28,7 +28,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@db:5432/music_samples
     volumes:
       - ./backend:/app
-      - backend_node_modules:/app/node_modules
+      - /app/node_modules
 
     depends_on:
       db:
@@ -55,4 +55,3 @@ services:
 
 volumes:
   postgres_data:
-  backend_node_modules:
