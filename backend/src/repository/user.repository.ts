@@ -1,4 +1,4 @@
-import User from "../models/User";
+import User from "../models/User.model";
 
 export async function findUserByEmail(email: string) {
   return User.findOne({
@@ -12,6 +12,14 @@ export async function findAdmin() {
   return User.findOne({
     where: {
       role: "ADMIN",
+    },
+  });
+}
+
+export async function findUserByUsername(username: string) {
+  return User.findOne({
+    where: {
+      username,
     },
   });
 }
