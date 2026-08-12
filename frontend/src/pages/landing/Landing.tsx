@@ -1,11 +1,12 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 export default function Landing() {
     return (
         <div
             className="w-full text-zinc-50 bg-zinc-950 bg-top bg-no-repeat"
             style={{
-                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.7), rgba(9, 9, 11, 0.9)), url(/landing-page-1.png)',
+                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.8)), url(/landing-page-2.png)',
                 backgroundSize: '95% 100%'
             }}
         >
@@ -64,12 +65,29 @@ export default function Landing() {
                     </motion.h2>
                 </motion.div>
 
-                {/* Animated Header */}
+                {/* Animated Neon Header */}
                 <motion.h1
-                    className="text-5xl md:text-7xl max-w-5xl font-extrabold tracking-tighter mb-6 bg-gradient-to-r from-purple-400 to-emerald-400 text-transparent bg-clip-text line-height-tight leading-[1.1]"
+                    className="text-5xl md:text-7xl max-w-5xl mb-6 text-purple-300 line-height-tight leading-[1.1] z-10"
+                    style={{ fontFamily: "'Shrikhand', cursive" }}
                     initial={{ opacity: 0, y: -30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
+                    animate={{
+                        opacity: [1, 0.4, 1, 1, 0.2, 1, 1],
+                        y: 0,
+                        textShadow: [
+                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
+                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
+                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
+                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
+                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
+                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7", // Bright surge
+                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7"
+                        ]
+                    }}
+                    transition={{
+                        y: { duration: 0.8, delay: 0.1, ease: "easeOut" }, // Control the initial drop
+                        opacity: { duration: 5, repeat: Infinity, ease: "linear", delay: 0.8 }, // Start flickering after drop-in
+                        textShadow: { duration: 5, repeat: Infinity, ease: "linear", delay: 0.8 }
+                    }}
                 >
                     get FREE and premium recorded samples
                 </motion.h1>
@@ -91,13 +109,14 @@ export default function Landing() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                 >
-                    <motion.button
-                        className="px-8 py-4 bg-zinc-100 text-zinc-900 font-bold rounded-full hover:bg-emerald-400 hover:text-zinc-900 transition-colors duration-300 relative"
+                    <motion.div
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
                         animate={{
                             boxShadow: [
-                                "0px 0px 0px 0px rgba(52, 211, 153, 0)",
-                                "0px 0px 25px 8px rgba(52, 211, 153, 0.5)",
-                                "0px 0px 0px 0px rgba(52, 211, 153, 0)"
+                                "0px 0px 0px 0px rgba(168, 85, 247, 0)", // Purple transparent
+                                "0px 0px 25px 8px rgba(168, 85, 247, 0.5)", // Purple glow (purple-500)
+                                "0px 0px 0px 0px rgba(168, 85, 247, 0)"  // Purple transparent
                             ]
                         }}
                         transition={{
@@ -105,11 +124,15 @@ export default function Landing() {
                             repeat: Infinity,
                             ease: "easeInOut"
                         }}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
+                        className="rounded-full inline-block"
                     >
-                        Browse Catalog
-                    </motion.button>
+                        <Link
+                            to="/catalog"
+                            className="inline-block px-8 py-4 bg-zinc-100 text-zinc-900 font-bold rounded-full hover:bg-purple-400 hover:text-zinc-900 transition-colors duration-300 relative"
+                        >
+                            Browse Catalog
+                        </Link>
+                    </motion.div>
                 </motion.div>
             </section>
 
@@ -159,7 +182,7 @@ export default function Landing() {
                     <div className="bg-zinc-900/40 w-1/2 p-10 md:p-14 rounded-3xl backdrop-blur-sm border border-zinc-800/30 flex flex-col md:flex-row items-center gap-8 shadow-2xl">
                         <div className="flex-grow w-full">
                             <div className="flex items-center gap-4 mb-4">
-                                <h3 className="text-3xl font-bold text-emerald-400">
+                                <h3 className="text-3xl font-bold text-purple-400">
                                     Join the Community
                                 </h3>
                                 <span className="px-3 py-1 bg-zinc-800 text-zinc-300 text-xs font-bold rounded uppercase tracking-widest border border-zinc-700">
@@ -171,7 +194,7 @@ export default function Landing() {
                             </p>
 
                             {/* Click to learn more link */}
-                            <a href="#" className="mt-auto text-emerald-400 hover:text-emerald-300 font-semibold inline-flex items-center transition-colors w-fit group text-lg">
+                            <a href="#" className="mt-auto text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center transition-colors w-fit group text-lg">
                                 Click to learn more
                                 <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
