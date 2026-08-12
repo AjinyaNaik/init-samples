@@ -1,19 +1,33 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
+import express, { Request, Response } from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import sequelize from "./config/databse";
 
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = Number(process.env.PORT) || 3000;
 
 app.use(cors());
 app.use(express.json());
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Hello from the TypeScript Express backend!');
+app.get("/", (req: Request, res: Response) => {
+  res.send("Hello from the TypeScript Express backend!");
 });
 
-app.listen(port, () => {
-  console.log(`Server is running at http://localhost:${port}`);
-});
+async function startServer() {
+  try {
+    await sequelize.authenticate();
+
+    console.log("Database connected successfully.");
+
+    app.listen(port, "0.0.0.0", () => {
+      console.log(`Server running on port ${port}`);
+    });
+  } catch (error) {
+    console.error("Unable to connect to database:", error);
+    process.exit(1);
+  }
+}
+
+startServer();
