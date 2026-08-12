@@ -3,6 +3,7 @@ import {
   InferAttributes,
   InferCreationAttributes,
   Model,
+  CreationOptional,
 } from "sequelize";
 
 import sequelize from "../config/databse";
@@ -11,18 +12,17 @@ class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
 > {
-  declare id: number;
+  declare id: CreationOptional<number>;
   declare username: string;
   declare email: string;
   declare password_hash: string;
   declare profile_image: string | null;
   declare bio: string | null;
+declare role: CreationOptional<"BUYER" | "SELLER" | "ADMIN">;
+declare status: CreationOptional<"ACTIVE" | "SUSPENDED">;
 
-  declare role: "BUYER" | "SELLER" | "ADMIN";
-  declare status: "ACTIVE" | "SUSPENDED";
-
-  declare readonly created_at: Date;
-  declare readonly updated_at: Date;
+ declare created_at: CreationOptional<Date>;
+declare updated_at: CreationOptional<Date>;
 }
 
 User.init(
