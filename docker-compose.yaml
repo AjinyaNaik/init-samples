@@ -4,8 +4,11 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: init-samples-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     ports:
-      - "4173:4173"
+      - "5173:5173"
     depends_on:
       - backend
     restart: unless-stopped
@@ -21,6 +24,9 @@ services:
       NODE_ENV: development
       PORT: 3000
       DATABASE_URL: postgresql://postgres:postgres@db:5432/music_samples
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
       db:
         condition: service_healthy
