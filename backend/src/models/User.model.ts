@@ -8,6 +8,8 @@ import {
 
 import sequelize from "../config/databse";
 
+export type UserRole = "BUYER" | "SELLER" | "ADMIN";
+export type UserStatus = "ACTIVE" | "SUSPENDED";
 class User extends Model<
   InferAttributes<User>,
   InferCreationAttributes<User>
@@ -18,8 +20,8 @@ class User extends Model<
   declare password_hash: string;
   declare profile_image: string | null;
   declare bio: string | null;
-declare role: CreationOptional<"BUYER" | "SELLER" | "ADMIN">;
-declare status: CreationOptional<"ACTIVE" | "SUSPENDED">;
+declare role: CreationOptional<UserRole>;
+declare status: CreationOptional<UserStatus>;
 
  declare created_at: CreationOptional<Date>;
 declare updated_at: CreationOptional<Date>;
