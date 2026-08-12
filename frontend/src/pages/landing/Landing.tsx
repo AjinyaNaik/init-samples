@@ -142,11 +142,11 @@ export default function Landing() {
                 <div className="flex flex-col items-start w-full">
                     <h2 className="text-4xl md:text-5xl font-bold mb-8">Trending Packs</h2>
 
-                    <div className="flex flex-col w-full border-t border-zinc-500/30">
+                    <div className="flex flex-col w-full border-t border-zinc-500/80">
                         {[1, 2, 3, 4, 5, 6].map((item) => (
                             <div
                                 key={item}
-                                className="flex flex-row items-center cursor-pointer py-3 px-2 border-b border-zinc-500/30 hover:bg-zinc-100/10 transition-colors duration-200 group w-full"
+                                className="flex flex-row items-center cursor-pointer py-3 px-2 border-b border-zinc-500/80 hover:bg-zinc-100/10 transition-colors duration-200 group w-full"
                             >
                                 {/* Tiny Thumbnail */}
                                 <div className="w-10 h-10 bg-zinc-400/20 rounded shrink-0 mr-4"></div>
