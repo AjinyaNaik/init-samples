@@ -8,7 +8,7 @@ import {
 
 import sequelize from "../config/databse";
 
-export type UserRole = "BUYER" | "SELLER" | "ADMIN";
+export type UserRole = "USER" | "ADMIN";
 export type UserStatus = "ACTIVE" | "SUSPENDED";
 class User extends Model<
   InferAttributes<User>,
@@ -21,6 +21,7 @@ class User extends Model<
   declare profile_image: string | null;
   declare bio: string | null;
 declare role: CreationOptional<UserRole>;
+declare is_seller: CreationOptional<boolean>;
 declare status: CreationOptional<UserStatus>;
 
  declare created_at: CreationOptional<Date>;
@@ -70,6 +71,12 @@ User.init(
       allowNull: false,
       defaultValue: "BUYER",
     },
+
+    is_seller: {
+  type: DataTypes.BOOLEAN,
+  allowNull: false,
+  defaultValue: false,
+},
 
     status: {
       type: DataTypes.ENUM("ACTIVE", "SUSPENDED"),

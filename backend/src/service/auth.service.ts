@@ -33,7 +33,7 @@ export async function registerUser(input: RegisterInput) {
     username,
     email,
     password_hash: passwordHash,
-    role: "BUYER",
+    role: "USER",
     status: "ACTIVE",
   });
 
