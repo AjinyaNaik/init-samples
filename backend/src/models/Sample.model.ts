@@ -8,6 +8,7 @@ class Sample extends Model {
   public audio_url!: string; 
   public sample_pack_id!: number | null;
   public sample_type!: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
+  public is_selling!: boolean; 
   public genres!: string[];
   public metadata!: Record<string, any>;
 
@@ -37,6 +38,11 @@ Sample.init(
     sample_pack_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    is_selling: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     sample_type: {
       type: DataTypes.ENUM("DRUMS", "BASS", "MIDS", "HIGHS", "VOCALS"),

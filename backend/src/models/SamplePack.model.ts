@@ -6,6 +6,7 @@ class SamplePack extends Model {
   public name!: string;
   public description!: string | null;
   public cover_image!: string | null;
+  public is_selling!: boolean; 
 
   public readonly created_at!: Date;
   public readonly updated_at!: Date;
@@ -29,6 +30,11 @@ SamplePack.init(
     cover_image: {
       type: DataTypes.STRING,
       allowNull: true,
+    },
+    is_selling: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
     },
     created_at: {
       type: DataTypes.DATE,
