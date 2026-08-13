@@ -47,7 +47,7 @@ export default function Catalog() {
         <div
             className="w-full min-h-screen text-zinc-50 pt-24 px-8 pb-32 bg-zinc-950 bg-top bg-no-repeat"
             style={{
-                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.8), rgba(9, 9, 11, 0.95)), url(/catalog-page-1.png)',
+                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.8)), url(/catalog-page-1.png)',
                 backgroundSize: '90% 100%'
             }}
         >
