@@ -7,6 +7,7 @@ interface SampleAttributes {
   description: string | null;
   audio_url: string;
   sample_pack_id: number | null;
+  category: "sample" | "loop" | "track or stem";
   sample_type: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
   is_selling: boolean;
   genres: string[];
