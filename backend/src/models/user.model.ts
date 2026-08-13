@@ -67,9 +67,9 @@ User.init(
     },
 
     role: {
-      type: DataTypes.ENUM("BUYER", "SELLER", "ADMIN"),
+      type: DataTypes.ENUM("USER", "ADMIN"),
       allowNull: false,
-      defaultValue: "BUYER",
+      defaultValue: "USER",
     },
 
     is_seller: {

@@ -8,9 +8,19 @@ User.hasMany(SellerRequest, {
   as: "sellerRequests",
 });
 
+User.hasMany(SellerRequest, {
+  foreignKey: "reviewed_by",
+  as: "reviewedSellerRequests",
+});
+
 SellerRequest.belongsTo(User, {
   foreignKey: "user_id",
   as: "user",
+});
+
+SellerRequest.belongsTo(User, {
+  foreignKey: "reviewed_by",
+  as: "reviewer",
 });
 
 SamplePack.hasMany(Sample, {
