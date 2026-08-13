@@ -6,7 +6,7 @@ export default function Landing() {
         <div
             className="w-full text-zinc-50 bg-zinc-950 bg-top bg-no-repeat"
             style={{
-                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.8)), url(/landing-page-2.png)',
+                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/landing-page-2.png)',
                 backgroundSize: '95% 100%'
             }}
         >
