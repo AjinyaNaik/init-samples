@@ -1,25 +1,29 @@
-import { SampleType, SampleCategory } from "../../utils/enums/sample.enum";
-
 export interface CreateSampleRequest {
   name: string;
   description?: string;
   sample_pack_id?: string;
-  category: SampleCategory;
-  sample_type: SampleType;
+  category: string; 
+  sample_type: string; 
   is_selling: string;
-  genres: string; // From FormData as a JSON string
-  metadata?: string; // From FormData as a JSON string
+  genres: string; 
+  metadata?: string; 
 }
 
 export interface UpdateSampleRequest {
   name?: string;
   description?: string;
   sample_pack_id?: string;
-  category?: SampleCategory;
-  sample_type?: SampleType;
+  category?: string;
+  sample_type?: string;
   is_selling?: string;
   genres?: string;
   metadata?: string;
+}
+
+export interface GetFilteredSamplesQuery {
+  category?: string | string[];
+  sample_type?: string | string[];
+  genre?: string | string[];
 }
 
 export interface SampleResponseData {
@@ -28,10 +32,10 @@ export interface SampleResponseData {
   description: string | null;
   audio_url: string;
   sample_pack_id: number | null;
-  category: SampleCategory;
-  sample_type: SampleType;
+  category: string[];
+  sample_type: string[];
   is_selling: boolean;
-  genres: string[];
+  genres: string[] | null; 
   metadata: Record<string, any>;
   created_at: Date;
   updated_at: Date;

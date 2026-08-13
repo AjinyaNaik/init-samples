@@ -34,3 +34,44 @@ export const useCreateSample = () => {
 
   return { createSample, isLoading, error };
 };
+
+export const useFilteredSamples = () => {
+  const [samples, setSamples] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchFilteredSamples = async (filters: { category?: string[]; sample_type?: string[]; genre?: string[] }) => {
+    setIsLoading(true);
+    setError(null);
+
+    const queryParams = new URLSearchParams();
+    if (filters.category && filters.category.length > 0) {
+      queryParams.append("category", filters.category.join(","));
+    }
+    if (filters.sample_type && filters.sample_type.length > 0) {
+      queryParams.append("sample_type", filters.sample_type.join(","));
+    }
+    if (filters.genre && filters.genre.length > 0) {
+      queryParams.append("genre", filters.genre.join(","));
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3000/admin/samples/filter?${queryParams.toString()}`);
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.message || "Failed to fetch filtered samples");
+      }
+
+      setSamples(json.data || []);
+      return json.data;
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { samples, fetchFilteredSamples, isLoading, error };
+};

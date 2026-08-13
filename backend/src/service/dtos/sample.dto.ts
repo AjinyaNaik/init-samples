@@ -21,3 +21,9 @@ export interface UpdateSampleData {
   genres?: string[];
   metadata?: Record<string, any>;
 }
+
+export interface SampleFilterParams {
+  category?: string | string[];
+  sample_type?: string | string[];
+  genre?: string | string[];
+}

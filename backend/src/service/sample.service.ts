@@ -3,7 +3,9 @@ import * as samplePackRepository from "../repository/sample-pack.repository";
 import {
   CreateSampleData,
   UpdateSampleData,
+  SampleFilterParams,
 } from "./dtos/sample.dto";
+import { matchesFilters } from "../utils/filter";
 
 export const createSample = async (
   data: CreateSampleData
@@ -75,6 +77,22 @@ export const getSampleById = async (id: number) => {
   }
 
   return sample;
+};
+
+export const getFilteredSamples = async (filters: SampleFilterParams) => {
+  const samples = await sampleRepository.findAll();
+  
+  return samples.filter((sample: any) => {
+    return matchesFilters(
+      {
+        category: sample.category || [],
+        sample_type: sample.sample_type || [],
+        genres: sample.genres || [],
+        is_selling: sample.is_selling ?? false, 
+      },
+      filters
+    );
+  });
 };
 
 export const updateSample = async (

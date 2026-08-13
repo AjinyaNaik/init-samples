@@ -4,12 +4,18 @@ interface CreateSamplePackData {
   name: string;
   description?: string | null;
   cover_image?: string | null;
+  category?: string[];
+  sample_type?: string[];
+  genres?: string[] | null;
 }
 
 interface UpdateSamplePackData {
   name?: string;
   description?: string | null;
   cover_image?: string | null;
+  category?: string[];
+  sample_type?: string[];
+  genres?: string[] | null;
 }
 
 export const create = async (data: CreateSamplePackData) => {

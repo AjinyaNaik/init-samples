@@ -8,6 +8,12 @@ export interface UpdateSamplePackRequest {
   description?: string;
 }
 
+export interface GetFilteredPacksQuery {
+  category?: string | string[];
+  sample_type?: string | string[];
+  genre?: string | string[];
+}
+
 export interface SamplePackResponseData {
   id: number;
   name: string;

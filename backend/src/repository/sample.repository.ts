@@ -4,7 +4,7 @@ import { CreateSampleData, UpdateSampleData } from "../service/dtos/sample.dto";
 
 const samplePackInclude = {
   model: SamplePack,
-  as: "samplePack",
+  as: "sample_pack",
   attributes: [
     "id",
     "name",

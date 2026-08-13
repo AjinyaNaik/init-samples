@@ -4,6 +4,7 @@ import { uploadImage } from "../service/storage.service";
 import {
   CreateSamplePackRequest,
   UpdateSamplePackRequest,
+  GetFilteredPacksQuery,
   StandardResponse,
   SamplePackResponseData
 } from "./dtos/sample-pack.dto";
@@ -136,13 +137,39 @@ export const updateSamplePack = async (
 
     return res.status(200).json({
       success: true,
-      data: samplePack, 
+      data: samplePack,
     });
-  } 
+  }
   catch (error: any) {
     const status = error.message === "Sample pack not found" ? 404 : 400;
 
     return res.status(status).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const getFilteredPacks = async (
+  req: Request<{}, {}, {}, GetFilteredPacksQuery>,
+  res: Response<StandardResponse<SamplePackResponseData[]>>
+) => {
+  try {
+    const { category, sample_type, genre } = req.query;
+
+    const filtered = await samplePackService.getFilteredSamplePacks({
+      category: category || undefined,
+      sample_type: sample_type || undefined,
+      genre: genre || undefined,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: filtered,
+    });
+  } 
+  catch (error: any) {
+    return res.status(500).json({
       success: false,
       message: error.message,
     });

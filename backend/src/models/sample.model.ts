@@ -35,19 +35,19 @@ class Sample
   >
   implements SampleAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
-  public audio_url!: string;
-  public sample_pack_id!: number | null;
-  public category!: string[];
-  public sample_type!: string[];
-  public is_selling!: boolean;
-  public genres!: string[] | null;
-  public metadata!: Record<string, any>;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
+  declare audio_url: string;
+  declare sample_pack_id: number | null;
+  declare category: string[];
+  declare sample_type: string[];
+  declare is_selling: boolean;
+  declare genres: string[] | null;
+  declare metadata: Record<string, any>;
 
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 Sample.init(
@@ -57,63 +57,52 @@ Sample.init(
       autoIncrement: true,
       primaryKey: true,
     },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
     audio_url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     sample_pack_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-
     is_selling: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     }, 
-
     category: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
-
     sample_type: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
-
     genres: {
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: [],
     },
-
     metadata: {
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: {},
     },
-
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,

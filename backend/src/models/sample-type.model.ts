@@ -2,10 +2,10 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../config/database";
 
 class SampleType extends Model {
-  public id!: number;
-  public name!: string;
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare id: number;
+  declare name: string;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 SampleType.init(

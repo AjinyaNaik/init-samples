@@ -5,13 +5,13 @@ import {
   CreateSampleRequest, 
   UpdateSampleRequest, 
   StandardResponse, 
-  SampleResponseData 
+  GetFilteredSamplesQuery, 
 } from "./dtos/sample.dto";
-import { CreateSampleData, UpdateSampleData } from "../service/dtos/sample.dto";
+import { CreateSampleData, UpdateSampleData, SampleFilterParams } from "../service/dtos/sample.dto";
 
 export const createSample = async (
   req: Request<{}, {}, CreateSampleRequest>,
-  res: Response<StandardResponse<SampleResponseData>>
+  res: Response<StandardResponse<any>>
 ) => {
   try {
     const file = req.file;
@@ -29,6 +29,8 @@ export const createSample = async (
       file.mimetype
     );
 
+    const category = req.body.category ? JSON.parse(req.body.category) : [];
+    const sampleType = req.body.sample_type ? JSON.parse(req.body.sample_type) : [];
     const genres = req.body.genres ? JSON.parse(req.body.genres) : [];
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : null;
@@ -39,8 +41,8 @@ export const createSample = async (
       description: req.body.description || null,
       audio_url: audioUrl,
       sample_pack_id: samplePackId,
-      category: req.body.category,
-      sample_type: req.body.sample_type,
+      category,
+      sample_type: sampleType,
       is_selling: isSelling,
       genres,
       metadata,
@@ -63,7 +65,7 @@ export const createSample = async (
 
 export const getSamples = async (
   req: Request,
-  res: Response<StandardResponse<SampleResponseData[]>>
+  res: Response<StandardResponse<any[]>>
 ) => {
   try {
     const samples = await sampleService.getAllSamples();
@@ -82,7 +84,7 @@ export const getSamples = async (
 
 export const getSample = async (
   req: Request<{ id: string }>,
-  res: Response<StandardResponse<SampleResponseData>>
+  res: Response<StandardResponse<any>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -110,9 +112,34 @@ export const getSample = async (
   }
 };
 
+export const getFilteredSamples = async (
+  req: Request<{}, {}, {}, GetFilteredSamplesQuery>,
+  res: Response<StandardResponse<any[]>>
+) => {
+  try {
+    const { category, sample_type, genre } = req.query;
+
+    const filtered = await sampleService.getFilteredSamples({
+      category: category || undefined,
+      sample_type: sample_type || undefined,
+      genre: genre || undefined,
+    });
+
+    return res.status(200).json({
+      success: true,
+      data: filtered,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 export const updateSample = async (
   req: Request<{ id: string }, {}, UpdateSampleRequest>,
-  res: Response<StandardResponse<SampleResponseData>>
+  res: Response<StandardResponse<any>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -135,6 +162,8 @@ export const updateSample = async (
       );
     }
 
+    const category = req.body.category ? JSON.parse(req.body.category) : undefined;
+    const sampleType = req.body.sample_type ? JSON.parse(req.body.sample_type) : undefined;
     const genres = req.body.genres ? JSON.parse(req.body.genres) : undefined;
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : undefined;
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : undefined;
@@ -143,6 +172,8 @@ export const updateSample = async (
     const payload: UpdateSampleData = {
       ...req.body,
       ...(audioUrl && { audio_url: audioUrl }),
+      ...(category && { category }),
+      ...(sampleType && { sample_type: sampleType }),
       ...(genres && { genres }),
       ...(metadata && { metadata }),
       ...(samplePackId !== undefined && { sample_pack_id: samplePackId }),

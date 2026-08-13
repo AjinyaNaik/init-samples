@@ -9,10 +9,15 @@ import {
   getSamplePack,
   updateSamplePack,
   deleteSamplePack,
+  getFilteredPacks, 
 } from "../controller/sample-pack.controller";
 
 const router = Router();
 
+// PUBLIC FILTER ROUTE (No Auth Middleware needed because it's for the public Catalog)
+router.get("/filter", getFilteredPacks); 
+
+// PRIVATE BOARDING ROUTES
 router.post(
   "/",
   authMiddleware,

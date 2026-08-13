@@ -6,6 +6,9 @@ interface SamplePackAttributes {
   name: string;
   description: string | null;
   cover_image: string | null;
+  category: string[];
+  sample_type: string[];
+  genres: string[] | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -13,7 +16,14 @@ interface SamplePackAttributes {
 interface SamplePackCreationAttributes
   extends Optional<
     SamplePackAttributes,
-    "id" | "description" | "cover_image" | "created_at" | "updated_at"
+    | "id"
+    | "description"
+    | "cover_image"
+    | "category"
+    | "sample_type"
+    | "genres"
+    | "created_at"
+    | "updated_at"
   > {}
 
 class SamplePack
@@ -23,13 +33,16 @@ class SamplePack
   >
   implements SamplePackAttributes
 {
-  public id!: number;
-  public name!: string;
-  public description!: string | null;
-  public cover_image!: string | null;
+  declare id: number;
+  declare name: string;
+  declare description: string | null;
+  declare cover_image: string | null;
+  declare category: string[];
+  declare sample_type: string[];
+  declare genres: string[] | null;
 
-  public readonly created_at!: Date;
-  public readonly updated_at!: Date;
+  declare readonly created_at: Date;
+  declare readonly updated_at: Date;
 }
 
 SamplePack.init(
@@ -39,28 +52,38 @@ SamplePack.init(
       autoIncrement: true,
       primaryKey: true,
     },
-
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-
     cover_image: {
       type: DataTypes.STRING,
       allowNull: true,
     },
-
+    category: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      defaultValue: [],
+    },
+    sample_type: {
+      type: DataTypes.JSON,
+      allowNull: false,
+      defaultValue: [],
+    },
+    genres: {
+      type: DataTypes.JSON,
+      allowNull: true,
+      defaultValue: [],
+    },
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
-
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,

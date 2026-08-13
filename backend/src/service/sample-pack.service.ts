@@ -1,16 +1,10 @@
 import * as samplePackRepository from "../repository/sample-pack.repository";
-
-interface CreateSamplePackData {
-  name: string;
-  description?: string | null;
-  cover_image?: string | null;
-}
-
-interface UpdateSamplePackData {
-  name?: string;
-  description?: string | null;
-  cover_image?: string | null;
-}
+import {
+  CreateSamplePackData,
+  UpdateSamplePackData,
+  FilterParams
+} from "./dtos/sample-pack.dto";
+import { matchesFilters } from "../utils/filter";
 
 export const createSamplePack = async (
   data: CreateSamplePackData
@@ -23,6 +17,9 @@ export const createSamplePack = async (
     name: data.name.trim(),
     description: data.description ?? null,
     cover_image: data.cover_image ?? null,
+    category: data.category ?? [],
+    sample_type: data.sample_type ?? [],
+    genres: data.genres ?? [],
   });
 };
 
@@ -38,6 +35,22 @@ export const getSamplePackById = async (id: number) => {
   }
 
   return samplePack;
+};
+
+export const getFilteredSamplePacks = async (filters: FilterParams) => {
+  const packs = await samplePackRepository.findAll();
+
+  return packs.filter((pack: any) => {
+    return matchesFilters(
+      {
+        category: pack.category || [],
+        sample_type: pack.sample_type || [],
+        genres: pack.genres || [],
+        is_selling: pack.is_selling ?? false, 
+      },
+      filters
+    );
+  });
 };
 
 export const updateSamplePack = async (
