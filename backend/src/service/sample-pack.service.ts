@@ -1,4 +1,4 @@
-import * as samplePackRepository from "../repository/samplePack.repository";
+import * as samplePackRepository from "../repository/sample-pack.repository";
 
 interface CreateSamplePackData {
   name: string;

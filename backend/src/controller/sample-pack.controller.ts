@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as samplePackService from "../service/samplePack.service";
+import * as samplePackService from "../service/sample-pack.service";
 
 export const createSamplePack = async (
   req: Request,

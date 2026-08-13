@@ -6,7 +6,7 @@ import "./models/association";
 import authRoutes from "./routes/auth.routes";
 import sellerRequestRoutes from "./routes/seller_request.routes";
 import sampleRoutes from "./routes/sample.routes";
-import samplePackRoutes from "./routes/samplePack.routes";
+import samplePackRoutes from "./routes/sample-pack.routes";
 
 dotenv.config();
 

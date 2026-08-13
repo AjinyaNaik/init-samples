@@ -8,7 +8,7 @@ import {
   getSamplePack,
   updateSamplePack,
   deleteSamplePack,
-} from "../controller/samplePack.controller";
+} from "../controller/sample-pack.controller";
 
 const router = Router();
 

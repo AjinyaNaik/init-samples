@@ -1,4 +1,4 @@
-import SellerRequest from "../models/SellerRequest.model";
+import SellerRequest from "../models/seller-request.model";
 
 export async function createSellerRequest(userId: number) {
   return SellerRequest.create({

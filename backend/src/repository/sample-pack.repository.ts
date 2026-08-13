@@ -1,4 +1,4 @@
-import SamplePack from "../models/SamplePack.model";
+import SamplePack from "../models/sample-pack.model";
 
 interface CreateSamplePackData {
   name: string;

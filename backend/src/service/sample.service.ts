@@ -1,5 +1,5 @@
 import * as sampleRepository from "../repository/sample.repository";
-import * as samplePackRepository from "../repository/samplePack.repository";
+import * as samplePackRepository from "../repository/sample-pack.repository";
 
 const SAMPLE_TYPES = [
   "DRUMS",

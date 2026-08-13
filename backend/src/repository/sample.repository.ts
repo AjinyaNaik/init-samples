@@ -1,5 +1,5 @@
-import Sample from "../models/Sample.model";
-import SamplePack from "../models/SamplePack.model";
+import Sample from "../models/sample.model";
+import SamplePack from "../models/sample-pack.model";
 
 type SampleType =
   | "DRUMS"

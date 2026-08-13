@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import * as samplePackService from "../src/service/samplePack.service";
+import * as samplePackService from "../src/service/sample-pack.service";
 
 import {
   createSamplePack,
@@ -7,9 +7,9 @@ import {
   getSamplePack,
   updateSamplePack,
   deleteSamplePack,
-} from "../src/controller/samplePack.controller";
+} from "../src/controller/sample-pack.controller";
 
-jest.mock("../src/service/samplePack.service");
+jest.mock("../src/service/sample-pack.service");
 
 describe("Sample Pack Controller", () => {
   let req: Partial<Request>;
