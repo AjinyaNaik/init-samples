@@ -26,7 +26,7 @@ const CreateSample = () => {
     if (metadata.trim()) {
       try {
         parsedMetadata = JSON.parse(metadata);
-      } 
+      }
       catch (e) {
         alert("Invalid JSON in metadata field.");
         return;
@@ -34,6 +34,15 @@ const CreateSample = () => {
     }
 
     const processedGenres = genres.split(",").map((g) => g.trim()).filter(Boolean);
+
+    const isAudio = audioFile.type.startsWith("audio/") ||
+      audioFile.name.endsWith(".wav") ||
+      audioFile.name.endsWith(".mp3");
+
+    if (!isAudio) {
+      alert("Please select a valid audio file (.wav, .mp3, etc)");
+      return;
+    }
 
     const formData = new FormData();
     formData.append("name", name);
@@ -51,16 +60,16 @@ const CreateSample = () => {
       await createSample(formData);
 
       alert("Sample created!");
-      
+
       setName("");
       setDescription("");
       setAudioFile(null);
       setGenres("");
       setMetadata("");
-      
+
       const fileInput = document.getElementById("audioFile") as HTMLInputElement;
       if (fileInput) fileInput.value = "";
-    } 
+    }
     catch (err: any) {
       alert("Error: " + err.message);
     }
@@ -69,7 +78,7 @@ const CreateSample = () => {
   return (
     <div>
       <h2 className="mb-6 text-xl font-semibold">Create Sample</h2>
-      
+
       {error && <div className="mb-4 text-red-600">{error}</div>}
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -80,14 +89,14 @@ const CreateSample = () => {
 
         <div className="md:col-span-2">
           <label className="mb-1 block text-sm font-medium text-gray-700">Audio File *</label>
-          <input 
+          <input
             id="audioFile"
-            type="file" 
-            accept="audio/*" 
-            onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)} 
-            required 
+            type="file"
+            accept="audio/*,.wav,.mp3"
+            onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
+            required
             disabled={isLoading}
-            className="w-full rounded border border-gray-300 p-2 bg-white disabled:bg-gray-100" 
+            className="w-full rounded border border-gray-300 p-2 bg-white disabled:bg-gray-100"
           />
         </div>
 

@@ -1,19 +1,59 @@
 import { Request, Response } from "express";
 import * as sampleService from "../service/sample.service";
+import { uploadAudio } from "../service/storage.service";
+import { 
+  CreateSampleRequest, 
+  UpdateSampleRequest, 
+  StandardResponse, 
+  SampleResponseData 
+} from "./dtos/sample.dto";
+import { CreateSampleData, UpdateSampleData } from "../service/dtos/sample.dto";
 
 export const createSample = async (
-  req: Request,
-  res: Response
+  req: Request<{}, {}, CreateSampleRequest>,
+  res: Response<StandardResponse<SampleResponseData>>
 ) => {
   try {
-    const sample =
-      await sampleService.createSample(req.body);
+    const file = req.file;
+
+    if (!file) {
+      return res.status(400).json({
+        success: false,
+        message: "Audio file is required",
+      });
+    }
+
+    const audioUrl = await uploadAudio(
+      file.buffer,
+      file.originalname,
+      file.mimetype
+    );
+
+    const genres = req.body.genres ? JSON.parse(req.body.genres) : [];
+    const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
+    const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : null;
+    const isSelling = req.body.is_selling === "true";
+
+    const payload: CreateSampleData = {
+      name: req.body.name,
+      description: req.body.description || null,
+      audio_url: audioUrl,
+      sample_pack_id: samplePackId,
+      category: req.body.category,
+      sample_type: req.body.sample_type,
+      is_selling: isSelling,
+      genres,
+      metadata,
+    };
+
+    const sample = await sampleService.createSample(payload);
 
     return res.status(201).json({
       success: true,
       data: sample,
     });
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     return res.status(400).json({
       success: false,
       message: error.message,
@@ -23,11 +63,10 @@ export const createSample = async (
 
 export const getSamples = async (
   req: Request,
-  res: Response
+  res: Response<StandardResponse<SampleResponseData[]>>
 ) => {
   try {
-    const samples =
-      await sampleService.getAllSamples();
+    const samples = await sampleService.getAllSamples();
 
     return res.status(200).json({
       success: true,
@@ -42,8 +81,8 @@ export const getSamples = async (
 };
 
 export const getSample = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }>,
+  res: Response<StandardResponse<SampleResponseData>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -55,18 +94,14 @@ export const getSample = async (
       });
     }
 
-    const sample =
-      await sampleService.getSampleById(id);
+    const sample = await sampleService.getSampleById(id);
 
     return res.status(200).json({
       success: true,
       data: sample,
     });
   } catch (error: any) {
-    const status =
-      error.message === "Sample not found"
-        ? 404
-        : 400;
+    const status = error.message === "Sample not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,
@@ -76,8 +111,8 @@ export const getSample = async (
 };
 
 export const updateSample = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }, {}, UpdateSampleRequest>,
+  res: Response<StandardResponse<SampleResponseData>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -89,21 +124,46 @@ export const updateSample = async (
       });
     }
 
-    const sample =
-      await sampleService.updateSample(
-        id,
-        req.body
+    const file = req.file;
+    let audioUrl = undefined;
+
+    if (file) {
+      audioUrl = await uploadAudio(
+        file.buffer,
+        file.originalname,
+        file.mimetype
       );
+    }
+
+    const genres = req.body.genres ? JSON.parse(req.body.genres) : undefined;
+    const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : undefined;
+    const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : undefined;
+    const isSelling = req.body.is_selling !== undefined ? req.body.is_selling === "true" : undefined;
+
+    const payload: UpdateSampleData = {
+      ...req.body,
+      ...(audioUrl && { audio_url: audioUrl }),
+      ...(genres && { genres }),
+      ...(metadata && { metadata }),
+      ...(samplePackId !== undefined && { sample_pack_id: samplePackId }),
+      ...(isSelling !== undefined && { is_selling: isSelling }),
+    };
+
+    const sample = await sampleService.updateSample(id, payload);
+
+    if (!sample) {
+      return res.status(404).json({
+        success: false,
+        message: "Sample not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
       data: sample,
     });
   } catch (error: any) {
-    const status =
-      error.message === "Sample not found"
-        ? 404
-        : 400;
+    const status = error.message === "Sample not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,
@@ -113,8 +173,8 @@ export const updateSample = async (
 };
 
 export const deleteSample = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }>,
+  res: Response<StandardResponse<{ success: boolean; message: string }>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -126,15 +186,14 @@ export const deleteSample = async (
       });
     }
 
-    const result =
-      await sampleService.deleteSample(id);
+    const result = await sampleService.deleteSample(id);
 
-    return res.status(200).json(result);
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
   } catch (error: any) {
-    const status =
-      error.message === "Sample not found"
-        ? 404
-        : 400;
+    const status = error.message === "Sample not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,

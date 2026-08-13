@@ -138,7 +138,8 @@ export const updateSamplePack = async (
       success: true,
       data: samplePack, 
     });
-  } catch (error: any) {
+  } 
+  catch (error: any) {
     const status = error.message === "Sample pack not found" ? 404 : 400;
 
     return res.status(status).json({

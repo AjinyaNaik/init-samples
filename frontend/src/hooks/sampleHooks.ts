@@ -10,7 +10,7 @@ export const useCreateSample = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch('http://localhost:3000/samples', {
+      const response = await fetch('http://localhost:3000/admin/samples', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`

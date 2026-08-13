@@ -8,12 +8,18 @@ import sellerRequestRoutes from "./routes/seller_request.routes";
 import sampleRoutes from "./routes/sample.routes";
 import samplePackRoutes from "./routes/sample-pack.routes";
 import path from "path";
+import fs from "fs";
 
 dotenv.config();
 
 const app = express();
 
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+const uploadsDir = path.join(__dirname, "../uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  fs.mkdirSync(path.join(uploadsDir, "covers"));
+  fs.mkdirSync(path.join(uploadsDir, "audio"));
+}
 
 const port = Number(process.env.PORT) || 3000;
 
