@@ -30,7 +30,7 @@ export default function Catalog() {
 
     if (activeFormat === "packs") {
       fetchFilteredSamplePacks(filters).catch(err => console.error(err));
-    } 
+    }
     else {
       fetchFilteredSamples(filters).catch(err => console.error(err));
     }
@@ -95,7 +95,7 @@ export default function Catalog() {
         </motion.h1>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-          
+
           <CatalogSidebar
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
@@ -108,7 +108,7 @@ export default function Catalog() {
             sampleTypes={sampleTypes}
             loadingSampleTypes={loadingSampleTypes}
             activeTypes={activeTypes}
-            toggleType={toggleType}
+            setActiveTypes={setActiveTypes}
             genres={genres}
             loadingGenres={loadingGenres}
             selectedGenres={selectedGenres}
@@ -123,7 +123,7 @@ export default function Catalog() {
             results={filteredResults}
             isLoading={isResultsLoading}
           />
-          
+
         </div>
       </div>
     </div>

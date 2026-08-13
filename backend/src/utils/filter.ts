@@ -41,16 +41,19 @@ export const hasOverlap = (
   searchTerms = searchTerms.filter(Boolean);
   if (searchTerms.length === 0) return true;
 
-  // 4. Match against terms using a highly readable double for loop
+  // 4. Match-counter equality check (Ensure exact array overlap match)
+  let matchCount = 0;
+
   for (const term of searchTerms) {
     for (const checkAgainstTerm of lowerDb) {
-      if (checkAgainstTerm === term || checkAgainstTerm.includes(term) || term.includes(checkAgainstTerm)) {
-        return true; // Return true on the very first match
+      if (checkAgainstTerm === term) {
+        matchCount++;
+        break; 
       }
     }
   }
 
-  return false;
+  return matchCount === searchTerms.length;
 };
 
 export const matchesFilters = (

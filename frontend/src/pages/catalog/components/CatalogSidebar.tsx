@@ -12,7 +12,7 @@ interface CatalogSidebarProps {
   sampleTypes: FilterItem[];
   loadingSampleTypes: boolean;
   activeTypes: string[];
-  toggleType: (type: string) => void;
+  setActiveTypes: (types: string[]) => void; // Under parent, change toggleType setter wrapper to give child state control
   genres: FilterItem[];
   loadingGenres: boolean;
   selectedGenres: string[];
@@ -31,12 +31,29 @@ export default function CatalogSidebar({
   sampleTypes,
   loadingSampleTypes,
   activeTypes,
-  toggleType,
+  setActiveTypes,
   genres,
   loadingGenres,
   selectedGenres,
   toggleGenre,
 }: CatalogSidebarProps) {
+  
+  const handleTypeClick = (typeName: string) => {
+    if (activeFormat === "standalones") {
+      if (activeTypes.includes(typeName)) {
+        setActiveTypes([]);
+      } else {
+        setActiveTypes([typeName]);
+      }
+    } else {
+      if (activeTypes.includes(typeName)) {
+        setActiveTypes(activeTypes.filter((t) => t !== typeName));
+      } else {
+        setActiveTypes([...activeTypes, typeName]);
+      }
+    }
+  };
+
   return (
     <div className="md:col-span-1 flex flex-col gap-6 pr-8">
       {/* Search Bar */}
@@ -92,7 +109,10 @@ export default function CatalogSidebar({
         {["packs", "standalones"].map((format) => (
           <button
             key={format}
-            onClick={() => setActiveFormat(format)}
+            onClick={() => {
+              setActiveFormat(format);
+              setActiveTypes([]); // Clear types on format swap to prevent index bleedout
+            }}
             className={`text-left px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${
               activeFormat === format
                 ? "bg-zinc-800 text-zinc-100 shadow-sm"
@@ -118,7 +138,7 @@ export default function CatalogSidebar({
             return (
               <button
                 key={type.id}
-                onClick={() => toggleType(type.name)}
+                onClick={() => handleTypeClick(type.name)}
                 className={`flex items-center justify-between px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${
                   isSelected
                     ? "bg-zinc-800 text-zinc-100 shadow-sm"
