@@ -6,7 +6,7 @@ import {
   CreationOptional,
 } from "sequelize";
 
-import sequelize from "../config/databse";
+import sequelize from "../config/database";
 
 export type UserRole = "USER" | "ADMIN";
 export type UserStatus = "ACTIVE" | "SUSPENDED";

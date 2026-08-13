@@ -6,7 +6,7 @@ import {
   CreationOptional,
 } from "sequelize";
 
-import sequelize from "../config/databse";
+import sequelize from "../config/database";
 import User from "./User.model";
 
 export type SellerRequestStatus =
