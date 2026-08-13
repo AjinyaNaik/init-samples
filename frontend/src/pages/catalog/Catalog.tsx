@@ -16,11 +16,9 @@ export default function Catalog() {
     const { sampleTypes, isLoading: loadingSampleTypes } = useSampleTypes();
     const { genres, isLoading: loadingGenres } = useGenres();
 
-    // Single Selects typed as plain strings to adapt dynamically
     const [activeCategory, setActiveCategory] = useState<string>('Samples');
     const [activeFormat, setActiveFormat] = useState<string>('packs');
 
-    // Multi Selects (Arrays of plain strings)
     const [activeTypes, setActiveTypes] = useState<string[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
@@ -91,11 +89,14 @@ export default function Catalog() {
                         </div>
 
                         {/* 1. Category Filter Card */}
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
+                        <div 
+                            className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+                            style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
+                        >
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Category</h3>
 
                             {loadingCategories ? (
-                                <p className="text-xs text-zinc-500 px-2">Loading...</p>
+                                <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
                             ) : (
                                 categories.map((cat) => (
                                     <button
@@ -116,7 +117,10 @@ export default function Catalog() {
                         </div>
 
                         {/* 2. Format Filter Card */}
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
+                        <div 
+                            className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+                            style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
+                        >
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Format</h3>
 
                             {(['packs', 'standalones']).map((format) => (
@@ -134,11 +138,14 @@ export default function Catalog() {
                         </div>
 
                         {/* 3. Type Filter Card */}
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
+                        <div 
+                            className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+                            style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
+                        >
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Type</h3>
 
                             {loadingSampleTypes ? (
-                                <p className="text-xs text-zinc-500 px-2">Loading...</p>
+                                <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
                             ) : (
                                 sampleTypes.map((type) => {
                                     const isSelected = activeTypes.includes(type.name);
@@ -164,7 +171,10 @@ export default function Catalog() {
                         </div>
 
                         {/* 4. Genre List Card */}
-                        <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm">
+                        <div 
+                            className="border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm"
+                            style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
+                        >
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 border-b border-zinc-800/80 pb-3 px-2">
                                 System Genres
                             </h3>
@@ -200,7 +210,10 @@ export default function Catalog() {
 
                     {/* Content / Right Column */}
                     <div className="md:col-span-3">
-                        <div className="bg-zinc-900/40 border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-sm h-full flex flex-col">
+                        <div 
+                            className="border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-sm h-full flex flex-col"
+                            style={{ backgroundColor: "rgba(24, 24, 27, 0.8)" }}
+                        >
 
                             {/* Header */}
                             <div className="flex justify-between items-center mb-8 border-b border-zinc-800/80 pb-6">
