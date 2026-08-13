@@ -1,10 +1,9 @@
 import * as sampleRepository from "../repository/sample.repository";
 import * as samplePackRepository from "../repository/sample-pack.repository";
-import { 
-  CreateSampleData, 
+import {
+  CreateSampleData,
   UpdateSampleData,
 } from "./dtos/sample.dto";
-import { SAMPLE_CATEGORIES, SAMPLE_TYPES } from "../utils/enums/sample.enum";
 
 export const createSample = async (
   data: CreateSampleData
@@ -17,16 +16,12 @@ export const createSample = async (
     throw new Error("Audio URL is required");
   }
 
-  if (data.category && !SAMPLE_CATEGORIES.includes(data.category)) {
-    throw new Error(
-      `Invalid category. Must be one of: ${SAMPLE_CATEGORIES.join(", ")}`
-    );
+  if (!Array.isArray(data.category)) {
+    throw new Error("Categories must be an array");
   }
 
-  if (!SAMPLE_TYPES.includes(data.sample_type)) {
-    throw new Error(
-      `Invalid sample type. Must be one of: ${SAMPLE_TYPES.join(", ")}`
-    );
+  if (!Array.isArray(data.sample_type)) {
+    throw new Error("Sample types must be an array");
   }
 
   if (!Array.isArray(data.genres)) {
@@ -60,7 +55,7 @@ export const createSample = async (
     description: data.description ?? null,
     audio_url: data.audio_url.trim(),
     sample_pack_id: data.sample_pack_id ?? null,
-    category: data.category ?? "sample",
+    category: data.category,
     sample_type: data.sample_type,
     is_selling: data.is_selling ?? false,
     genres: data.genres,
@@ -106,23 +101,16 @@ export const updateSample = async (
     throw new Error("Audio URL cannot be empty");
   }
 
-  if (
-    data.category !== undefined && 
-    data.category !== null &&
-    !SAMPLE_CATEGORIES.includes(data.category)
-  ) {
-    throw new Error(
-      `Invalid category. Must be one of: ${SAMPLE_CATEGORIES.join(", ")}`
-    );
+  if (data.category !== undefined) {
+    if (!Array.isArray(data.category)) {
+      throw new Error("Categories must be an array");
+    }
   }
 
-  if (
-    data.sample_type !== undefined &&
-    !SAMPLE_TYPES.includes(data.sample_type)
-  ) {
-    throw new Error(
-      `Invalid sample type. Must be one of: ${SAMPLE_TYPES.join(", ")}`
-    );
+  if (data.sample_type !== undefined) {
+    if (!Array.isArray(data.sample_type)) {
+      throw new Error("Sample types must be an array");
+    }
   }
 
   if (data.genres !== undefined) {

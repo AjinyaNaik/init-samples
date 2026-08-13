@@ -1,41 +1,6 @@
 import Sample from "../models/sample.model";
 import SamplePack from "../models/sample-pack.model";
-
-type SampleType =
-  | "DRUMS"
-  | "BASS"
-  | "MIDS"
-  | "HIGHS"
-  | "VOCALS";
-
-type SampleCategory =
-  | "sample"
-  | "loop"
-  | "track or stem";
-
-export interface CreateSampleData {
-  name: string;
-  description?: string | null;
-  audio_url: string;
-  sample_pack_id?: number | null;
-  category?: SampleCategory;
-  sample_type: SampleType;
-  is_selling?: boolean;
-  genres: string[];
-  metadata?: Record<string, any>;
-}
-
-export interface UpdateSampleData {
-  name?: string;
-  description?: string | null;
-  audio_url?: string;
-  sample_pack_id?: number | null;
-  category?: SampleCategory;
-  sample_type?: SampleType;
-  is_selling?: boolean;
-  genres?: string[];
-  metadata?: Record<string, any>;
-}
+import { CreateSampleData, UpdateSampleData } from "../service/dtos/sample.dto";
 
 const samplePackInclude = {
   model: SamplePack,
@@ -54,8 +19,8 @@ export const create = async (data: CreateSampleData) => {
     description: data.description ?? null,
     audio_url: data.audio_url,
     sample_pack_id: data.sample_pack_id ?? null,
-    category: data.category ?? "sample",
-    sample_type: data.sample_type,
+    category: data.category || [],
+    sample_type: data.sample_type || [],
     is_selling: data.is_selling ?? false,
     genres: data.genres,
     metadata: data.metadata ?? {},
@@ -89,6 +54,7 @@ export const update = async (
 
   return await findById(id);
 };
+
 export const remove = async (id: number) => {
   return await Sample.destroy({
     where: { id },

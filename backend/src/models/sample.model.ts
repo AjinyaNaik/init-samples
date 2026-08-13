@@ -10,7 +10,7 @@ interface SampleAttributes {
   category: string[];
   sample_type: string[];
   is_selling: boolean;
-  genres: string[];
+  genres: string[] | null;
   metadata: Record<string, any>;
   created_at: Date;
   updated_at: Date;
@@ -43,7 +43,7 @@ class Sample
   public category!: string[];
   public sample_type!: string[];
   public is_selling!: boolean;
-  public genres!: string[];
+  public genres!: string[] | null;
   public metadata!: Record<string, any>;
 
   public readonly created_at!: Date;
@@ -98,7 +98,7 @@ Sample.init(
 
     genres: {
       type: DataTypes.JSON,
-      allowNull: false,
+      allowNull: true,
       defaultValue: [],
     },
 
