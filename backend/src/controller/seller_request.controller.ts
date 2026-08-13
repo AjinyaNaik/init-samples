@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { requestToBecomeSeller } from "../service/sellerRequest.service";
+import { requestToBecomeSeller } from "../service/seller_request.service";
 
 export async function createSellerRequest(
   req: Request,

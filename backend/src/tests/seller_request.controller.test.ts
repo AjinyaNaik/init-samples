@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createSellerRequest } from "../controller/sellerRequest.controller";
-import { requestToBecomeSeller } from "../service/sellerRequest.service";
+import { createSellerRequest } from "../controller/seller_request.controller";
+import { requestToBecomeSeller } from "../service/seller_request.service";
 
 jest.mock("../service/sellerRequest.service", () => ({
   requestToBecomeSeller: jest.fn(),

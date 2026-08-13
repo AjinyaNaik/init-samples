@@ -6,7 +6,7 @@ import sequelize from "./config/databse";
 import "./models/association";
 
 import authRoutes from "./routes/auth.routes";
-import sellerRequestRoutes from "./routes/sellerRequest.routes";
+import sellerRequestRoutes from "./routes/seller_request.routes";
 
 
 dotenv.config();
@@ -17,8 +17,8 @@ const port = Number(process.env.PORT) || 3000;
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
-app.use("/api/seller-requests", sellerRequestRoutes);
+app.use("/auth", authRoutes);
+app.use("/seller-requests", sellerRequestRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello from the TypeScript Express backend!");
 });

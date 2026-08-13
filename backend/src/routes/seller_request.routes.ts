@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createSellerRequest } from "../controller/sellerRequest.controller";
+import { createSellerRequest } from "../controller/seller_request.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
 
 const router = Router();
