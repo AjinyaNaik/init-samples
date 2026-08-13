@@ -7,8 +7,8 @@ interface SampleAttributes {
   description: string | null;
   audio_url: string;
   sample_pack_id: number | null;
-  category: "sample" | "loop" | "track or stem";
-  sample_type: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
+  category: string[];
+  sample_type: string[];
   is_selling: boolean;
   genres: string[];
   metadata: Record<string, any>;
@@ -40,8 +40,8 @@ class Sample
   public description!: string | null;
   public audio_url!: string;
   public sample_pack_id!: number | null;
-  public category!: "sample" | "loop" | "track or stem";
-  public sample_type!: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
+  public category!: string[];
+  public sample_type!: string[];
   public is_selling!: boolean;
   public genres!: string[];
   public metadata!: Record<string, any>;
@@ -83,21 +83,17 @@ Sample.init(
       allowNull: false,
       defaultValue: false,
     }, 
+
     category: {
-      type: DataTypes.ENUM("sample", "loop", "track or stem"),
+      type: DataTypes.JSON,
       allowNull: false,
-      defaultValue: "sample",
+      defaultValue: [],
     },
 
     sample_type: {
-      type: DataTypes.ENUM(
-        "DRUMS",
-        "BASS",
-        "MIDS",
-        "HIGHS",
-        "VOCALS"
-      ),
+      type: DataTypes.JSON,
       allowNull: false,
+      defaultValue: [],
     },
 
     genres: {
