@@ -1,10 +1,6 @@
 import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import type { CategoryType, FormatType, InstrumentType } from '../../utils/enums/catalog';
-
-const sampleGenres = ['Hip Hop', 'R&B', 'Trap', 'Lofi', 'Drill', 'Pop', 'Soul'];
-const trackGenres = ['House', 'Techno', 'Synthwave', 'Synth Pop', 'Cinematic', 'Ambient'];
-const loopGenres = ['Hip Hop', 'R&B', 'Trap', 'Lofi', 'Drill', 'Pop', 'Soul'];
+import { motion } from 'framer-motion';
+import { useCategories, useSampleTypes, useGenres } from '../../hooks/filterHooks';
 
 const dummyResults = [
     { id: 1, title: 'Midnight R&B Vol 1', genre: 'R&B', price: '$29.99' },
@@ -16,22 +12,20 @@ const dummyResults = [
 ];
 
 export default function Catalog() {
-    // Single Selects (for primary navigation)
-    const [activeCategory, setActiveCategory] = useState<CategoryType>('samples');
-    const [activeFormat, setActiveFormat] = useState<FormatType>('packs');
+    const { categories, isLoading: loadingCategories } = useCategories();
+    const { sampleTypes, isLoading: loadingSampleTypes } = useSampleTypes();
+    const { genres, isLoading: loadingGenres } = useGenres();
 
-    // Multi Selects (Arrays)
-    const [activeTypes, setActiveTypes] = useState<InstrumentType[]>([]);
+    // Single Selects typed as plain strings to adapt dynamically
+    const [activeCategory, setActiveCategory] = useState<string>('Samples');
+    const [activeFormat, setActiveFormat] = useState<string>('packs');
+
+    // Multi Selects (Arrays of plain strings)
+    const [activeTypes, setActiveTypes] = useState<string[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const activeGenresList =
-        activeCategory === 'samples' ? sampleGenres :
-            activeCategory === 'loops' ? loopGenres :
-                trackGenres;
-
-    // Helper functions for multi-select logic
-    const toggleType = (type: InstrumentType) => {
+    const toggleType = (type: string) => {
         setActiveTypes(prev =>
             prev.includes(type) ? prev.filter(t => t !== type) : [...prev, type]
         );
@@ -56,14 +50,14 @@ export default function Catalog() {
                     className="text-6xl md:text-7xl pb-4 mb-8 text-center md:text-left text-purple-300"
                     style={{ fontFamily: "'Shrikhand', cursive" }}
                     animate={{
-                        opacity: [1, 0.4, 1, 1, 0.2, 1, 1], // Flickering sequence
+                        opacity: [1, 0.4, 1, 1, 0.2, 1, 1],
                         textShadow: [
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
                             "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
                             "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
-                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7", // Extra bright surge
+                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7",
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7"
                         ]
                     }}
@@ -76,13 +70,11 @@ export default function Catalog() {
                     The Init Catalog
                 </motion.h1>
 
-                {/* Main 2-Column Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
 
                     {/* Sidebar / Left Column */}
                     <div className="md:col-span-1 flex flex-col gap-6 pr-8">
 
-                        {/* Search Bar */}
                         <div className="relative mb-4">
                             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                                 <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,37 +86,40 @@ export default function Catalog() {
                                 placeholder="Search catalog..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                /* Changed focus rings from emerald to purple */
                                 className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors placeholder-zinc-500 shadow-sm"
                             />
                         </div>
 
-                        {/* 1. Category Filter Card (Single Select) */}
+                        {/* 1. Category Filter Card */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Category</h3>
 
-                            {(['samples', 'loops', 'tracks'] as CategoryType[]).map((cat) => (
-                                <button
-                                    key={cat}
-                                    onClick={() => {
-                                        setActiveCategory(cat);
-                                        setSelectedGenres([]); // Reset genres when category changes
-                                    }}
-                                    className={`text-left px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${activeCategory === cat
-                                        ? 'bg-zinc-800 text-zinc-100 shadow-sm'
-                                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-                                        }`}
-                                >
-                                    {cat === 'tracks' ? 'Tracks (Stems)' : cat}
-                                </button>
-                            ))}
+                            {loadingCategories ? (
+                                <p className="text-xs text-zinc-500 px-2">Loading...</p>
+                            ) : (
+                                categories.map((cat) => (
+                                    <button
+                                        key={cat.id}
+                                        onClick={() => {
+                                            setActiveCategory(cat.name);
+                                            setSelectedGenres([]);
+                                        }}
+                                        className={`text-left px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${activeCategory === cat.name
+                                            ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                                            }`}
+                                    >
+                                        {cat.name}
+                                    </button>
+                                ))
+                            )}
                         </div>
 
-                        {/* 2. Format Filter Card (Single Select) */}
+                        {/* 2. Format Filter Card */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Format</h3>
 
-                            {(['packs', 'standalones'] as FormatType[]).map((format) => (
+                            {(['packs', 'standalones']).map((format) => (
                                 <button
                                     key={format}
                                     onClick={() => setActiveFormat(format)}
@@ -138,58 +133,57 @@ export default function Catalog() {
                             ))}
                         </div>
 
-                        {/* 3. Type Filter Card (Multi Select with Checkmarks) */}
+                        {/* 3. Type Filter Card */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm">
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Type</h3>
 
-                            {(['drums', 'bass', 'mids', 'highs', 'vocals'] as InstrumentType[]).map((type) => {
-                                const isSelected = activeTypes.includes(type);
-                                return (
-                                    <button
-                                        key={type}
-                                        onClick={() => toggleType(type)}
-                                        className={`flex items-center justify-between px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${isSelected
-                                            ? 'bg-zinc-800 text-zinc-100 shadow-sm'
-                                            : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
-                                            }`}
-                                    >
-                                        <span>{type}</span>
-                                        {isSelected && (
-                                            <svg className="w-5 h-5 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                            </svg>
-                                        )}
-                                    </button>
-                                );
-                            })}
+                            {loadingSampleTypes ? (
+                                <p className="text-xs text-zinc-500 px-2">Loading...</p>
+                            ) : (
+                                sampleTypes.map((type) => {
+                                    const isSelected = activeTypes.includes(type.name);
+                                    return (
+                                        <button
+                                            key={type.id}
+                                            onClick={() => toggleType(type.name)}
+                                            className={`flex items-center justify-between px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${isSelected
+                                                ? 'bg-zinc-800 text-zinc-100 shadow-sm'
+                                                : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
+                                                }`}
+                                        >
+                                            <span>{type.name}</span>
+                                            {isSelected && (
+                                                <svg className="w-5 h-5 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            )}
+                                        </button>
+                                    );
+                                })
+                            )}
                         </div>
 
-                        {/* 4. Genre List Card (Multi Select with Checkmarks) */}
+                        {/* 4. Genre List Card */}
                         <div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm">
                             <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 border-b border-zinc-800/80 pb-3 px-2">
-                                {activeCategory === 'samples' ? 'Sample Genres' : activeCategory === 'loops' ? 'Loop Genres' : 'Track Genres'}
+                                System Genres
                             </h3>
-                            <AnimatePresence mode="wait">
-                                <motion.div
-                                    key={activeCategory}
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    exit={{ opacity: 0, x: 10 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="flex flex-col gap-1"
-                                >
-                                    {activeGenresList.map((genre) => {
-                                        const isSelected = selectedGenres.includes(genre);
+                            {loadingGenres ? (
+                                <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
+                            ) : (
+                                <div className="flex flex-col gap-1 max-h-60 overflow-y-auto pr-1">
+                                    {genres.map((genre) => {
+                                        const isSelected = selectedGenres.includes(genre.name);
                                         return (
                                             <button
-                                                key={genre}
-                                                onClick={() => toggleGenre(genre)}
-                                                className={`flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-sm font-semibold ${isSelected
+                                                key={genre.id}
+                                                onClick={() => toggleGenre(genre.name)}
+                                                className={`flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-sm font-semibold text-left ${isSelected
                                                     ? 'bg-zinc-800 text-zinc-100 shadow-sm'
                                                     : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50'
                                                     }`}
                                             >
-                                                <span>{genre}</span>
+                                                <span>{genre.name}</span>
                                                 {isSelected && (
                                                     <svg className="w-4 h-4 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -198,8 +192,8 @@ export default function Catalog() {
                                             </button>
                                         );
                                     })}
-                                </motion.div>
-                            </AnimatePresence>
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -211,10 +205,9 @@ export default function Catalog() {
                             {/* Header */}
                             <div className="flex justify-between items-center mb-8 border-b border-zinc-800/80 pb-6">
                                 <h2 className="text-3xl font-bold flex flex-col gap-2">
-                                    {/* Main dynamically built title row */}
                                     <div className="flex flex-wrap items-center gap-2">
                                         <span className="capitalize">
-                                            {activeCategory === 'tracks' ? 'Tracks' : activeCategory}
+                                            {activeCategory}
                                         </span>
                                         <span className="capitalize text-zinc-400">
                                             {activeFormat}
@@ -224,7 +217,6 @@ export default function Catalog() {
                                         </span>
                                     </div>
 
-                                    {/* Subtitle row showing selected multi-filters */}
                                     {(activeTypes.length > 0 || selectedGenres.length > 0) && (
                                         <div className="flex flex-wrap items-center gap-2 mt-2 text-base font-normal text-zinc-400">
                                             {activeTypes.length > 0 && <span>Types: <span className="text-zinc-200">{activeTypes.join(', ')}</span></span>}
@@ -244,10 +236,8 @@ export default function Catalog() {
                                             ${index !== dummyResults.length - 1 ? 'border-b border-zinc-800/50 mb-1' : ''}`
                                         }
                                     >
-                                        {/* Thumbnail changed border/shadow to purple on hover */}
                                         <div className="w-16 h-16 bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-6 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.2)] transition-all duration-300"></div>
 
-                                        {/* Info changed text to purple on hover */}
                                         <div className="flex-grow flex flex-col">
                                             <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200">
                                                 {result.title}
@@ -255,7 +245,6 @@ export default function Catalog() {
                                             <p className="text-zinc-500 text-sm mt-1">{result.genre}</p>
                                         </div>
 
-                                        {/* Price / Action */}
                                         <div className="flex items-center gap-6">
                                             <span className={`font-semibold ${result.price === 'FREE' ? 'text-purple-400' : 'text-zinc-300'}`}>
                                                 {result.price}
@@ -267,7 +256,6 @@ export default function Catalog() {
                                     </div>
                                 ))}
 
-                                {/* Empty State Fallback */}
                                 {dummyResults.length === 0 && (
                                     <div className="flex flex-col items-center justify-center py-20 text-zinc-500">
                                         <svg className="w-16 h-16 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">

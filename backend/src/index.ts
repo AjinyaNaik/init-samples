@@ -7,19 +7,14 @@ import authRoutes from "./routes/auth.routes";
 import sellerRequestRoutes from "./routes/seller_request.routes";
 import sampleRoutes from "./routes/sample.routes";
 import samplePackRoutes from "./routes/sample-pack.routes";
+import filterRoutes from "./routes/filter.routes"; // <-- Import here
 import path from "path";
-import fs from "fs";
 
 dotenv.config();
 
 const app = express();
 
-const uploadsDir = path.join(__dirname, "../uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-  fs.mkdirSync(path.join(uploadsDir, "covers"));
-  fs.mkdirSync(path.join(uploadsDir, "audio"));
-}
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 const port = Number(process.env.PORT) || 3000;
 
@@ -30,6 +25,8 @@ app.use("/auth", authRoutes);
 app.use("/seller-requests", sellerRequestRoutes);
 app.use("/admin/samples", sampleRoutes);
 app.use("/admin/sample-packs", samplePackRoutes);
+app.use("/filters", filterRoutes); 
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello from the TypeScript Express backend!");
 });
