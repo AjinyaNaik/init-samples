@@ -8,11 +8,17 @@ type SampleType =
   | "HIGHS"
   | "VOCALS";
 
+type SampleCategory =
+  | "sample"
+  | "loop"
+  | "track or stem";
+
 export interface CreateSampleData {
   name: string;
   description?: string | null;
   audio_url: string;
   sample_pack_id?: number | null;
+  category?: SampleCategory;
   sample_type: SampleType;
   is_selling?: boolean;
   genres: string[];
@@ -24,6 +30,7 @@ export interface UpdateSampleData {
   description?: string | null;
   audio_url?: string;
   sample_pack_id?: number | null;
+  category?: SampleCategory;
   sample_type?: SampleType;
   is_selling?: boolean;
   genres?: string[];
@@ -47,6 +54,7 @@ export const create = async (data: CreateSampleData) => {
     description: data.description ?? null,
     audio_url: data.audio_url,
     sample_pack_id: data.sample_pack_id ?? null,
+    category: data.category ?? "sample",
     sample_type: data.sample_type,
     is_selling: data.is_selling ?? false,
     genres: data.genres,
