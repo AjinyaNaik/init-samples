@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { register, login } from "../controller/auth.controller";
+import { register, login } from "../src/controller/auth.controller";
 import {
   registerUser,
   loginUser,
-} from "../service/auth.service";
+} from "../src/service/auth.service";
 
-jest.mock("../service/auth.service", () => ({
+jest.mock("../src/service/auth.service", () => ({
   registerUser: jest.fn(),
   loginUser: jest.fn(),
 }));
