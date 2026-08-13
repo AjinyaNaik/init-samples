@@ -1,7 +1,7 @@
 import {
   createSellerRequest,
   findPendingSellerRequest,
-} from "../repository/seller_Request.repository";
+} from "../repository/seller_request.repository";
 
 export async function requestToBecomeSeller(userId: number) {
   const existingRequest = await findPendingSellerRequest(userId);
