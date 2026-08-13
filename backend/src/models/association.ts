@@ -1,7 +1,7 @@
-import User from "./User.model";
-import SellerRequest from "./SellerRequest.model";
-import SamplePack from "./SamplePack.model";
-import Sample from "./Sample.model";
+import User from "./user.model";
+import SellerRequest from "./seller-request.model";
+import SamplePack from "./sample-pack.model";
+import Sample from "./sample.model";
 
 User.hasMany(SellerRequest, {
   foreignKey: "user_id",

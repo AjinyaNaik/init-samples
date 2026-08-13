@@ -7,7 +7,7 @@ import {
 } from "sequelize";
 
 import sequelize from "../config/database";
-import User from "./User.model";
+import User from "./user.model";
 
 export type SellerRequestStatus =
   | "PENDING"

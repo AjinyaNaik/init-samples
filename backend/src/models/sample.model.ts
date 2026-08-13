@@ -1,7 +1,40 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes, Optional } from "sequelize";
 import sequelize from "../config/database";
 
-class Sample extends Model {
+interface SampleAttributes {
+  id: number;
+  name: string;
+  description: string | null;
+  audio_url: string;
+  sample_pack_id: number | null;
+  category: "sample" | "loop" | "track or stem";
+  sample_type: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
+  is_selling: boolean;
+  genres: string[];
+  metadata: Record<string, any>;
+  created_at: Date;
+  updated_at: Date;
+}
+
+interface SampleCreationAttributes
+  extends Optional<
+    SampleAttributes,
+    | "id"
+    | "description"
+    | "sample_pack_id"
+    | "is_selling"
+    | "metadata"
+    | "created_at"
+    | "updated_at"
+  > {}
+
+class Sample
+  extends Model<
+    SampleAttributes,
+    SampleCreationAttributes
+  >
+  implements SampleAttributes
+{
   public id!: number;
   public name!: string;
   public description!: string | null;
@@ -24,51 +57,67 @@ Sample.init(
       autoIncrement: true,
       primaryKey: true,
     },
+
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+
     description: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
+
     audio_url: {
       type: DataTypes.STRING,
       allowNull: false,
     },
+
     sample_pack_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+
     is_selling: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
-    },
+    }, 
     category: {
       type: DataTypes.ENUM("sample", "loop", "track or stem"),
       allowNull: false,
       defaultValue: "sample",
     },
+
     sample_type: {
-      type: DataTypes.ENUM("DRUMS", "BASS", "MIDS", "HIGHS", "VOCALS"),
+      type: DataTypes.ENUM(
+        "DRUMS",
+        "BASS",
+        "MIDS",
+        "HIGHS",
+        "VOCALS"
+      ),
       allowNull: false,
     },
+
     genres: {
       type: DataTypes.JSON,
       allowNull: false,
       defaultValue: [],
     },
+
     metadata: {
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: {},
     },
+
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
       defaultValue: DataTypes.NOW,
     },
+
     updated_at: {
       type: DataTypes.DATE,
       allowNull: false,
