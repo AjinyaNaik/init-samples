@@ -28,14 +28,16 @@ export async function createUser(data: {
   username: string;
   email: string;
   password_hash: string;
-  role: "BUYER" | "SELLER" | "ADMIN";
+  role?: "USER" | "ADMIN";
+  is_seller?: boolean;
   status?: "ACTIVE" | "SUSPENDED";
 }) {
   return User.create({
     username: data.username,
     email: data.email,
     password_hash: data.password_hash,
-    role: data.role,
+    role: data.role ?? "USER",
+    is_seller: data.is_seller ?? false,
     status: data.status ?? "ACTIVE",
   });
 }
