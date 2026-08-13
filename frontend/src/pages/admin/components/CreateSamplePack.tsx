@@ -1,40 +1,33 @@
 import { useState } from "react";
+import { useCreateSamplePack } from "../../../hooks/samplePackHooks";
 
 const CreateSamplePack = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [coverImage, setCoverImage] = useState("");
+  const [coverImage, setCoverImage] = useState<File | null>(null);
+
+  const { createSamplePack, isLoading, error } = useCreateSamplePack();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    //const token = localStorage.getItem("token");
 
-    const payload = {
-      name,
-      description: description || null,
-      cover_image: coverImage || null,
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    if (description) formData.append("description", description);
+    if (coverImage) formData.append("cover_image", coverImage);
 
     try {
-      // TODO: Replace with your actual frontend API call
-      /*
-      const response = await fetch('/api/sample-packs', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-      if (!response.ok) throw new Error('Failed to create sample pack');
-      alert('Sample pack created!');
-      */
-      console.log("Submitting Sample Pack:", payload);
-      alert("Sample Pack created (Mock)!");
+      await createSamplePack(formData);
+      
+      alert("Sample Pack created!");
       setName("");
       setDescription("");
-      setCoverImage("");
-    } catch (err: any) {
+      setCoverImage(null);
+
+      const fileInput = document.getElementById("coverImage") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
+    } 
+    catch (err: any) {
       alert("Error: " + err.message);
     }
   };
@@ -42,6 +35,9 @@ const CreateSamplePack = () => {
   return (
     <div>
       <h2 className="mb-6 text-xl font-semibold">Create Sample Pack</h2>
+      
+      {error && <div className="mb-4 text-red-600">{error}</div>}
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">Name *</label>
@@ -50,7 +46,8 @@ const CreateSamplePack = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+            disabled={isLoading}
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
         </div>
         <div>
@@ -58,21 +55,28 @@ const CreateSamplePack = () => {
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+            disabled={isLoading}
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
             rows={3}
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Cover Image URL</label>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Cover Image</label>
           <input
-            type="text"
-            value={coverImage}
-            onChange={(e) => setCoverImage(e.target.value)}
-            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none"
+            id="coverImage"
+            type="file"
+            accept="image/*"
+            disabled={isLoading}
+            onChange={(e) => setCoverImage(e.target.files ? e.target.files[0] : null)}
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none bg-white disabled:bg-gray-100"
           />
         </div>
-        <button type="submit" className="mt-4 rounded bg-blue-600 p-2 text-white hover:bg-blue-700">
-          Create Pack
+        <button 
+          type="submit" 
+          disabled={isLoading} 
+          className="mt-4 rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isLoading ? "Creating..." : "Create Pack"}
         </button>
       </form>
     </div>

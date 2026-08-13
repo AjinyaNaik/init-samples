@@ -1,15 +1,35 @@
 import { Request, Response } from "express";
 import * as samplePackService from "../service/sample-pack.service";
+import { uploadImage } from "../service/storage.service";
+import {
+  CreateSamplePackRequest,
+  UpdateSamplePackRequest,
+  StandardResponse,
+  SamplePackResponseData
+} from "./dtos/sample-pack.dto";
 
 export const createSamplePack = async (
-  req: Request,
-  res: Response
+  req: Request<{}, {}, CreateSamplePackRequest>,
+  res: Response<StandardResponse<SamplePackResponseData>>
 ) => {
   try {
-    const samplePack =
-      await samplePackService.createSamplePack(
-        req.body
+    const file = req.file;
+    let coverUrl = null;
+
+    if (file) {
+      coverUrl = await uploadImage(
+        file.buffer,
+        file.originalname,
+        file.mimetype
       );
+    }
+
+    const payload = {
+      ...req.body,
+      cover_image: coverUrl,
+    };
+
+    const samplePack = await samplePackService.createSamplePack(payload);
 
     return res.status(201).json({
       success: true,
@@ -25,11 +45,10 @@ export const createSamplePack = async (
 
 export const getSamplePacks = async (
   req: Request,
-  res: Response
+  res: Response<StandardResponse<SamplePackResponseData[]>>
 ) => {
   try {
-    const samplePacks =
-      await samplePackService.getAllSamplePacks();
+    const samplePacks = await samplePackService.getAllSamplePacks();
 
     return res.status(200).json({
       success: true,
@@ -44,8 +63,8 @@ export const getSamplePacks = async (
 };
 
 export const getSamplePack = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }>,
+  res: Response<StandardResponse<SamplePackResponseData>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -57,18 +76,14 @@ export const getSamplePack = async (
       });
     }
 
-    const samplePack =
-      await samplePackService.getSamplePackById(id);
+    const samplePack = await samplePackService.getSamplePackById(id);
 
     return res.status(200).json({
       success: true,
       data: samplePack,
     });
   } catch (error: any) {
-    const status =
-      error.message === "Sample pack not found"
-        ? 404
-        : 400;
+    const status = error.message === "Sample pack not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,
@@ -78,8 +93,8 @@ export const getSamplePack = async (
 };
 
 export const updateSamplePack = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }, {}, UpdateSamplePackRequest>,
+  res: Response<StandardResponse<SamplePackResponseData>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -91,21 +106,40 @@ export const updateSamplePack = async (
       });
     }
 
-    const samplePack =
-      await samplePackService.updateSamplePack(
-        id,
-        req.body
+    const file = req.file;
+    let coverUrl = undefined;
+
+    if (file) {
+      coverUrl = await uploadImage(
+        file.buffer,
+        file.originalname,
+        file.mimetype
       );
+    }
+
+    const payload: UpdateSamplePackRequest & { cover_image?: string } = {
+      ...req.body,
+    };
+
+    if (coverUrl) {
+      payload.cover_image = coverUrl;
+    }
+
+    const samplePack = await samplePackService.updateSamplePack(id, payload);
+
+    if (!samplePack) {
+      return res.status(404).json({
+        success: false,
+        message: "Sample pack not found",
+      });
+    }
 
     return res.status(200).json({
       success: true,
-      data: samplePack,
+      data: samplePack, 
     });
   } catch (error: any) {
-    const status =
-      error.message === "Sample pack not found"
-        ? 404
-        : 400;
+    const status = error.message === "Sample pack not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,
@@ -115,8 +149,8 @@ export const updateSamplePack = async (
 };
 
 export const deleteSamplePack = async (
-  req: Request,
-  res: Response
+  req: Request<{ id: string }>,
+  res: Response<StandardResponse<{ success: boolean; message: string }>>
 ) => {
   try {
     const id = Number(req.params.id);
@@ -128,15 +162,15 @@ export const deleteSamplePack = async (
       });
     }
 
-    const result =
-      await samplePackService.deleteSamplePack(id);
+    const result = await samplePackService.deleteSamplePack(id);
 
-    return res.status(200).json(result);
-  } catch (error: any) {
-    const status =
-      error.message === "Sample pack not found"
-        ? 404
-        : 400;
+    return res.status(200).json({
+      success: true,
+      data: result,
+    });
+  }
+  catch (error: any) {
+    const status = error.message === "Sample pack not found" ? 404 : 400;
 
     return res.status(status).json({
       success: false,
