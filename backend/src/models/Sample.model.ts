@@ -5,10 +5,11 @@ class Sample extends Model {
   public id!: number;
   public name!: string;
   public description!: string | null;
-  public audio_url!: string; 
+  public audio_url!: string;
   public sample_pack_id!: number | null;
+  public category!: "sample" | "loop" | "track or stem";
   public sample_type!: "DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS";
-  public is_selling!: boolean; 
+  public is_selling!: boolean;
   public genres!: string[];
   public metadata!: Record<string, any>;
 
@@ -31,9 +32,9 @@ Sample.init(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    audio_url: { 
+    audio_url: {
       type: DataTypes.STRING,
-      allowNull: false, 
+      allowNull: false,
     },
     sample_pack_id: {
       type: DataTypes.INTEGER,
@@ -43,6 +44,11 @@ Sample.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+    category: {
+      type: DataTypes.ENUM("sample", "loop", "track or stem"),
+      allowNull: false,
+      defaultValue: "sample",
     },
     sample_type: {
       type: DataTypes.ENUM("DRUMS", "BASS", "MIDS", "HIGHS", "VOCALS"),
