@@ -1,37 +1,10 @@
 import * as sampleRepository from "../repository/sample.repository";
 import * as samplePackRepository from "../repository/sample-pack.repository";
-
-const SAMPLE_TYPES = [
-  "DRUMS",
-  "BASS",
-  "MIDS",
-  "HIGHS",
-  "VOCALS",
-] as const;
-
-type SampleType = (typeof SAMPLE_TYPES)[number];
-
-interface CreateSampleData {
-  name: string;
-  description?: string | null;
-  audio_url: string;
-  sample_pack_id?: number | null;
-  sample_type: SampleType;
-  is_selling?: boolean;
-  genres: string[];
-  metadata?: Record<string, any>;
-}
-
-interface UpdateSampleData {
-  name?: string;
-  description?: string | null;
-  audio_url?: string;
-  sample_pack_id?: number | null;
-  sample_type?: SampleType;
-  is_selling?: boolean;
-  genres?: string[];
-  metadata?: Record<string, any>;
-}
+import { 
+  CreateSampleData, 
+  UpdateSampleData,
+} from "./dtos/sample.dto";
+import { SAMPLE_CATEGORIES, SAMPLE_TYPES } from "../utils/enums/sample.enum";
 
 export const createSample = async (
   data: CreateSampleData
@@ -42,6 +15,12 @@ export const createSample = async (
 
   if (!data.audio_url || !data.audio_url.trim()) {
     throw new Error("Audio URL is required");
+  }
+
+  if (data.category && !SAMPLE_CATEGORIES.includes(data.category)) {
+    throw new Error(
+      `Invalid category. Must be one of: ${SAMPLE_CATEGORIES.join(", ")}`
+    );
   }
 
   if (!SAMPLE_TYPES.includes(data.sample_type)) {
@@ -81,6 +60,7 @@ export const createSample = async (
     description: data.description ?? null,
     audio_url: data.audio_url.trim(),
     sample_pack_id: data.sample_pack_id ?? null,
+    category: data.category ?? "sample",
     sample_type: data.sample_type,
     is_selling: data.is_selling ?? false,
     genres: data.genres,
@@ -124,6 +104,16 @@ export const updateSample = async (
     !data.audio_url.trim()
   ) {
     throw new Error("Audio URL cannot be empty");
+  }
+
+  if (
+    data.category !== undefined && 
+    data.category !== null &&
+    !SAMPLE_CATEGORIES.includes(data.category)
+  ) {
+    throw new Error(
+      `Invalid category. Must be one of: ${SAMPLE_CATEGORIES.join(", ")}`
+    );
   }
 
   if (

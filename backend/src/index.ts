@@ -7,10 +7,14 @@ import authRoutes from "./routes/auth.routes";
 import sellerRequestRoutes from "./routes/seller_request.routes";
 import sampleRoutes from "./routes/sample.routes";
 import samplePackRoutes from "./routes/sample-pack.routes";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
+
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 const port = Number(process.env.PORT) || 3000;
 
 app.use(cors());
