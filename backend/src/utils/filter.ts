@@ -41,18 +41,24 @@ export const hasOverlap = (
   searchTerms = searchTerms.filter(Boolean);
   if (searchTerms.length === 0) return true;
 
-  // 4. Match against terms
-  return searchTerms.some((term) =>
-    lowerDb.some((dbVal) => dbVal === term || dbVal.includes(term) || term.includes(dbVal))
-  );
+  // 4. Match against terms using a highly readable double for loop
+  for (const term of searchTerms) {
+    for (const checkAgainstTerm of lowerDb) {
+      if (checkAgainstTerm === term || checkAgainstTerm.includes(term) || term.includes(checkAgainstTerm)) {
+        return true; // Return true on the very first match
+      }
+    }
+  }
+
+  return false;
 };
 
 export const matchesFilters = (
   item: { category: string[]; sample_type: string[]; genres: string[] | null; is_selling: boolean },
-  filters: { 
-    category?: string | string[]; 
-    sample_type?: string | string[]; 
-    genre?: string | string[] 
+  filters: {
+    category?: string | string[];
+    sample_type?: string | string[];
+    genre?: string | string[]
   }
 ): boolean => {
   if (!item.is_selling) return false;
