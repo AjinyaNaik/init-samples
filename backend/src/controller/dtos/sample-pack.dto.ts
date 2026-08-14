@@ -1,6 +1,10 @@
 export interface CreateSamplePackRequest {
   name: string;
   description?: string;
+  category?: string;
+  sample_type?: string;
+  genres?: string;
+  is_selling?: string;
 }
 
 export interface UpdateSamplePackRequest {

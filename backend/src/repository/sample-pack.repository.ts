@@ -7,6 +7,7 @@ interface CreateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  is_selling?: boolean;
 }
 
 interface UpdateSamplePackData {
@@ -16,6 +17,7 @@ interface UpdateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  is_selling?: boolean;
 }
 
 export const create = async (data: CreateSamplePackData) => {

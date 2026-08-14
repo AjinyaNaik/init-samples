@@ -8,6 +8,7 @@ import {
   StandardResponse,
   SamplePackResponseData
 } from "./dtos/sample-pack.dto";
+import { getFilterNamesByIds } from "../repository/filter.repository";
 
 export const createSamplePack = async (
   req: Request<{}, {}, CreateSamplePackRequest>,
@@ -25,10 +26,29 @@ export const createSamplePack = async (
       );
     }
 
-    const payload = {
-      ...req.body,
-      cover_image: coverUrl,
-    };
+    //Convert the request body to the service DTO format
+    const categoryIds = JSON.parse(req.body.category || "[]");
+    const sampleTypeIds = JSON.parse(req.body.sample_type || "[]");
+    const genreIds = JSON.parse(req.body.genres || "[]");
+
+    const filters = await getFilterNamesByIds(
+  categoryIds,
+  sampleTypeIds,
+  genreIds
+);
+
+const payload = {
+  name: req.body.name,
+  description: req.body.description,
+
+  category: filters.categories,
+  sample_type: filters.sampleTypes,
+  genres: filters.genres,
+
+  is_selling: req.body.is_selling === "true",
+
+  cover_image: coverUrl,
+};
 
     const samplePack = await samplePackService.createSamplePack(payload);
 

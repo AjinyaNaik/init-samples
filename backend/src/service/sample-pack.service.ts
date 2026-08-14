@@ -12,6 +12,7 @@ export const createSamplePack = async (
   if (!data.name || !data.name.trim()) {
     throw new Error("Sample pack name is required");
   }
+  console.log("Creating sample pack with data:", data);
 
   return await samplePackRepository.create({
     name: data.name.trim(),
@@ -20,6 +21,7 @@ export const createSamplePack = async (
     category: data.category ?? [],
     sample_type: data.sample_type ?? [],
     genres: data.genres ?? [],
+    is_selling: data.is_selling ?? false,
   });
 };
 

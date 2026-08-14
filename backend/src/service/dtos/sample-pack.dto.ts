@@ -5,6 +5,7 @@ export interface CreateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  is_selling?: boolean;
 }
 
 export interface UpdateSamplePackData {
