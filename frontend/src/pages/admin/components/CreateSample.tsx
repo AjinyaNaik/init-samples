@@ -1,35 +1,30 @@
 import { useState } from "react";
 import { useCreateSample } from "../../../hooks/sampleHooks";
 import {
+  useCategories,
   useSampleTypes,
   useGenres,
 } from "../../../hooks/filterHooks";
-
-type SampleCategory = "sample" | "loop" | "track or stem";
 
 const CreateSample = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
-
   const [samplePackId, setSamplePackId] = useState<string>("");
 
-  const [category, setCategory] =
-    useState<SampleCategory[]>(["sample"]);
-
+  const [category, setCategory] = useState<string[]>([]);
   const [sampleType, setSampleType] = useState<string[]>([]);
-
   const [genres, setGenres] = useState<string[]>([]);
 
   const [isSelling, setIsSelling] = useState(false);
-
   const [metadata, setMetadata] = useState("");
 
+  const { createSample, isLoading, error } = useCreateSample();
+
   const {
-    createSample,
-    isLoading,
-    error,
-  } = useCreateSample();
+    categories: categoryOptions,
+    isLoading: categoriesLoading,
+  } = useCategories();
 
   const {
     sampleTypes: sampleTypeOptions,
@@ -41,9 +36,7 @@ const CreateSample = () => {
     isLoading: genresLoading,
   } = useGenres();
 
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!name.trim()) {
@@ -56,8 +49,13 @@ const CreateSample = () => {
       return;
     }
 
+    if (category.length === 0) {
+      alert("At least one category is required.");
+      return;
+    }
+
     if (sampleType.length === 0) {
-      alert("Sample type is required.");
+      alert("At least one sample type is required.");
       return;
     }
 
@@ -67,14 +65,11 @@ const CreateSample = () => {
       audioFile.name.toLowerCase().endsWith(".mp3");
 
     if (!isAudio) {
-      alert(
-        "Please select a valid audio file (.wav, .mp3, etc.)"
-      );
+      alert("Please select a valid audio file (.wav, .mp3, etc.)");
       return;
     }
 
     let parsedMetadata = {};
-
     if (metadata.trim()) {
       try {
         parsedMetadata = JSON.parse(metadata);
@@ -85,55 +80,20 @@ const CreateSample = () => {
     }
 
     const formData = new FormData();
-
-    formData.append(
-      "name",
-      name.trim()
-    );
-
-    formData.append(
-      "audio_file",
-      audioFile
-    );
-
-    // Backend expects JSON.parse()
-    formData.append(
-      "category",
-      JSON.stringify(category)
-    );
-
-    formData.append(
-      "sample_type",
-      JSON.stringify(sampleType)
-    );
-
-    formData.append(
-      "genres",
-      JSON.stringify(genres)
-    );
-
-    formData.append(
-      "is_selling",
-      String(isSelling)
-    );
-
-    formData.append(
-      "metadata",
-      JSON.stringify(parsedMetadata)
-    );
+    formData.append("name", name.trim());
+    formData.append("audio_file", audioFile);
+    formData.append("category", JSON.stringify(category));
+    formData.append("sample_type", JSON.stringify(sampleType));
+    formData.append("genres", JSON.stringify(genres));
+    formData.append("is_selling", String(isSelling));
+    formData.append("metadata", JSON.stringify(parsedMetadata));
 
     if (description.trim()) {
-      formData.append(
-        "description",
-        JSON.stringify(description.trim())
-      );
+      formData.append("description", description.trim());
     }
 
     if (samplePackId) {
-      formData.append(
-        "sample_pack_id",
-        JSON.stringify(Number(samplePackId))
-      );
+      formData.append("sample_pack_id", String(Number(samplePackId)));
     }
 
     try {
@@ -145,16 +105,13 @@ const CreateSample = () => {
       setDescription("");
       setAudioFile(null);
       setSamplePackId("");
-      setCategory(["sample"]);
+      setCategory([]);
       setSampleType([]);
       setGenres([]);
       setIsSelling(false);
       setMetadata("");
 
-      const fileInput = document.getElementById(
-        "audioFile"
-      ) as HTMLInputElement;
-
+      const fileInput = document.getElementById("audioFile") as HTMLInputElement;
       if (fileInput) {
         fileInput.value = "";
       }
@@ -165,32 +122,19 @@ const CreateSample = () => {
 
   return (
     <div>
-      <h2 className="mb-6 text-xl font-semibold">
-        Create Sample
-      </h2>
+      <h2 className="mb-6 text-xl font-semibold">Create Sample</h2>
 
-      {error && (
-        <div className="mb-4 text-red-600">
-          {error}
-        </div>
-      )}
+      {error && <div className="mb-4 text-red-600">{error}</div>}
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-5"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+
         {/* Name */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Name *
-          </label>
-
+          <label className="mb-1 block text-sm font-medium text-gray-700">Name *</label>
           <input
             type="text"
             value={name}
-            onChange={(e) =>
-              setName(e.target.value)
-            }
+            onChange={(e) => setName(e.target.value)}
             required
             disabled={isLoading}
             placeholder="Enter sample name"
@@ -198,162 +142,112 @@ const CreateSample = () => {
           />
         </div>
 
-
-
         {/* Sample Pack ID */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Sample Pack ID
-          </label>
-
+          <label className="mb-1 block text-sm font-medium text-gray-700">Sample Pack ID</label>
           <input
             type="number"
             value={samplePackId}
-            onChange={(e) =>
-              setSamplePackId(e.target.value)
-            }
+            onChange={(e) => setSamplePackId(e.target.value)}
             disabled={isLoading}
             placeholder="Optional"
             className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
-
-          <p className="mt-1 text-xs text-gray-500">
+          <p className="mt-1 text-xs text-gray-500 font-normal">
             Leave empty to create a standalone sample.
           </p>
         </div>
 
         {/* Category */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Category *
-          </label>
-
-          <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
-            {[
-              {
-                value: "sample",
-                label: "Sample",
-              },
-              {
-                value: "loop",
-                label: "Loop",
-              },
-              {
-                value: "track or stem",
-                label: "Track / Stem",
-              },
-            ].map((categoryOption) => (
-              <label
-                key={categoryOption.value}
-                className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50"
-              >
-                <input
-                  type="radio"
-                  name="category"
-                  value={categoryOption.value}
-                  checked={category.includes(
-                    categoryOption.value as SampleCategory
-                  )}
-                  onChange={() =>
-                    setCategory([
-                      categoryOption.value as SampleCategory,
-                    ])
-                  }
-                  disabled={isLoading}
-                  className="h-4 w-4"
-                />
-
-                <span className="text-sm text-gray-700">
-                  {categoryOption.label}
-                </span>
-              </label>
-            ))}
-          </div>
+          <label className="mb-2 block text-sm font-medium text-gray-700 font-bold">Category *</label>
+          {categoriesLoading ? (
+            <p className="text-sm text-gray-500">Loading categories...</p>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
+              {categoryOptions.map((categoryOption) => {
+                const isChecked = category.includes(categoryOption.name);
+                return (
+                  <label
+                    key={categoryOption.id}
+                    className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50 font-normal"
+                  >
+                    <input
+                      type="radio"
+                      name="adminCategory"
+                      checked={isChecked}
+                      onChange={() => {
+                        setCategory([categoryOption.name]);
+                      }}
+                      disabled={isLoading}
+                      className="h-4 w-4"
+                    />
+                    <span className="text-sm text-gray-700">{categoryOption.name}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
         </div>
 
         {/* Sample Types */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Sample Type *
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-gray-700 font-bold">Sample Types *</label>
           {sampleTypesLoading ? (
-            <p className="text-sm text-gray-500">
-              Loading sample types...
-            </p>
+            <p className="text-sm text-gray-500">Loading sample types...</p>
           ) : (
             <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
-              {sampleTypeOptions.map(
-                (sampleTypeOption) => (
+              {sampleTypeOptions.map((sampleTypeOption) => {
+                const isChecked = sampleType.includes(sampleTypeOption.name);
+                return (
                   <label
                     key={sampleTypeOption.id}
-                    className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50"
+                    className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50 font-normal"
                   >
                     <input
-                      type="radio"
-                      name="sampleType"
-                      value={sampleTypeOption.name}
-                      checked={sampleType.includes(sampleTypeOption.name)}
-                      onChange={() =>
-                        setSampleType([sampleTypeOption.name])
-                      }
+                      type="radio"            
+                      name="adminSampleType"   
+                      checked={isChecked}
+                      onChange={() => {
+                        setSampleType([sampleTypeOption.name]);
+                      }}
                       disabled={isLoading}
                       className="h-4 w-4"
                     />
-
-                    <span className="text-sm text-gray-700">
-                      {sampleTypeOption.name}
-                    </span>
+                    <span className="text-sm text-gray-700">{sampleTypeOption.name}</span>
                   </label>
-                )
-              )}
+                );
+              })}
             </div>
           )}
         </div>
 
         {/* Genres */}
         <div>
-          <label className="mb-2 block text-sm font-medium text-gray-700">
-            Genres
-          </label>
-
+          <label className="mb-2 block text-sm font-medium text-gray-700 font-bold">Genres</label>
           {genresLoading ? (
-            <p className="text-sm text-gray-500">
-              Loading genres...
-            </p>
+            <p className="text-sm text-gray-500">Loading genres...</p>
           ) : (
             <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
               {genreOptions.map((genre) => (
                 <label
                   key={genre.id}
-                  className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50"
+                  className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50 font-normal"
                 >
                   <input
                     type="checkbox"
-                    checked={genres.includes(
-                      genre.name
-                    )}
+                    checked={genres.includes(genre.name)}
                     onChange={(e) => {
                       if (e.target.checked) {
-                        setGenres((prev) => [
-                          ...prev,
-                          genre.name,
-                        ]);
+                        setGenres((prev) => [...prev, genre.name]);
                       } else {
-                        setGenres((prev) =>
-                          prev.filter(
-                            (name) => name !== genre.name
-                          )
-                        );
+                        setGenres((prev) => prev.filter((name) => name !== genre.name));
                       }
                     }}
                     disabled={isLoading}
                     className="h-4 w-4"
                   />
-
-                  <span className="text-sm text-gray-700">
-                    {genre.name}
-                  </span>
+                  <span className="text-sm text-gray-700">{genre.name}</span>
                 </label>
               ))}
             </div>
@@ -362,15 +256,10 @@ const CreateSample = () => {
 
         {/* Description */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Description
-          </label>
-
+          <label className="mb-1 block text-sm font-medium text-gray-700 font-semibold">Description</label>
           <textarea
             value={description}
-            onChange={(e) =>
-              setDescription(e.target.value)
-            }
+            onChange={(e) => setDescription(e.target.value)}
             disabled={isLoading}
             rows={4}
             placeholder="Describe this sample..."
@@ -380,49 +269,31 @@ const CreateSample = () => {
 
         {/* Metadata */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Metadata
-          </label>
-
+          <label className="mb-1 block text-sm font-medium text-gray-700 font-semibold">Metadata</label>
           <textarea
             value={metadata}
-            onChange={(e) =>
-              setMetadata(e.target.value)
-            }
+            onChange={(e) => setMetadata(e.target.value)}
             disabled={isLoading}
             rows={4}
             placeholder='{"bpm": 120, "key": "C minor"}'
             className="w-full rounded border border-gray-300 p-2 font-mono text-sm focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
-
-          <p className="mt-1 text-xs text-gray-500">
-            Must be valid JSON.
-          </p>
+          <p className="mt-1 text-xs text-gray-500 font-normal">Must be valid JSON.</p>
         </div>
 
         {/* Audio File */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
-            Audio File *
-          </label>
-
+          <label className="mb-1 block text-sm font-medium text-gray-700 font-semibold">Audio File *</label>
           <input
             id="audioFile"
             type="file"
             accept="audio/*,.wav,.mp3"
             required
             disabled={isLoading}
-            onChange={(e) =>
-              setAudioFile(
-                e.target.files
-                  ? e.target.files[0]
-                  : null
-              )
-            }
+            onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
             className="w-full rounded border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
         </div>
-
 
         {/* Is Selling */}
         <div className="flex items-center gap-2">
@@ -430,35 +301,22 @@ const CreateSample = () => {
             id="isSelling"
             type="checkbox"
             checked={isSelling}
-            onChange={(e) =>
-              setIsSelling(e.target.checked)
-            }
+            onChange={(e) => setIsSelling(e.target.checked)}
             disabled={isLoading}
             className="h-4 w-4"
           />
-
-          <label
-            htmlFor="isSelling"
-            className="text-sm font-medium text-gray-700"
-          >
+          <label htmlFor="isSelling" className="text-sm font-medium text-gray-700 font-normal cursor-pointer">
             Make this sample available for sale
           </label>
         </div>
 
-
         {/* Submit */}
         <button
           type="submit"
-          disabled={
-            isLoading ||
-            sampleTypesLoading ||
-            genresLoading
-          }
+          disabled={isLoading || categoriesLoading || sampleTypesLoading || genresLoading}
           className="mt-2 rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50"
         >
-          {isLoading
-            ? "Creating..."
-            : "Create Sample"}
+          {isLoading ? "Creating..." : "Create Sample"}
         </button>
       </form>
     </div>
