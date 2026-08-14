@@ -1,60 +1,140 @@
 import { useState } from "react";
 import { useCreateSample } from "../../../hooks/sampleHooks";
+import {
+  useSampleTypes,
+  useGenres,
+} from "../../../hooks/filterHooks";
+
+type SampleCategory = "sample" | "loop" | "track or stem";
 
 const CreateSample = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
+
   const [samplePackId, setSamplePackId] = useState<string>("");
-  const [category, setCategory] = useState<"sample" | "loop" | "track or stem">("sample");
-  const [sampleType, setSampleType] = useState<"DRUMS" | "BASS" | "MIDS" | "HIGHS" | "VOCALS">("DRUMS");
+
+  const [category, setCategory] =
+    useState<SampleCategory[]>(["sample"]);
+
+  const [sampleType, setSampleType] = useState<string[]>([]);
+
+  const [genres, setGenres] = useState<string[]>([]);
+
   const [isSelling, setIsSelling] = useState(false);
-  const [genres, setGenres] = useState("");
+
   const [metadata, setMetadata] = useState("");
 
-  const { createSample, isLoading, error } = useCreateSample();
+  const {
+    createSample,
+    isLoading,
+    error,
+  } = useCreateSample();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const {
+    sampleTypes: sampleTypeOptions,
+    isLoading: sampleTypesLoading,
+  } = useSampleTypes();
+
+  const {
+    genres: genreOptions,
+    isLoading: genresLoading,
+  } = useGenres();
+
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
+
+    if (!name.trim()) {
+      alert("Name is required");
+      return;
+    }
 
     if (!audioFile) {
       alert("Audio file is required.");
       return;
     }
 
+    if (!sampleType) {
+      alert("Sample type is required.");
+      return;
+    }
+
+    const isAudio =
+      audioFile.type.startsWith("audio/") ||
+      audioFile.name.toLowerCase().endsWith(".wav") ||
+      audioFile.name.toLowerCase().endsWith(".mp3");
+
+    if (!isAudio) {
+      alert(
+        "Please select a valid audio file (.wav, .mp3, etc.)"
+      );
+      return;
+    }
+
     let parsedMetadata = {};
+
     if (metadata.trim()) {
       try {
         parsedMetadata = JSON.parse(metadata);
-      }
-      catch (e) {
+      } catch {
         alert("Invalid JSON in metadata field.");
         return;
       }
     }
 
-    const processedGenres = genres.split(",").map((g) => g.trim()).filter(Boolean);
+    const formData = new FormData();
 
-    const isAudio = audioFile.type.startsWith("audio/") ||
-      audioFile.name.endsWith(".wav") ||
-      audioFile.name.endsWith(".mp3");
+    formData.append(
+      "name",
+      name.trim()
+    );
 
-    if (!isAudio) {
-      alert("Please select a valid audio file (.wav, .mp3, etc)");
-      return;
+    formData.append(
+      "audio_file",
+      audioFile
+    );
+
+    // Backend expects JSON.parse()
+    formData.append(
+      "category",
+      JSON.stringify(category)
+    );
+
+    formData.append(
+      "sample_type",
+      JSON.stringify(sampleType)
+    );
+
+    formData.append(
+      "genres",
+      JSON.stringify(genres)
+    );
+
+   formData.append(
+  "is_selling",
+  String(isSelling)
+);
+
+    formData.append(
+      "metadata",
+      JSON.stringify(parsedMetadata)
+    );
+
+    if (description.trim()) {
+      formData.append(
+        "description",
+        JSON.stringify(description.trim())
+      );
     }
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("audio_file", audioFile);
-    formData.append("category", category);
-    formData.append("sample_type", sampleType);
-    formData.append("is_selling", String(isSelling));
-    formData.append("genres", JSON.stringify(processedGenres));
-    formData.append("metadata", JSON.stringify(parsedMetadata));
-
-    if (description) formData.append("description", description);
-    if (samplePackId) formData.append("sample_pack_id", samplePackId);
+    if (samplePackId) {
+      formData.append(
+        "sample_pack_id",
+        JSON.stringify(Number(samplePackId))
+      );
+    }
 
     try {
       await createSample(formData);
@@ -64,92 +144,299 @@ const CreateSample = () => {
       setName("");
       setDescription("");
       setAudioFile(null);
-      setGenres("");
+      setSamplePackId("");
+      setCategory(["sample"]);
+      setSampleType([]);
+      setGenres([]);
+      setIsSelling(false);
       setMetadata("");
 
-      const fileInput = document.getElementById("audioFile") as HTMLInputElement;
-      if (fileInput) fileInput.value = "";
-    }
-    catch (err: any) {
+      const fileInput = document.getElementById(
+        "audioFile"
+      ) as HTMLInputElement;
+
+      if (fileInput) {
+        fileInput.value = "";
+      }
+    } catch (err: any) {
       alert("Error: " + err.message);
     }
   };
 
   return (
     <div>
-      <h2 className="mb-6 text-xl font-semibold">Create Sample</h2>
+      <h2 className="mb-6 text-xl font-semibold">
+        Create Sample
+      </h2>
 
-      {error && <div className="mb-4 text-red-600">{error}</div>}
+      {error && (
+        <div className="mb-4 text-red-600">
+          {error}
+        </div>
+      )}
 
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <div className="md:col-span-2">
-          <label className="mb-1 block text-sm font-medium text-gray-700">Name *</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required disabled={isLoading} className="w-full rounded border border-gray-300 p-2 disabled:bg-gray-100" />
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col gap-5"
+      >
+        {/* Name */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Name *
+          </label>
+
+          <input
+            type="text"
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+            required
+            disabled={isLoading}
+            placeholder="Enter sample name"
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          />
         </div>
 
-        <div className="md:col-span-2">
-          <label className="mb-1 block text-sm font-medium text-gray-700">Audio File *</label>
+        {/* Audio File */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Audio File *
+          </label>
+
           <input
             id="audioFile"
             type="file"
             accept="audio/*,.wav,.mp3"
-            onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
             required
             disabled={isLoading}
-            className="w-full rounded border border-gray-300 p-2 bg-white disabled:bg-gray-100"
+            onChange={(e) =>
+              setAudioFile(
+                e.target.files
+                  ? e.target.files[0]
+                  : null
+              )
+            }
+            className="w-full rounded border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
         </div>
 
+        {/* Sample Pack ID */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Sample Pack ID</label>
-          <input type="number" value={samplePackId} onChange={(e) => setSamplePackId(e.target.value)} disabled={isLoading} className="w-full rounded border border-gray-300 p-2 disabled:bg-gray-100" />
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Sample Pack ID
+          </label>
+
+          <input
+            type="number"
+            value={samplePackId}
+            onChange={(e) =>
+              setSamplePackId(e.target.value)
+            }
+            disabled={isLoading}
+            placeholder="Optional"
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          />
+
+          <p className="mt-1 text-xs text-gray-500">
+            Leave empty to create a standalone sample.
+          </p>
         </div>
 
+        {/* Category */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Category *</label>
-          <select value={category} onChange={(e) => setCategory(e.target.value as any)} disabled={isLoading} className="w-full rounded border border-gray-300 p-2 bg-white disabled:bg-gray-100">
-            <option value="sample">Sample</option>
-            <option value="loop">Loop</option>
-            <option value="track or stem">Track / Stem</option>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Category *
+          </label>
+
+          <select
+            value={category}
+            onChange={(e) =>
+              setCategory(
+                [e.target.value as SampleCategory]
+              )
+            }
+            disabled={isLoading}
+            className="w-full rounded border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          >
+            <option value="sample">
+              Sample
+            </option>
+
+            <option value="loop">
+              Loop
+            </option>
+
+            <option value="track or stem">
+              Track / Stem
+            </option>
           </select>
         </div>
 
+        {/* Sample Types */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Type *</label>
-          <select value={sampleType} onChange={(e) => setSampleType(e.target.value as any)} disabled={isLoading} className="w-full rounded border border-gray-300 p-2 bg-white disabled:bg-gray-100">
-            <option value="DRUMS">Drums</option>
-            <option value="BASS">Bass</option>
-            <option value="MIDS">Mids</option>
-            <option value="HIGHS">Highs</option>
-            <option value="VOCALS">Vocals</option>
-          </select>
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Sample Type *
+          </label>
+
+          {sampleTypesLoading ? (
+            <p className="text-sm text-gray-500">
+              Loading sample types...
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
+              {sampleTypeOptions.map(
+                (sampleTypeOption) => (
+                  <label
+                    key={sampleTypeOption.id}
+                    className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50"
+                  >
+                    <input
+                      type="radio"
+                      name="sampleType"
+                      value={sampleTypeOption.name}
+                      checked={sampleType.includes(sampleTypeOption.name)}
+                      onChange={() =>
+                        setSampleType([sampleTypeOption.name])
+                      }
+                      disabled={isLoading}
+                      className="h-4 w-4"
+                    />
+
+                    <span className="text-sm text-gray-700">
+                      {sampleTypeOption.name}
+                    </span>
+                  </label>
+                )
+              )}
+            </div>
+          )}
         </div>
 
+        {/* Genres */}
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Genres (Comma separated) *</label>
-          <input type="text" value={genres} onChange={(e) => setGenres(e.target.value)} required disabled={isLoading} placeholder="e.g. Hip-Hop, Trap, Lo-Fi" className="w-full rounded border border-gray-300 p-2 disabled:bg-gray-100" />
+          <label className="mb-2 block text-sm font-medium text-gray-700">
+            Genres
+          </label>
+
+          {genresLoading ? (
+            <p className="text-sm text-gray-500">
+              Loading genres...
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-2 rounded border border-gray-300 p-3 md:grid-cols-3">
+              {genreOptions.map((genre) => (
+                <label
+                  key={genre.id}
+                  className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50"
+                >
+                  <input
+                    type="checkbox"
+                    checked={genres.includes(
+                      genre.name
+                    )}
+                   onChange={(e) => {
+                  if (e.target.checked) {
+                    setGenres((prev) => [
+                      ...prev,
+                      genre.name,
+                    ]);
+                  } else {
+                    setGenres((prev) =>
+                      prev.filter(
+                        (name) => name !== genre.name
+                      )
+                    );
+                  }
+                }}
+                    disabled={isLoading}
+                    className="h-4 w-4"
+                  />
+
+                  <span className="text-sm text-gray-700">
+                    {genre.name}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
         </div>
 
-        <div className="md:col-span-2 flex items-center gap-2">
-          <input type="checkbox" id="isSelling" checked={isSelling} disabled={isLoading} onChange={(e) => setIsSelling(e.target.checked)} className="h-4 w-4" />
-          <label htmlFor="isSelling" className="text-sm font-medium text-gray-700">For Sale?</label>
+        {/* Is Selling */}
+        <div className="flex items-center gap-2">
+          <input
+            id="isSelling"
+            type="checkbox"
+            checked={isSelling}
+            onChange={(e) =>
+              setIsSelling(e.target.checked)
+            }
+            disabled={isLoading}
+            className="h-4 w-4"
+          />
+
+          <label
+            htmlFor="isSelling"
+            className="text-sm font-medium text-gray-700"
+          >
+            Make this sample available for sale
+          </label>
         </div>
 
-        <div className="md:col-span-2">
-          <label className="mb-1 block text-sm font-medium text-gray-700">Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} disabled={isLoading} className="w-full rounded border border-gray-300 p-2 disabled:bg-gray-100" rows={2} />
+        {/* Description */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Description
+          </label>
+
+          <textarea
+            value={description}
+            onChange={(e) =>
+              setDescription(e.target.value)
+            }
+            disabled={isLoading}
+            rows={4}
+            placeholder="Describe this sample..."
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          />
         </div>
 
-        <div className="md:col-span-2">
-          <label className="mb-1 block text-sm font-medium text-gray-700">Metadata (Valid JSON Format)</label>
-          <textarea value={metadata} onChange={(e) => setMetadata(e.target.value)} disabled={isLoading} placeholder='{"bpm": 120, "key": "C minor"}' className="w-full rounded border border-gray-300 p-2 font-mono text-sm disabled:bg-gray-100" rows={3} />
+        {/* Metadata */}
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Metadata
+          </label>
+
+          <textarea
+            value={metadata}
+            onChange={(e) =>
+              setMetadata(e.target.value)
+            }
+            disabled={isLoading}
+            rows={4}
+            placeholder='{"bpm": 120, "key": "C minor"}'
+            className="w-full rounded border border-gray-300 p-2 font-mono text-sm focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          />
+
+          <p className="mt-1 text-xs text-gray-500">
+            Must be valid JSON.
+          </p>
         </div>
 
-        <div className="md:col-span-2">
-          <button type="submit" disabled={isLoading} className="w-full mt-2 rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50">
-            {isLoading ? "Creating..." : "Create Sample"}
-          </button>
-        </div>
+        {/* Submit */}
+        <button
+          type="submit"
+          disabled={
+            isLoading ||
+            sampleTypesLoading ||
+            genresLoading
+          }
+          className="mt-2 rounded bg-blue-600 p-2 text-white hover:bg-blue-700 disabled:opacity-50"
+        >
+          {isLoading
+            ? "Creating..."
+            : "Create Sample"}
+        </button>
       </form>
     </div>
   );
