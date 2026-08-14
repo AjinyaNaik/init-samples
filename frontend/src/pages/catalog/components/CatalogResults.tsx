@@ -85,7 +85,9 @@ export default function CatalogResults({
             results.map((result, index) => {
               const title = result.name || "Untitled";
               const genreLabel = Array.isArray(result.genres) ? result.genres.join(", ") : (result.genre || "Global");
-              const artworkUrl = result.cover_image || "";
+              const artworkUrl = activeFormat === "packs"
+                ? (result.cover_image || "")
+                : "/wave-image-fallback.png";
               const price = result.is_selling ? "$ Buy" : "FREE";
               const packName = activeFormat !== "packs" && result.sample_pack ? result.sample_pack.name : null;
 
