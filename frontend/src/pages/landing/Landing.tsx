@@ -100,7 +100,7 @@ export default function Landing() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                 >
                     High-quality, royalty-free audio samples and loops designed for modern music producers.
-                    Elevate your tracks with our premium, meticulously engineered sample packs.
+                    <strong>NO AI SAMPLES.</strong> All content is human-recorded and produced by professional sound designers. 
                 </motion.p>
 
                 {/* Animated Button */}
