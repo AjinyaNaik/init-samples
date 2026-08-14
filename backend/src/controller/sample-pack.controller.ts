@@ -8,7 +8,7 @@ import {
   StandardResponse,
   SamplePackResponseData
 } from "./dtos/sample-pack.dto";
-import { getFilterNamesByIds } from "../repository/filter.repository";
+import { CreateSamplePackData } from "../service/dtos/sample-pack.dto";
 
 export const createSamplePack = async (
   req: Request<{}, {}, CreateSamplePackRequest>,
@@ -26,8 +26,6 @@ export const createSamplePack = async (
       );
     }
 
-    // FormData sends arrays as JSON strings,
-    // so convert them back to string arrays.
     const categories: string[] = JSON.parse(
       req.body.category || "[]"
     );
@@ -40,7 +38,6 @@ export const createSamplePack = async (
       req.body.genres || "[]"
     );
 
-    // Category is required
     if (categories.length === 0) {
       return res.status(400).json({
         success: false,
@@ -48,21 +45,17 @@ export const createSamplePack = async (
       });
     }
 
-    const payload = {
+    const payload: CreateSamplePackData = {
       name: req.body.name,
       description: req.body.description || null,
-
-      category: categories,
-      sample_type: sampleTypes,
-      genres: genres,
-
-      is_selling: req.body.is_selling === "true",
-
       cover_image: coverUrl,
+      category: categories,      
+      sample_type: sampleTypes,   
+      genres: genres,             
+      is_selling: req.body.is_selling === "true", 
     };
 
-    const samplePack =
-      await samplePackService.createSamplePack(payload);
+    const samplePack = await samplePackService.createSamplePack(payload);
 
     return res.status(201).json({
       success: true,
