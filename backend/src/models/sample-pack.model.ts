@@ -10,6 +10,7 @@ interface SamplePackAttributes {
   sample_type: string[];
   genres: string[] | null;
   is_selling: boolean; // <-- Added
+  download_count: number;
   created_at: Date;
   updated_at: Date;
 }
@@ -24,6 +25,7 @@ interface SamplePackCreationAttributes
     | "sample_type"
     | "genres"
     | "is_selling" // <-- Added
+    | "download_count" // <-- Added
     | "created_at"
     | "updated_at"
   > {}
@@ -43,6 +45,7 @@ class SamplePack
   declare sample_type: string[];
   declare genres: string[] | null;
   declare is_selling: boolean; // <-- Added
+  declare download_count: number;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -86,6 +89,11 @@ SamplePack.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
+    },
+     download_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
 
     created_at: {

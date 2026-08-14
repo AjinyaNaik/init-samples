@@ -12,6 +12,7 @@ interface SampleAttributes {
   is_selling: boolean;
   genres: string[] | null;
   metadata: Record<string, any>;
+  download_count: number;
   created_at: Date;
   updated_at: Date;
 }
@@ -24,6 +25,7 @@ interface SampleCreationAttributes
     | "sample_pack_id"
     | "is_selling"
     | "metadata"
+    | "download_count"
     | "created_at"
     | "updated_at"
   > {}
@@ -45,6 +47,7 @@ class Sample
   declare is_selling: boolean;
   declare genres: string[] | null;
   declare metadata: Record<string, any>;
+  declare download_count: number;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -97,6 +100,11 @@ Sample.init(
       type: DataTypes.JSON,
       allowNull: true,
       defaultValue: {},
+    },
+    download_count: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 0,
     },
     created_at: {
       type: DataTypes.DATE,
