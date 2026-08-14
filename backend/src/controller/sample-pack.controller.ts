@@ -26,31 +26,43 @@ export const createSamplePack = async (
       );
     }
 
-    //Convert the request body to the service DTO format
-    const categoryIds = JSON.parse(req.body.category || "[]");
-    const sampleTypeIds = JSON.parse(req.body.sample_type || "[]");
-    const genreIds = JSON.parse(req.body.genres || "[]");
+    // FormData sends arrays as JSON strings,
+    // so convert them back to string arrays.
+    const categories: string[] = JSON.parse(
+      req.body.category || "[]"
+    );
 
-    const filters = await getFilterNamesByIds(
-  categoryIds,
-  sampleTypeIds,
-  genreIds
-);
+    const sampleTypes: string[] = JSON.parse(
+      req.body.sample_type || "[]"
+    );
 
-const payload = {
-  name: req.body.name,
-  description: req.body.description,
+    const genres: string[] = JSON.parse(
+      req.body.genres || "[]"
+    );
 
-  category: filters.categories,
-  sample_type: filters.sampleTypes,
-  genres: filters.genres,
+    // Category is required
+    if (categories.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "At least one category is required",
+      });
+    }
 
-  is_selling: req.body.is_selling === "true",
+    const payload = {
+      name: req.body.name,
+      description: req.body.description || null,
 
-  cover_image: coverUrl,
-};
+      category: categories,
+      sample_type: sampleTypes,
+      genres: genres,
 
-    const samplePack = await samplePackService.createSamplePack(payload);
+      is_selling: req.body.is_selling === "true",
+
+      cover_image: coverUrl,
+    };
+
+    const samplePack =
+      await samplePackService.createSamplePack(payload);
 
     return res.status(201).json({
       success: true,
