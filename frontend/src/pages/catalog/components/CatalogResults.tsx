@@ -22,7 +22,7 @@ export default function CatalogResults({
   const handleRouteToDetail = (id: number) => {
     if (activeFormat === "packs") {
       navigate(`/catalog/pack/${id}`);
-    } 
+    }
     else {
       navigate(`/catalog/sample/${id}`);
     }
@@ -30,6 +30,20 @@ export default function CatalogResults({
 
   return (
     <div className="md:col-span-3">
+
+      <style>{`
+        @keyframes neon-flicker {
+          0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+            text-shadow: 0 0 4px #d8b4fe, 0 0 10px #a855f7;
+            opacity: 1;
+          }
+          20%, 24%, 55% {
+            text-shadow: none;
+            opacity: 0.6;
+          }
+        }
+      `}</style>
+
       <div
         className="border border-zinc-800 rounded-2xl p-6 md:p-8 shadow-sm h-full flex flex-col"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.8)" }}
@@ -73,16 +87,16 @@ export default function CatalogResults({
               const genreLabel = Array.isArray(result.genres) ? result.genres.join(", ") : (result.genre || "Global");
               const artworkUrl = result.cover_image || "";
               const price = result.is_selling ? "$ Buy" : "FREE";
+              const packName = activeFormat !== "packs" && result.sample_pack ? result.sample_pack.name : null;
 
               return (
                 <div
                   key={result.id}
                   onClick={() => handleRouteToDetail(result.id)}
-                  className={`flex flex-row items-center py-5 transition-colors duration-200 group rounded-xl px-4 cursor-pointer hover:bg-zinc-800/50 ${
-                    index !== results.length - 1 ? "border-b border-zinc-800/50 mb-1" : ""
-                  }`}
+                  className={`flex flex-row items-center py-5 transition-colors duration-200 group rounded-xl px-4 cursor-pointer hover:bg-zinc-800/50 ${index !== results.length - 1 ? "border-b border-zinc-800/50 mb-1" : ""
+                    }`}
                 >
-                  <div 
+                  <div
                     className="w-16 h-16 bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-6 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.2)] transition-all duration-305 bg-cover bg-center"
                     style={artworkUrl ? { backgroundImage: `url(${artworkUrl})` } : undefined}
                   ></div>
@@ -91,19 +105,36 @@ export default function CatalogResults({
                     <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200">
                       {title}
                     </h3>
-                    <p className="text-zinc-500 text-sm mt-1">{genreLabel}</p>
+                    <p className="text-zinc-500 text-sm mt-1 flex flex-wrap items-center gap-1">
+                      <span>{genreLabel}</span>
+                      {packName && (
+                        <span className="text-zinc-500 font-normal ml-1">
+                          &bull; Part of{" "}
+                          <span
+                            className="text-purple-300 transition-all duration-300 tracking-wide text-xs px-1 hover:text-purple-400"
+                            style={{
+                              fontFamily: "'Shrikhand', cursive",
+                              animation: "neon-flicker 4s infinite alternate"
+                            }}
+                          >
+                            {packName}
+                          </span>{" "}
+                          pack.
+                        </span>
+                      )}
+                    </p>
                   </div>
 
                   <div className="flex items-center gap-6">
                     <span className={`font-semibold ${price === "FREE" ? "text-purple-400" : "text-zinc-300"}`}>
                       {price}
                     </span>
-                    <button 
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRouteToDetail(result.id);
                       }}
-                      className="px-5 py-2.5 bg-zinc-800 group-hover:bg-zinc-700 text-zinc-100 rounded-lg font-medium transition-colors hidden md:block"
+                      className="px-5 py-2.5 bg-zinc-800 text-zinc-100 rounded-lg font-medium transition-all duration-300 transform active:scale-95 hover:scale-105 hover:bg-purple-600 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.5)] cursor-pointer hidden md:block"
                     >
                       Preview
                     </button>
