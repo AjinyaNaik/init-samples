@@ -75,3 +75,29 @@ export const useFilteredSamplePacks = () => {
 
   return { samplePacks, fetchFilteredSamplePacks, isLoading, error };
 };
+
+export const useSamplePackDetail = () => {
+  const [pack, setPack] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSamplePackDetail = async (id: string | undefined) => {
+    if (!id) return;
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:3000/admin/sample-packs/${id}`);
+      const json = await response.json();
+      if (!response.ok) throw new Error(json.message || "Failed to load pack");
+      setPack(json.data);
+      return json.data;
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { pack, fetchSamplePackDetail, isLoading, error };
+};

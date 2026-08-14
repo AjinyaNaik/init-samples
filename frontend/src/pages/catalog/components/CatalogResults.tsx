@@ -1,3 +1,5 @@
+import { useNavigate } from "react-router-dom";
+
 interface CatalogResultsProps {
   activeCategory: string;
   activeFormat: string;
@@ -15,6 +17,17 @@ export default function CatalogResults({
   results,
   isLoading,
 }: CatalogResultsProps) {
+  const navigate = useNavigate();
+
+  const handleRouteToDetail = (id: number) => {
+    if (activeFormat === "packs") {
+      navigate(`/catalog/pack/${id}`);
+    } 
+    else {
+      navigate(`/catalog/sample/${id}`);
+    }
+  };
+
   return (
     <div className="md:col-span-3">
       <div
@@ -56,7 +69,6 @@ export default function CatalogResults({
             <p className="text-zinc-400 text-lg py-20 text-center animate-pulse">Fetching catalogs...</p>
           ) : (
             results.map((result, index) => {
-              // Graceful property mappings for both packs and samples
               const title = result.name || "Untitled";
               const genreLabel = Array.isArray(result.genres) ? result.genres.join(", ") : (result.genre || "Global");
               const artworkUrl = result.cover_image || "";
@@ -65,6 +77,7 @@ export default function CatalogResults({
               return (
                 <div
                   key={result.id}
+                  onClick={() => handleRouteToDetail(result.id)}
                   className={`flex flex-row items-center py-5 transition-colors duration-200 group rounded-xl px-4 cursor-pointer hover:bg-zinc-800/50 ${
                     index !== results.length - 1 ? "border-b border-zinc-800/50 mb-1" : ""
                   }`}
@@ -85,7 +98,13 @@ export default function CatalogResults({
                     <span className={`font-semibold ${price === "FREE" ? "text-purple-400" : "text-zinc-300"}`}>
                       {price}
                     </span>
-                    <button className="px-5 py-2.5 bg-zinc-800 group-hover:bg-zinc-700 text-zinc-100 rounded-lg font-medium transition-colors hidden md:block">
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRouteToDetail(result.id);
+                      }}
+                      className="px-5 py-2.5 bg-zinc-800 group-hover:bg-zinc-700 text-zinc-100 rounded-lg font-medium transition-colors hidden md:block"
+                    >
                       Preview
                     </button>
                   </div>

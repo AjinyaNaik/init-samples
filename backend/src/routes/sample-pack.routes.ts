@@ -26,7 +26,7 @@ router.post(
   createSamplePack
 );
 router.get("/", authMiddleware, adminMiddleware, getSamplePacks);
-router.get("/:id", authMiddleware, adminMiddleware, getSamplePack);
+router.get("/:id", getSamplePack);
 router.put(
   "/:id", 
   authMiddleware, 

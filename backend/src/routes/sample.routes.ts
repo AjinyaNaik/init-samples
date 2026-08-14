@@ -26,7 +26,7 @@ router.post(
 );
 
 router.get("/", authMiddleware, adminMiddleware, getSamples);
-router.get("/:id", authMiddleware, adminMiddleware, getSample);
+router.get("/:id", getSample);
 
 router.put(
   "/:id", 
