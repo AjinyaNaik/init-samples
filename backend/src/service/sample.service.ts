@@ -60,7 +60,7 @@ export const createSample = async (
     sample_pack_id: data.sample_pack_id ?? null,
     category: data.category,
     sample_type: data.sample_type,
-    is_selling: data.is_selling ?? false,
+    can_preview: data.can_preview ?? false,
     genres: data.genres,
     metadata: data.metadata ?? {},
   });
@@ -89,7 +89,6 @@ export const getFilteredSamples = async (filters: SampleFilterParams) => {
         category: sample.category || [],
         sample_type: sample.sample_type || [],
         genres: sample.genres || [],
-        is_selling: sample.is_selling ?? false, 
       },
       filters
     );

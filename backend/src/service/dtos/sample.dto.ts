@@ -6,7 +6,7 @@ export interface CreateSampleData {
   sample_pack_id?: number | null;
   category: string[];
   sample_type: string[];
-  is_selling?: boolean;
+  can_preview?: boolean;
   genres: string[];
   metadata?: Record<string, any>;
 }
@@ -18,7 +18,7 @@ export interface UpdateSampleData {
   sample_pack_id?: number | null;
   category?: string[];
   sample_type?: string[];
-  is_selling?: boolean;
+  can_preview?: boolean;
   genres?: string[];
   metadata?: Record<string, any>;
 }

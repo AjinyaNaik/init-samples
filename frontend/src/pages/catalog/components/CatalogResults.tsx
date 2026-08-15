@@ -88,7 +88,7 @@ export default function CatalogResults({
               const artworkUrl = activeFormat === "packs"
                 ? (result.cover_image || "")
                 : "/wave-image-fallback.png";
-              const price = result.is_selling ? "$ Buy" : "FREE";
+              const price =  "$ Buy";
               const packName = activeFormat !== "packs" && result.sample_pack ? result.sample_pack.name : null;
 
               return (
@@ -128,7 +128,7 @@ export default function CatalogResults({
                   </div>
 
                   <div className="flex items-center gap-6">
-                    <span className={`font-semibold ${price === "FREE" ? "text-purple-400" : "text-zinc-300"}`}>
+                    <span className="font-semibold text-zinc-300">
                       {price}
                     </span>
                     <button

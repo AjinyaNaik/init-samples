@@ -45,7 +45,6 @@ export const createSample = async (
     const genres = req.body.genres ? JSON.parse(req.body.genres) : [];
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : null;
-    const isSelling = req.body.is_selling === "true";
 
     const payload: CreateSampleData = {
       name: req.body.name,
@@ -55,7 +54,6 @@ export const createSample = async (
       sample_pack_id: samplePackId,
       category,
       sample_type: sampleType,
-      is_selling: isSelling,
       genres,
       metadata,
     };
@@ -179,7 +177,6 @@ export const updateSample = async (
     const genres = req.body.genres ? JSON.parse(req.body.genres) : undefined;
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : undefined;
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : undefined;
-    const isSelling = req.body.is_selling !== undefined ? req.body.is_selling === "true" : undefined;
 
     const payload: UpdateSampleData = {
       ...req.body,
@@ -189,7 +186,6 @@ export const updateSample = async (
       ...(genres && { genres }),
       ...(metadata && { metadata }),
       ...(samplePackId !== undefined && { sample_pack_id: samplePackId }),
-      ...(isSelling !== undefined && { is_selling: isSelling }),
     };
 
     const sample = await sampleService.updateSample(id, payload);

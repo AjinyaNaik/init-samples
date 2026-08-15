@@ -16,7 +16,7 @@ const CreateSample = () => {
   const [sampleType, setSampleType] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
 
-  const [isSelling, setIsSelling] = useState(false);
+  const [canPreview, setCanPreview] = useState(false);
   const [metadata, setMetadata] = useState("");
 
   const { createSample, isLoading, error } = useCreateSample();
@@ -85,7 +85,7 @@ const CreateSample = () => {
     formData.append("category", JSON.stringify(category));
     formData.append("sample_type", JSON.stringify(sampleType));
     formData.append("genres", JSON.stringify(genres));
-    formData.append("is_selling", String(isSelling));
+    formData.append("can_preview", String(canPreview));
     formData.append("metadata", JSON.stringify(parsedMetadata));
 
     if (description.trim()) {
@@ -108,7 +108,7 @@ const CreateSample = () => {
       setCategory([]);
       setSampleType([]);
       setGenres([]);
-      setIsSelling(false);
+      setCanPreview(false);
       setMetadata("");
 
       const fileInput = document.getElementById("audioFile") as HTMLInputElement;
@@ -142,20 +142,42 @@ const CreateSample = () => {
           />
         </div>
 
-        {/* Sample Pack ID */}
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Sample Pack ID</label>
-          <input
-            type="number"
-            value={samplePackId}
-            onChange={(e) => setSamplePackId(e.target.value)}
-            disabled={isLoading}
-            placeholder="Optional"
-            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
-          />
-          <p className="mt-1 text-xs text-gray-500 font-normal">
-            Leave empty to create a standalone sample.
-          </p>
+        {/* Sample Pack ID & canPreview conditional container */}
+        <div className="flex flex-col md:flex-row md:items-end gap-5">
+          {/* Sample Pack ID */}
+          <div className="flex-1">
+            <label className="mb-1 block text-sm font-medium text-gray-700">
+              Sample Pack ID
+            </label>
+            <input
+              type="number"
+              value={samplePackId}
+              onChange={(e) => setSamplePackId(e.target.value)}
+              disabled={isLoading}
+              placeholder="Optional"
+              className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+            />
+            <p className="mt-1 text-xs text-gray-500 font-normal">
+              Leave empty to create a standalone sample.
+            </p>
+          </div>
+
+          {/* Conditional Can Preview Checkbox */}
+          {samplePackId.trim() !== "" && (
+            <div className="flex items-center gap-2 pb-3 shrink-0 transition-opacity duration-300 animate-fade-in">
+              <input
+                id="canPreview"
+                type="checkbox"
+                checked={canPreview}
+                onChange={(e) => setCanPreview(e.target.checked)}
+                disabled={isLoading}
+                className="h-4 w-4"
+              />
+              <label htmlFor="canPreview" className="text-sm font-medium text-gray-700 font-normal cursor-pointer">
+                Can be previewed on site (leave unchecked to lock it)
+              </label>
+            </div>
+          )}
         </div>
 
         {/* Category */}
@@ -205,8 +227,8 @@ const CreateSample = () => {
                     className="flex cursor-pointer items-center gap-2 rounded p-2 hover:bg-gray-50 font-normal"
                   >
                     <input
-                      type="radio"            
-                      name="adminSampleType"   
+                      type="radio"
+                      name="adminSampleType"
                       checked={isChecked}
                       onChange={() => {
                         setSampleType([sampleTypeOption.name]);
@@ -293,21 +315,6 @@ const CreateSample = () => {
             onChange={(e) => setAudioFile(e.target.files ? e.target.files[0] : null)}
             className="w-full rounded border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
-        </div>
-
-        {/* Is Selling */}
-        <div className="flex items-center gap-2">
-          <input
-            id="isSelling"
-            type="checkbox"
-            checked={isSelling}
-            onChange={(e) => setIsSelling(e.target.checked)}
-            disabled={isLoading}
-            className="h-4 w-4"
-          />
-          <label htmlFor="isSelling" className="text-sm font-medium text-gray-700 font-normal cursor-pointer">
-            Make this sample available for sale
-          </label>
         </div>
 
         {/* Submit */}

@@ -22,7 +22,6 @@ export const createSamplePack = async (
     category: data.category ?? [],
     sample_type: data.sample_type ?? [],
     genres: data.genres ?? [],
-    is_selling: data.is_selling ?? false,
   });
 };
 
@@ -40,7 +39,7 @@ export const getSamplePackById = async (id: number): Promise<SamplePackWithAssoc
   if (samplePack.samples) {
     for (const sample of samplePack.samples) {
       sample.audio_url = null;
-      if (!sample.is_selling) {
+      if (!sample.can_preview) {
         sample.preview_url = null;
       }
     }
@@ -58,7 +57,6 @@ export const getFilteredSamplePacks = async (filters: FilterParams) => {
         category: pack.category || [],
         sample_type: pack.sample_type || [],
         genres: pack.genres || [],
-        is_selling: pack.is_selling ?? false, 
       },
       filters
     );

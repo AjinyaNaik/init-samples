@@ -10,7 +10,7 @@ interface SampleAttributes {
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];
-  is_selling: boolean;
+  can_preview: boolean;
   genres: string[] | null;
   metadata: Record<string, any>;
   download_count: number;
@@ -25,7 +25,7 @@ interface SampleCreationAttributes
     | "description"
     | "preview_url"
     | "sample_pack_id"
-    | "is_selling"
+    | "can_preview"
     | "metadata"
     | "download_count"
     | "created_at"
@@ -47,7 +47,7 @@ class Sample
   declare sample_pack_id: number | null;
   declare category: string[];
   declare sample_type: string[];
-  declare is_selling: boolean;
+  declare can_preview: boolean;
   declare genres: string[] | null;
   declare metadata: Record<string, any>;
   declare download_count: number;
@@ -83,7 +83,7 @@ Sample.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    is_selling: {
+    can_preview: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,

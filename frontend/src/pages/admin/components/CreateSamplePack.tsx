@@ -15,7 +15,6 @@ const CreateSamplePack = () => {
   const [genres, setGenres] = useState<string[]>([]);
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
-  const [isSelling, setIsSelling] = useState(false);
 
   const {
     createSamplePack,
@@ -68,8 +67,6 @@ const CreateSamplePack = () => {
     formData.append("sample_type", JSON.stringify(sampleTypes));
     formData.append("genres", JSON.stringify(genres));
 
-    formData.append("is_selling", String(isSelling));
-
     if (coverImage) {
       formData.append("cover_image", coverImage);
     }
@@ -86,7 +83,6 @@ const CreateSamplePack = () => {
       setSampleTypes([]);
       setGenres([]);
       setCoverImage(null);
-      setIsSelling(false);
 
       const fileInput = document.getElementById(
         "coverImage"
@@ -308,27 +304,6 @@ const CreateSamplePack = () => {
             }
             className="w-full rounded border border-gray-300 bg-white p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
           />
-        </div>
-
-        {/* Is Selling */}
-        <div className="flex items-center gap-2">
-          <input
-            id="isSelling"
-            type="checkbox"
-            checked={isSelling}
-            onChange={(e) =>
-              setIsSelling(e.target.checked)
-            }
-            disabled={isLoading}
-            className="h-4 w-4"
-          />
-
-          <label
-            htmlFor="isSelling"
-            className="text-sm font-medium text-gray-700"
-          >
-            Make this sample pack available for sale
-          </label>
         </div>
 
         {/* Submit */}

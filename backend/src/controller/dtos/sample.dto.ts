@@ -4,7 +4,7 @@ export interface CreateSampleRequest {
   sample_pack_id?: string;
   category: string; 
   sample_type: string; 
-  is_selling: string;
+  can_preview: string;
   genres: string; 
   metadata?: string; 
 }
@@ -15,7 +15,7 @@ export interface UpdateSampleRequest {
   sample_pack_id?: string;
   category?: string;
   sample_type?: string;
-  is_selling?: string;
+  can_preview?: string;
   genres?: string;
   metadata?: string;
 }
@@ -34,7 +34,7 @@ export interface PublicSampleResponseData {
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];
-  is_selling: boolean;
+  can_preview: boolean;
   genres: string[] | null; 
   metadata: Record<string, any>;
   created_at: Date;

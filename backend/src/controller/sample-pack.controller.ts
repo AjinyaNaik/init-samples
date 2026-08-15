@@ -52,7 +52,6 @@ export const createSamplePack = async (
       category: categories,      
       sample_type: sampleTypes,   
       genres: genres,             
-      is_selling: req.body.is_selling === "true", 
     };
 
     const samplePack = await samplePackService.createSamplePack(payload);
