@@ -15,7 +15,8 @@ class OrderItem extends Model<
   declare id: CreationOptional<number>;
 
   declare order_id: number;
-  declare sample_id: number;
+  declare sample_id: number | null;
+  declare sample_pack_id: number | null;
 
   // Price at the time of purchase, in cents
   declare price: number;
@@ -39,7 +40,12 @@ OrderItem.init(
 
     sample_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+    },
+    
+    sample_pack_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
     },
 
     price: {
