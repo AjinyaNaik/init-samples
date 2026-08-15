@@ -10,7 +10,7 @@ const IS_DEV = process.env.NODE_ENV === "development";
 
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || "";
-const bucketName = process.env.SUPABASE_BUCKET_NAME || "samples-bucket";
+const bucketName = process.env.SUPABASE_BUCKET_NAME || "";
 
 const UPLOAD_DIR = path.join(__dirname, "../../uploads");
 
