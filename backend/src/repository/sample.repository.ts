@@ -1,5 +1,7 @@
 import Sample from "../models/sample.model";
 import SamplePack from "../models/sample-pack.model";
+import OrderItem from "../models/order_item.model";
+import Order from "../models/order.model";
 import { CreateSampleData, UpdateSampleData } from "../service/dtos/sample.dto";
 
 const samplePackInclude = {
@@ -120,4 +122,48 @@ export const countByPackId = async (
       sample_pack_id,
     },
   });
+};
+
+export const findSamplesByIds = async (
+  sampleIds: number[]
+) => {
+  return await Sample.findAll({
+    where: {
+      id: sampleIds,
+    },
+  });
+};
+
+export const findSamplesByPackId = async (
+  samplePackId: number
+) => {
+  return await Sample.findAll({
+    where: {
+      sample_pack_id: samplePackId,
+    },
+  });
+};
+
+export const findPurchasedSamplesByUserId = async (
+  userId: number
+) => {
+  const orderItems = await OrderItem.findAll({
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+      {
+        model: Sample,
+        as: "sample",
+      },
+    ],
+    order: [["created_at", "DESC"]],
+  });
+
+  return orderItems;
 };

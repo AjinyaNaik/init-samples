@@ -1,4 +1,6 @@
 import * as orderRepository from "../repository/order.repository";
+import {findSamplesByIds, findSamplesByPackId, findPurchasedSamplesByUserId} from "../repository/sample.repository";
+import {findSamplePackById, } from "../repository/sample-pack.repository";
 import { CreateOrderData } from "./dtos/order.dto";
 
 const DUMMY_SAMPLE_PRICE = 100;
@@ -24,7 +26,7 @@ export const createOrder = async (
    */
   const standaloneSamples =
     sampleIds.length > 0
-      ? await orderRepository.findSamplesByIds(sampleIds)
+      ? await findSamplesByIds(sampleIds)
       : [];
 
   /*
@@ -41,7 +43,7 @@ export const createOrder = async (
 
   for (const packId of samplePackIds) {
   const pack =
-    await orderRepository.findSamplePackById(packId);
+    await findSamplePackById(packId);
 
   if (!pack) {
     throw new Error(
@@ -50,7 +52,7 @@ export const createOrder = async (
   }
 
   const samples =
-    await orderRepository.findSamplesByPackId(packId);
+    await findSamplesByPackId(packId);
 
   packSamples.push(...samples);
 }
@@ -161,7 +163,7 @@ export const getMyPurchasedSamples = async (
   userId: number
 ) => {
   const orderItems =
-    await orderRepository.findPurchasedSamplesByUserId(
+    await findPurchasedSamplesByUserId(
       userId
     );
 

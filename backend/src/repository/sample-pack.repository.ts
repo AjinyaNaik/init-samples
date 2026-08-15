@@ -65,3 +65,10 @@ export const remove = async (id: number) => {
     where: { id },
   });
 };
+
+
+export const findSamplePackById = async (
+  samplePackId: number
+) => {
+  return await SamplePack.findByPk(samplePackId);
+};
