@@ -10,7 +10,9 @@ const IS_DEV = process.env.NODE_ENV === "development";
 
 const supabaseUrl = process.env.SUPABASE_URL || "";
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || "";
-const bucketName = process.env.SUPABASE_BUCKET_NAME || "";
+const bucketForImages = process.env.BUCKET_FOR_IMAGES || "";
+const bucketForMainAudio = process.env.BUCKET_FOR_MAIN_AUDIO || "";
+const bucketForNonMainAudio = process.env.BUCKET_FOR_NON_MAIN_AUDIO || "";
 
 const UPLOAD_DIR = path.join(__dirname, "../../uploads");
 
@@ -19,9 +21,18 @@ let supabase: ReturnType<typeof createClient> | null = null;
 if (!IS_DEV) {
   if (!supabaseUrl || !supabaseKey) {
     console.warn("WARNING: Supabase URL or Key is missing from environment variables.");
-  } 
-  else {
-    supabase = createClient(supabaseUrl, supabaseKey);
+  } else {
+    supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false 
+      },
+      global: {
+        headers: { 'x-my-custom-header': 'init-samples' },
+      },
+      realtime: {
+        websocket: () => ({}),
+      },
+    } as any);
   }
 }
 
@@ -46,7 +57,7 @@ export const uploadFileToBucket = async (
   fileBuffer: Buffer,
   originalName: string,
   mimeType: string,
-  folder: "covers" | "audio"  | "previews"
+  folder: string
 ): Promise<string> => {
   try {
     const extension = path.extname(originalName);
@@ -57,16 +68,22 @@ export const uploadFileToBucket = async (
       fs.writeFileSync(filePath, fileBuffer);
       const baseUrl = process.env.BASE_URL || "http://localhost:3000";
       return `${baseUrl}/uploads/${folder}/${uniqueFilename}`;
-    } 
+    }
     else {
       if (!supabase) {
         throw new Error("Supabase client is not initialized. Check your environment variables.");
       }
 
-      const uploadPath = `${folder}/${uniqueFilename}`;
-      
+      if (!bucketForImages || !bucketForMainAudio || !bucketForNonMainAudio) {
+        throw new Error("BUCKET_FOR_IMAGES, BUCKET_FOR_MAIN_AUDIO, and BUCKET_FOR_NON_MAIN_AUDIO must be defined in your environment.");
+      }
+
+      const targetBucket = folder;
+          
+      const uploadPath = uniqueFilename;
+
       const { error: uploadError } = await supabase.storage
-        .from(bucketName)
+        .from(targetBucket)
         .upload(uploadPath, fileBuffer, {
           contentType: mimeType,
           upsert: false,
@@ -77,12 +94,12 @@ export const uploadFileToBucket = async (
       }
 
       const { data: publicUrlData } = supabase.storage
-        .from(bucketName)
+        .from(targetBucket)
         .getPublicUrl(uploadPath);
 
       return publicUrlData.publicUrl;
     }
-  } 
+  }
   catch (error) {
     console.error("Storage Upload Error:", error);
     throw error;
@@ -98,7 +115,7 @@ export const uploadAudio = async (
     throw new Error("File must be an audio format");
   }
 
-  return await uploadFileToBucket(fileBuffer, originalName, mimeType, "audio");
+  return await uploadFileToBucket(fileBuffer, originalName, mimeType, bucketForMainAudio);
 };
 
 export const uploadImage = async (
@@ -110,10 +127,8 @@ export const uploadImage = async (
     throw new Error("File must be an image format");
   }
 
-  return await uploadFileToBucket(fileBuffer, originalName, mimeType, "covers");
+  return await uploadFileToBucket(fileBuffer, originalName, mimeType, bucketForImages);
 };
-
-
 
 export const createAudioPreview = async (
   buffer: Buffer,
@@ -186,6 +201,6 @@ export const uploadAudioPreview = async (
     fileBuffer,
     originalName,
     mimeType,
-    "previews"
+    bucketForNonMainAudio
   );
 };

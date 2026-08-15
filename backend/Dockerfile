@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -6,9 +6,7 @@ COPY package*.json ./
 RUN npm install
 
 #Installing ffmpeg for audio processing
-RUN apt-get update \
-    && apt-get install -y ffmpeg \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache ffmpeg
 
 COPY . .
 
