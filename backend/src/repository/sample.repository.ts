@@ -18,6 +18,7 @@ export const create = async (data: CreateSampleData) => {
     name: data.name,
     description: data.description ?? null,
     audio_url: data.audio_url,
+    preview_url: data.preview_url,
     sample_pack_id: data.sample_pack_id ?? null,
     category: data.category || [],
     sample_type: data.sample_type || [],

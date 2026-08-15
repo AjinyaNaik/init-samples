@@ -56,6 +56,7 @@ export const createSample = async (
     name: data.name.trim(),
     description: data.description ?? null,
     audio_url: data.audio_url.trim(),
+    preview_url: data.preview_url?.trim(),
     sample_pack_id: data.sample_pack_id ?? null,
     category: data.category,
     sample_type: data.sample_type,

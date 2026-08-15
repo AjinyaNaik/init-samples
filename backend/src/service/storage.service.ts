@@ -2,6 +2,9 @@ import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import path from "path";
 import fs from "fs";
+import ffmpeg from "fluent-ffmpeg";
+import os from "os";
+import crypto from "crypto";
 
 const IS_DEV = process.env.NODE_ENV === "development";
 
@@ -26,10 +29,14 @@ const ensureDirectoriesExist = () => {
   if (!IS_DEV) return;
 
   const audioDir = path.join(UPLOAD_DIR, "audio");
+  const previewsDir = path.join(UPLOAD_DIR, "previews");
   const coversDir = path.join(UPLOAD_DIR, "covers");
 
   if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR);
   if (!fs.existsSync(audioDir)) fs.mkdirSync(audioDir);
+  if (!fs.existsSync(previewsDir)) {
+    fs.mkdirSync(previewsDir);
+  }
   if (!fs.existsSync(coversDir)) fs.mkdirSync(coversDir);
 };
 
@@ -39,7 +46,7 @@ export const uploadFileToBucket = async (
   fileBuffer: Buffer,
   originalName: string,
   mimeType: string,
-  folder: "covers" | "audio"
+  folder: "covers" | "audio"  | "previews"
 ): Promise<string> => {
   try {
     const extension = path.extname(originalName);
@@ -104,4 +111,81 @@ export const uploadImage = async (
   }
 
   return await uploadFileToBucket(fileBuffer, originalName, mimeType, "covers");
+};
+
+
+
+export const createAudioPreview = async (
+  buffer: Buffer,
+  originalName: string
+): Promise<{
+  buffer: Buffer;
+  filename: string;
+  mimetype: string;
+}> => {
+  const tempId = crypto.randomUUID();
+
+  const extension = path.extname(originalName) || ".mp3";
+
+  const inputPath = path.join(
+    os.tmpdir(),
+    `${tempId}${extension}`
+  );
+
+  const outputPath = path.join(
+    os.tmpdir(),
+    `${tempId}-preview.mp3`
+  );
+
+  try {
+    // Write original audio temporarily
+    await fs.promises.writeFile(inputPath, buffer);
+
+    // Extract first 8 seconds
+    await new Promise<void>((resolve, reject) => {
+      ffmpeg(inputPath)
+        .setStartTime(0)
+        .setDuration(8)
+        .audioCodec("libmp3lame")
+        .audioBitrate("128k")
+        .output(outputPath)
+        .on("end", () => resolve())
+        .on("error", reject)
+        .run();
+    });
+
+    const previewBuffer = await fs.promises.readFile(outputPath);
+
+    return {
+      buffer: previewBuffer,
+      filename: `${path.basename(
+        originalName,
+        extension
+      )}-preview.mp3`,
+      mimetype: "audio/mpeg",
+    };
+  } finally {
+    // Clean up temporary files
+    await Promise.allSettled([
+      fs.promises.unlink(inputPath),
+      fs.promises.unlink(outputPath),
+    ]);
+  }
+};
+
+export const uploadAudioPreview = async (
+  fileBuffer: Buffer,
+  originalName: string,
+  mimeType: string
+): Promise<string> => {
+  if (mimeType !== "audio/mpeg") {
+    throw new Error("Preview must be an MP3 audio file");
+  }
+
+  return await uploadFileToBucket(
+    fileBuffer,
+    originalName,
+    mimeType,
+    "previews"
+  );
 };
