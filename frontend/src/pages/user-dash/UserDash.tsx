@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getStoredUser } from "../../utils/auth";
+import { useLogin } from "../../hooks/userHooks"; 
 
 export default function UserDash() {
   const navigate = useNavigate();
+  const { logout } = useLogin(); 
   const user = getStoredUser() || {
     id: 999,
     username: "producer_gareth",
@@ -81,6 +83,14 @@ export default function UserDash() {
               </span>
             </div>
           </div>
+
+          {/* === SIGN OUT BUTTON === */}
+          <button
+            onClick={logout} // <-- Trigger central session cleanup
+            className="text-center text-sm text-red-400 font-semibold hover:text-red-300 transition-all duration-300 py-3 bg-zinc-950 border border-zinc-800 rounded-xl hover:bg-red-950/20 hover:border-red-900/40 hover:shadow-[0_0_15px_rgba(239,68,68,0.15)] shadow-md mt-4 cursor-pointer"
+          >
+            Sign Out
+          </button>
         </div>
 
         {/* Right Side Column: Owned Content Box (Spans 3/5) */}
