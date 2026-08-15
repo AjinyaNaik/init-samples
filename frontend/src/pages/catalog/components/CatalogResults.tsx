@@ -33,13 +33,13 @@ export default function CatalogResults({
 
       <style>{`
         @keyframes neon-flicker {
-          0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+          0%, 9%, 11%, 13%, 15%, 30%, 32%, 50%, 52%, 53%, 55%, 68%, 70%, 100% {
             text-shadow: 0 0 4px #d8b4fe, 0 0 10px #a855f7;
             opacity: 1;
           }
-          20%, 24%, 55% {
+          10%, 14%, 31%, 51%, 54%, 69% {
             text-shadow: none;
-            opacity: 0.6;
+            opacity: 0.55;
           }
         }
       `}</style>

@@ -16,12 +16,54 @@ export default function SampleDetail() {
 
   return (
     <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-24 px-8 pb-32">
-      <div className="max-w-3xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-8 shadow-sm">
+
+      <style>{`
+        @keyframes sample-neon-flicker {
+          0%, 19%, 21%, 23%, 25%, 20%, 56%, 100% {
+            text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 40px #a855f7;
+            opacity: 1;
+          }
+          20%, 24%, 55% {
+            text-shadow: none;
+            opacity: 0.4;
+          }
+        }
+      `}</style>
+
+      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-16 shadow-sm">
         <button onClick={() => navigate(-1)} className="mb-6 text-sm text-purple-400 font-semibold hover:text-purple-300">
           &larr; Back to Catalog
         </button>
 
-        <h1 className="text-4xl font-bold mb-2 text-purple-300">{sample.name}</h1>
+        <h1
+          className="mb-4 text-purple-300 tracking-wide font-normal leading-tight" 
+          style={{
+            fontFamily: "'Shrikhand', cursive",
+            animation: "sample-neon-flicker 5s infinite alternate",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            width: "100%",
+
+            paddingTop: "30px",
+            paddingBottom: "30px",
+            paddingLeft: "30px",
+            paddingRight: "30px",
+            marginLeft: "-30px", 
+            marginRight: "-30px",
+
+            fontSize: sample.name.length <= 12
+              ? "calc(2.5rem + 1.7vw)"
+              : sample.name.length <= 20
+                ? "calc(1.8rem + 1.4vw)"
+                : sample.name.length <= 30
+                  ? "calc(1.4rem + 1vw)"
+                  : "calc(1.1rem + 0.7vw)"
+          }}
+        >
+          {sample.name}
+        </h1>
+
         <p className="text-zinc-500 mb-6">{sample.description || "No description provided."}</p>
 
         <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl mb-8 flex flex-col gap-4">
