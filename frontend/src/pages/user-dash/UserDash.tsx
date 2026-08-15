@@ -66,7 +66,7 @@ export default function UserDash() {
       {/* Back Arrow Header */}
       <div className="max-w-7xl mx-auto mb-6 relative z-10">
         <button
-          onClick={() => navigate(-1)}
+          onClick={() => navigate("/catalog")}
           className="flex items-center gap-2 text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors py-2 px-4 bg-zinc-900 border border-zinc-800/80 rounded-xl hover:bg-zinc-950 shadow-md cursor-pointer animate-fade-in"
         >
           &larr; Back to Catalog
