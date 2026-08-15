@@ -26,11 +26,11 @@ export interface GetFilteredSamplesQuery {
   genre?: string | string[];
 }
 
-export interface SampleResponseData {
+export interface PublicSampleResponseData {
   id: number;
   name: string;
   description: string | null;
-  audio_url: string;
+  preview_url: string | null;
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];

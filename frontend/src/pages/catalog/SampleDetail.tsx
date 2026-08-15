@@ -25,7 +25,7 @@ export default function SampleDetail() {
         <p className="text-zinc-500 mb-6">{sample.description || "No description provided."}</p>
 
         <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl mb-8 flex flex-col gap-4">
-          <audio src={sample.audio_url} controls className="w-full" />
+          <audio src={sample.preview_url} controls className="w-full" />
         </div>
 
         <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-6">
