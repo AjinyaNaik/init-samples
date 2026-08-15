@@ -6,6 +6,7 @@ import {
 } from "./dtos/sample-pack.dto";
 import { matchesFilters } from "../utils/filter";
 import { SamplePackWithAssociatedSamplesFromQuery } from "./dtos/sample-pack.dto";
+import {userOwnsSamplePack} from "../repository/order.repository";
 
 export const createSamplePack = async (
   data: CreateSamplePackData
@@ -98,4 +99,32 @@ export const deleteSamplePack = async (id: number) => {
     success: true,
     message: "Sample pack deleted successfully",
   };
+};
+
+export const getSamplePackAudio = async (
+  userId: number,
+  samplePackId: number
+) => {
+  const samplePack =
+    await samplePackRepository.findSamplePackAudioById(
+      samplePackId
+    );
+
+  if (!samplePack) {
+    throw new Error("Sample pack not found");
+  }
+
+  const ownsPack =
+    await userOwnsSamplePack(
+      userId,
+      samplePackId
+    );
+
+  if (!ownsPack) {
+    throw new Error(
+      "You do not own this sample pack"
+    );
+  }
+
+  return samplePack;
 };

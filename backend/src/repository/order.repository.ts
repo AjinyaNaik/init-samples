@@ -217,3 +217,26 @@ export const userOwnsSample = async (
 
   return false;
 };
+
+export const userOwnsSamplePack = async (
+  userId: number,
+  samplePackId: number
+) => {
+  const purchase = await OrderItem.findOne({
+    where: {
+      sample_pack_id: samplePackId,
+    },
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+    ],
+  });
+
+  return !!purchase;
+};

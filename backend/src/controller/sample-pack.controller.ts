@@ -230,3 +230,46 @@ export const deleteSamplePack = async (
     });
   }
 };
+
+export const getSamplePackAudio = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const userId = req.user!.id;
+    const samplePackId = Number(req.params.id);
+
+    if (Number.isNaN(samplePackId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sample pack ID",
+      });
+    }
+
+    const samplePack =
+      await samplePackService.getSamplePackAudio(
+        userId,
+        samplePackId
+      );
+
+    return res.status(200).json({
+      success: true,
+      message:
+        "Sample pack audio retrieved successfully",
+      data: samplePack,
+    });
+  } catch (error) {
+    console.error(
+      "Get sample pack audio error:",
+      error
+    );
+
+    return res.status(403).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to retrieve sample pack audio",
+    });
+  }
+};

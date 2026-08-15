@@ -9,7 +9,8 @@ import {
   getSamplePack,
   updateSamplePack,
   deleteSamplePack,
-  getFilteredPacks, 
+  getFilteredPacks,
+  getSamplePackAudio, 
 } from "../controller/sample-pack.controller";
 
 const router = Router();
@@ -24,6 +25,12 @@ router.post(
   adminMiddleware,
   uploadImageMiddleware,
   createSamplePack
+);
+
+router.get(
+  "/:id/audio",
+  authMiddleware,
+  getSamplePackAudio
 );
 router.get("/", authMiddleware, adminMiddleware, getSamplePacks);
 router.get("/:id", getSamplePack);
