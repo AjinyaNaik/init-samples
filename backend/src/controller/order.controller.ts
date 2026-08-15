@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
 import * as orderService from "../service/order.service";
-import { CreateOrderData } from "../service/dtos/order.dto";
+import { CreateSampleOrderData, CreateSamplePackOrderData } from "../service/dtos/order.dto";
 
 export const createOrderSamples = async (
-  req: Request<{}, {}, CreateOrderData>,
+  req: Request<{}, {}, CreateSampleOrderData>,
   res: Response
 ) => {
   try {
@@ -73,7 +73,7 @@ export const getMyPurchasedSamples = async (
 
 
 export const createOrderSamplePacks = async (
-  req: Request<{}, {}, CreateOrderData>,
+  req: Request<{}, {}, CreateSamplePackOrderData>,
   res: Response
 ) => {
   try {

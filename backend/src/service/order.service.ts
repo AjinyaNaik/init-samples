@@ -1,13 +1,13 @@
 import * as orderRepository from "../repository/order.repository";
 import {findSamplesByPackId,findStandaloneSamplesByIds} from "../repository/sample.repository";
 import {findSamplePacksByIds, } from "../repository/sample-pack.repository";
-import { CreateOrderData } from "./dtos/order.dto";
+import { CreateSampleOrderData,CreateSamplePackOrderData } from "./dtos/order.dto";
 
 const DUMMY_SAMPLE_PRICE = 100;
 
 export const createOrderSamples = async (
   userId: number,
-  data: CreateOrderData
+  data: CreateSampleOrderData
 ) => {
   const sampleIds = data.sample_ids ?? [];
    if (sampleIds.length === 0) {
@@ -136,7 +136,7 @@ export const getMyPurchasedSamples = async (
 
 export const createOrderSamplePacks = async (
   userId: number,
-  data: CreateOrderData
+  data: CreateSamplePackOrderData
 ) => {
   const samplePackIds = data.sample_pack_ids ?? [];
 

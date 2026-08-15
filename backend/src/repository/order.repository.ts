@@ -117,6 +117,11 @@ export const findPurchasedSamplePacksByUserId = async (
       {
         model: SamplePack,
         as: "sample_pack",
+        include: [
+          {
+            association: "samples",
+          },
+        ],
       },
     ],
     order: [["created_at", "DESC"]],

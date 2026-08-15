@@ -1,6 +1,9 @@
-export interface CreateOrderData {
-  sample_ids?: number[];
-  sample_pack_ids?: number[];
+export interface CreateSampleOrderData {
+  sample_ids: number[];
+}
+
+export interface CreateSamplePackOrderData {
+  sample_pack_ids: number[];
 }
 
 export interface CreateOrderResponse {
@@ -27,4 +30,17 @@ export interface PurchasedSample {
   download_count: number;
   created_at: string;
   updated_at: string;
+}
+
+export interface PurchasedSamplePack {
+  id: number;
+  name: string;
+  description: string | null;
+  cover_image: string | null;
+  category: string[];
+  sample_type: string[];
+  genres: string[] | null;
+  is_selling: boolean;
+  download_count: number;
+  samples: PurchasedSample[];
 }
