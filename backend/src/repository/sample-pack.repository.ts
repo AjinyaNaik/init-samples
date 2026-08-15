@@ -72,3 +72,13 @@ export const findSamplePackById = async (
 ) => {
   return await SamplePack.findByPk(samplePackId);
 };
+
+export const findSamplePacksByIds = async (
+  samplePackIds: number[]
+) => {
+  return await SamplePack.findAll({
+    where: {
+      id: samplePackIds,
+    },
+  });
+}

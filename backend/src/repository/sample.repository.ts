@@ -134,6 +134,17 @@ export const findSamplesByIds = async (
   });
 };
 
+export const findStandaloneSamplesByIds = async (
+  sampleIds: number[]
+) => {
+  return await Sample.findAll({
+    where: {
+      id: sampleIds,
+      sample_pack_id: null,
+    },
+  });
+};
+
 export const findSamplesByPackId = async (
   samplePackId: number
 ) => {
@@ -142,28 +153,4 @@ export const findSamplesByPackId = async (
       sample_pack_id: samplePackId,
     },
   });
-};
-
-export const findPurchasedSamplesByUserId = async (
-  userId: number
-) => {
-  const orderItems = await OrderItem.findAll({
-    include: [
-      {
-        model: Order,
-        as: "order",
-        where: {
-          user_id: userId,
-        },
-        attributes: [],
-      },
-      {
-        model: Sample,
-        as: "sample",
-      },
-    ],
-    order: [["created_at", "DESC"]],
-  });
-
-  return orderItems;
 };

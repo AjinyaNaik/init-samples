@@ -68,3 +68,30 @@ export const findPurchasedSamples = async (
 export const startTransaction = async () => {
   return await sequelize.transaction();
 };
+
+export const findPurchasedSamplesByUserId = async (
+  userId: number
+) => {
+  const orderItems = await OrderItem.findAll({
+    where: {
+      sample_pack_id: null,
+    },
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+      {
+        model: Sample,
+        as: "sample",
+      },
+    ],
+    order: [["created_at", "DESC"]],
+  });
+
+  return orderItems;
+};
