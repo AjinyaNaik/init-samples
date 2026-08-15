@@ -9,6 +9,8 @@ import sampleRoutes from "./routes/sample.routes";
 import samplePackRoutes from "./routes/sample-pack.routes";
 import filterRoutes from "./routes/filter.routes"; // <-- Import here
 import path from "path";
+import orderRoutes from "./routes/order.routes";
+
 
 dotenv.config();
 
@@ -26,6 +28,7 @@ app.use("/seller-requests", sellerRequestRoutes);
 app.use("/admin/samples", sampleRoutes);
 app.use("/admin/sample-packs", samplePackRoutes);
 app.use("/filters", filterRoutes); 
+app.use("/orders", orderRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello from the TypeScript Express backend!");
