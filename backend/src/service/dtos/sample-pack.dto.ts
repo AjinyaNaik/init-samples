@@ -1,3 +1,6 @@
+import Sample from "../../models/sample.model";
+import SamplePack from "../../models/sample-pack.model";
+
 export interface CreateSamplePackData {
   name: string;
   description?: string | null;
@@ -22,3 +25,7 @@ export interface FilterParams {
   sample_type?: string | string[];
   genre?: string | string[];
 }
+
+export interface SamplePackWithAssociatedSamplesFromQuery extends SamplePack {
+    samples?: Sample[];
+  };

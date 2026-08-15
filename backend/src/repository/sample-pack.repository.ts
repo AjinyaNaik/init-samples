@@ -1,4 +1,5 @@
 import SamplePack from "../models/sample-pack.model";
+import { SamplePackWithAssociatedSamplesFromQuery } from "../service/dtos/sample-pack.dto";
 
 interface CreateSamplePackData {
   name: string;
@@ -24,7 +25,7 @@ export const create = async (data: CreateSamplePackData) => {
   return await SamplePack.create(data);
 };
 
-export const findAll = async () => {
+export const findAll = async (): Promise<SamplePackWithAssociatedSamplesFromQuery[]> => {
   return await SamplePack.findAll({
     include: [
       {
@@ -32,17 +33,18 @@ export const findAll = async () => {
       },
     ],
     order: [["created_at", "DESC"]],
-  });
+  }) as unknown as SamplePackWithAssociatedSamplesFromQuery[]; 
 };
 
-export const findById = async (id: number) => {
-  return await SamplePack.findByPk(id, {
+export const findById = async (id: number): Promise<SamplePackWithAssociatedSamplesFromQuery | null> => {
+  const pack = await SamplePack.findByPk(id, {
     include: [
       {
         association: "samples",
       },
     ],
   });
+  return pack as unknown as SamplePackWithAssociatedSamplesFromQuery | null; 
 };
 
 export const update = async (

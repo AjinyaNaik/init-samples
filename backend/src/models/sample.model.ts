@@ -5,7 +5,7 @@ interface SampleAttributes {
   id: number;
   name: string;
   description: string | null;
-  audio_url: string;
+  audio_url: string | null;
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];
@@ -40,7 +40,7 @@ class Sample
   declare id: number;
   declare name: string;
   declare description: string | null;
-  declare audio_url: string;
+  declare audio_url: string | null;
   declare sample_pack_id: number | null;
   declare category: string[];
   declare sample_type: string[];

@@ -5,6 +5,7 @@ import {
   FilterParams
 } from "./dtos/sample-pack.dto";
 import { matchesFilters } from "../utils/filter";
+import { SamplePackWithAssociatedSamplesFromQuery } from "./dtos/sample-pack.dto";
 
 export const createSamplePack = async (
   data: CreateSamplePackData
@@ -29,11 +30,19 @@ export const getAllSamplePacks = async () => {
   return await samplePackRepository.findAll();
 };
 
-export const getSamplePackById = async (id: number) => {
+export const getSamplePackById = async (id: number): Promise<SamplePackWithAssociatedSamplesFromQuery> => {
   const samplePack = await samplePackRepository.findById(id);
-
+  
   if (!samplePack) {
     throw new Error("Sample pack not found");
+  }
+
+  if (samplePack.samples) {
+    for (const sample of samplePack.samples) {
+      if (!sample.is_selling) {
+        sample.audio_url = null;
+      }
+    }
   }
 
   return samplePack;
