@@ -5,6 +5,8 @@ import { useFilteredSamplePacks } from "../../hooks/samplePackHooks";
 import { useFilteredSamples } from "../../hooks/sampleHooks";
 import CatalogSidebar from "./components/CatalogSidebar";
 import CatalogResults from "./components/CatalogResults";
+import { Link } from "react-router-dom";
+import { getStoredUser } from '../../utils/auth';
 
 export default function Catalog() {
   const { categories, isLoading: loadingCategories } = useCategories();
@@ -61,6 +63,8 @@ export default function Catalog() {
     (item.name || "").toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  const user = getStoredUser();
+
   return (
     <div
       className="w-full min-h-screen text-zinc-50 pt-24 px-8 pb-32 bg-zinc-950 bg-top bg-no-repeat"
@@ -70,6 +74,28 @@ export default function Catalog() {
       }}
     >
       <div className="max-w-7xl mx-auto">
+
+        <div className="absolute top-6 right-10 mr-[2%] z-50 flex items-center gap-4">
+          {user ? (
+            <Link
+              to="/dashboard"
+              title={`Go to ${user.username}'s Dashboard`}
+              className="w-11 h-11 rounded-full bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 flex items-center justify-center text-purple-300 hover:text-white transition-all duration-300 hover:shadow-[0_0_15px_rgba(168,85,247,0.45)] hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </Link>
+          ) : (
+            <Link
+              to="/login"
+              className="px-5 py-2.5 text-sm font-bold text-purple-200 bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] rounded-full transition-all duration-300"
+            >
+              Login
+            </Link>
+          )}
+        </div>
+
         <motion.h1
           className="text-6xl md:text-7xl pb-4 mb-8 text-center md:text-left text-purple-300"
           style={{ fontFamily: "'Shrikhand', cursive" }}
