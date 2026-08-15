@@ -27,7 +27,8 @@ export const createOrder = async (
 export const createOrderItems = async (
   orderId: number,
   items: {
-    sample_id: number;
+    sample_id?: number | null;
+    sample_pack_id?: number | null;
     price: number;
   }[],
   transaction: any
@@ -35,7 +36,8 @@ export const createOrderItems = async (
   return await OrderItem.bulkCreate(
     items.map((item) => ({
       order_id: orderId,
-      sample_id: item.sample_id,
+      sample_id: item.sample_id ?? null,
+      sample_pack_id: item.sample_pack_id ?? null,
       price: item.price,
     })),
     {
@@ -88,6 +90,33 @@ export const findPurchasedSamplesByUserId = async (
       {
         model: Sample,
         as: "sample",
+      },
+    ],
+    order: [["created_at", "DESC"]],
+  });
+
+  return orderItems;
+};
+
+export const findPurchasedSamplePacksByUserId = async (
+  userId: number
+) => {
+  const orderItems = await OrderItem.findAll({
+    where: {
+      sample_id: null,
+    },
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+      {
+        model: SamplePack,
+        as: "sample_pack",
       },
     ],
     order: [["created_at", "DESC"]],

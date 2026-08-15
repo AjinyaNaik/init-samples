@@ -1,19 +1,43 @@
 import { Router } from "express";
+import {
+  createOrderSamples,
+  getMyPurchasedSamples,
+  createOrderSamplePacks,
+  getMyPurchasedSamplePacks,
+} from "../controller/order.controller";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { createOrder, getMyPurchasedSamplesByUserId } from "../controller/order.controller";
 
 const router = Router();
 
+/*
+ * Standalone samples
+ */
 router.post(
-  "/",
+  "/samples",
   authMiddleware,
-  createOrder
+  createOrderSamples
 );
 
 router.get(
   "/my/samples",
   authMiddleware,
-  getMyPurchasedSamplesByUserId
+  getMyPurchasedSamples
+);
+
+
+/*
+ * Sample packs
+ */
+router.post(
+  "/sample-packs",
+  authMiddleware,
+  createOrderSamplePacks
+);
+
+router.get(
+  "/my/sample-packs",
+  authMiddleware,
+  getMyPurchasedSamplePacks
 );
 
 export default router;
