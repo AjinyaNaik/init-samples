@@ -90,6 +90,20 @@ export const findPurchasedSamplesByUserId = async (
       {
         model: Sample,
         as: "sample",
+        attributes: [
+          "id",
+          "name",
+          "description",
+          "preview_url",
+          "sample_pack_id",
+          "category",
+          "sample_type",
+          "genres",
+          "metadata",
+          "download_count",
+          "created_at",
+          "updated_at",
+        ],
       },
     ],
     order: [["created_at", "DESC"]],
@@ -97,6 +111,7 @@ export const findPurchasedSamplesByUserId = async (
 
   return orderItems;
 };
+
 
 export const findPurchasedSamplePacksByUserId = async (
   userId: number
@@ -120,6 +135,20 @@ export const findPurchasedSamplePacksByUserId = async (
         include: [
           {
             association: "samples",
+            attributes: [
+              "id",
+              "name",
+              "description",
+              "preview_url",
+              "sample_pack_id",
+              "category",
+              "sample_type",
+              "genres",
+              "metadata",
+              "download_count",
+              "created_at",
+              "updated_at",
+            ],
           },
         ],
       },

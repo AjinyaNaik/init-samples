@@ -142,6 +142,7 @@ export const findStandaloneSamplesByIds = async (
       id: sampleIds,
       sample_pack_id: null,
     },
+    attributes: ["id"],
   });
 };
 
