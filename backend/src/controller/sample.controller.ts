@@ -240,3 +240,45 @@ export const deleteSample = async (
     });
   }
 };
+
+export const getSampleAudioUrl = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const userId = req.user!.id;
+    const sampleId = Number(req.params.id);
+
+    if (Number.isNaN(sampleId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid sample ID",
+      });
+    }
+
+    const audio =
+      await sampleService.getSampleAudioUrl(
+        userId,
+        sampleId
+      );
+
+    return res.status(200).json({
+      success: true,
+      message: "Sample audio URL retrieved successfully",
+      data: audio,
+    });
+  } catch (error) {
+    console.error(
+      "Get sample audio URL error:",
+      error
+    );
+
+    return res.status(403).json({
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Failed to retrieve sample audio URL",
+    });
+  }
+};

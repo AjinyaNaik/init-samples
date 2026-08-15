@@ -158,3 +158,85 @@ export const findPurchasedSamplePacksByUserId = async (
 
   return orderItems;
 };
+
+export const userOwnsSample = async (
+  userId: number,
+  sampleId: number
+) => {
+  const sample = await Sample.findByPk(sampleId, {
+    attributes: ["id", "sample_pack_id"],
+  });
+
+  if (!sample) {
+    return false;
+  }
+
+  // Directly purchased sample
+  const directPurchase = await OrderItem.findOne({
+    where: {
+      sample_id: sampleId,
+    },
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+    ],
+  });
+
+  if (directPurchase) {
+    return true;
+  }
+
+  // Sample belongs to a pack
+  if (sample.sample_pack_id !== null) {
+    const packPurchase = await OrderItem.findOne({
+      where: {
+        sample_pack_id: sample.sample_pack_id,
+      },
+      include: [
+        {
+          model: Order,
+          as: "order",
+          where: {
+            user_id: userId,
+          },
+          attributes: [],
+        },
+      ],
+    });
+
+    if (packPurchase) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+export const userOwnsSamplePack = async (
+  userId: number,
+  samplePackId: number
+) => {
+  const purchase = await OrderItem.findOne({
+    where: {
+      sample_pack_id: samplePackId,
+    },
+    include: [
+      {
+        model: Order,
+        as: "order",
+        where: {
+          user_id: userId,
+        },
+        attributes: [],
+      },
+    ],
+  });
+
+  return !!purchase;
+};

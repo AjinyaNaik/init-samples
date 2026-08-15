@@ -82,3 +82,17 @@ export const findSamplePacksByIds = async (
     },
   });
 }
+
+export const findSamplePackAudioById = async (
+  packId: number
+) => {
+  return await SamplePack.findByPk(packId, {
+    attributes: ["id"],
+    include: [
+      {
+        association: "samples",
+        attributes: ["id", "audio_url"],
+      },
+    ],
+  });
+};

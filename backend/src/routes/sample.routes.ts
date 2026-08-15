@@ -8,7 +8,8 @@ import {
   getSample,
   updateSample,
   deleteSample,
-  getFilteredSamples, 
+  getFilteredSamples,
+  getSampleAudioUrl, 
 } from "../controller/sample.controller";
 
 const router = Router();
@@ -24,7 +25,11 @@ router.post(
   uploadAudioMiddleware, 
   createSample
 );
-
+router.get(
+  "/:id/audio",
+  authMiddleware,
+  getSampleAudioUrl
+);
 router.get("/", authMiddleware, adminMiddleware, getSamples);
 router.get("/:id", getSample);
 
@@ -37,5 +42,7 @@ router.put(
 );
 
 router.delete("/:id", authMiddleware, adminMiddleware, deleteSample);
+
+
 
 export default router;
