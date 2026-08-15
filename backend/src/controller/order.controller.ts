@@ -33,7 +33,7 @@ export const createOrder = async (
   }
 };
 
-export const getMyPurchasedSamples = async (
+export const getMyPurchasedSamplesByUserId = async (
   req: Request,
   res: Response
 ) => {
