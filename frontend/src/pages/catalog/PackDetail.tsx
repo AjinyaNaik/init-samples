@@ -100,7 +100,7 @@ export default function PackDetail() {
             <div className="flex flex-col gap-3 max-h-[600px] overflow-y-auto pr-2">
               {pack.samples && pack.samples.length > 0 ? (
                 pack.samples.map((sample: any) => {
-                  const isLocked = sample.audio_url === null;
+                  const isLocked = sample.preview_url === null;
                   return (
                     <div
                       key={sample.id}
@@ -131,7 +131,7 @@ export default function PackDetail() {
                           <span className="text-xs tracking-wider uppercase text-purple-300">Buy Pack to Play</span>
                         </div>
                       ) : (
-                        <audio src={sample.audio_url} controls className="max-w-[185px] md:max-w-xs" />
+                        <audio src={sample.preview_url} controls className="max-w-[185px] md:max-w-xs" />
                       )}
                     </div>
                   );
