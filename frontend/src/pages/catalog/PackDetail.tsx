@@ -31,10 +31,10 @@ export default function PackDetail() {
       `}</style>
 
       {/* Outer Grid is now completely free-standing (no card background) */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-12 items-start">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start">
 
         {/* Left Column: Standalone, Free-standing Cover Art Aspect (Spans 2/5) */}
-        <div className="md:col-span-2 flex flex-col gap-6 sticky top-28">
+        <div className="md:col-span-3 flex flex-col gap-6 sticky top-28">
           <div
             className="w-full aspect-square bg-zinc-900 border border-zinc-800 rounded-3xl bg-cover bg-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-[1.01] hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]"
             style={pack.cover_image ? { backgroundImage: `url(${pack.cover_image})` } : undefined}
@@ -53,10 +53,15 @@ export default function PackDetail() {
           {/* Header & Details */}
           <div>
             <h1
-              className="text-5xl md:text-6xl pb-3 mb-4 text-purple-300 tracking-wide font-normal leading-none"
+              className="pb-3 mb-4 text-purple-300 tracking-wide font-normal leading-tight break-words"
               style={{
                 fontFamily: "'Shrikhand', cursive",
-                animation: "pack-neon-flicker 5s infinite alternate"
+                animation: "pack-neon-flicker 5s infinite alternate",
+                fontSize: pack.name.length <= 12
+                  ? "calc(2.7rem + 1.7vw)"
+                  : pack.name.length <= 20
+                    ? "calc(2.0rem + 1.4vw)"
+                    : "calc(1.5rem + 1.2vw)",
               }}
             >
               {pack.name}
