@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { UserRole } from "../models/user.model";
 
 interface JwtPayload {
-  id: number;
+  userId: number;
   role: UserRole;
 }
 
@@ -35,7 +35,7 @@ export function authMiddleware(
     ) as JwtPayload;
 
     req.user = {
-      id: decoded.id,
+      id: decoded.userId,
       role: decoded.role,
     };
 
