@@ -43,7 +43,7 @@ export default function UserRightContent({
               : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
           }`}
         >
-          My Tracks
+          My Samples
         </button>
       </div>
 
