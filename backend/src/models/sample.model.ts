@@ -6,6 +6,7 @@ interface SampleAttributes {
   name: string;
   description: string | null;
   audio_url: string | null;
+  preview_url: string | null;
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];
@@ -22,6 +23,7 @@ interface SampleCreationAttributes
     SampleAttributes,
     | "id"
     | "description"
+    | "preview_url"
     | "sample_pack_id"
     | "is_selling"
     | "metadata"
@@ -41,6 +43,7 @@ class Sample
   declare name: string;
   declare description: string | null;
   declare audio_url: string | null;
+  declare preview_url: string | null;
   declare sample_pack_id: number | null;
   declare category: string[];
   declare sample_type: string[];
@@ -71,6 +74,10 @@ Sample.init(
     audio_url: {
       type: DataTypes.STRING,
       allowNull: false,
+    },
+    preview_url: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     sample_pack_id: {
       type: DataTypes.INTEGER,
