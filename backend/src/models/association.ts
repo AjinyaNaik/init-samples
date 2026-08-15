@@ -88,3 +88,14 @@ Payment.belongsTo(Order, {
   foreignKey: "order_id",
   as: "order",
 });
+
+
+OrderItem.belongsTo(SamplePack, {
+  foreignKey: "sample_pack_id",
+  as: "sample_pack",
+});
+
+SamplePack.hasMany(OrderItem, {
+  foreignKey: "sample_pack_id",
+  as: "order_items",
+});
