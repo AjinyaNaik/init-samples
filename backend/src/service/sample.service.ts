@@ -1,5 +1,6 @@
 import * as sampleRepository from "../repository/sample.repository";
 import * as samplePackRepository from "../repository/sample-pack.repository";
+import { userOwnsSample} from "../repository/order.repository";  
 import {
   CreateSampleData,
   UpdateSampleData,
@@ -182,5 +183,32 @@ export const deleteSample = async (id: number) => {
   return {
     success: true,
     message: "Sample deleted successfully",
+  };
+};
+
+export const getSampleAudioUrl = async (
+  userId: number,
+  sampleId: number
+) => {
+  const sample =
+    await sampleRepository.findAudioUrlById(sampleId);
+
+  if (!sample) {
+    throw new Error("Sample not found");
+  }
+
+  const ownsSample =
+    await userOwnsSample(
+      userId,
+      sampleId
+    );
+
+  if (!ownsSample) {
+    throw new Error("You do not own this sample");
+  }
+
+  return {
+    id: sample.id,
+    audio_url: sample.audio_url,
   };
 };
