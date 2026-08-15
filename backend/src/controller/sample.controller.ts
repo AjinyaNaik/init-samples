@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import * as sampleService from "../service/sample.service";
-import { uploadAudio } from "../service/storage.service";
+import { createAudioPreview, uploadAudio, uploadAudioPreview } from "../service/storage.service";
 import { 
   CreateSampleRequest, 
   UpdateSampleRequest, 
@@ -29,6 +29,17 @@ export const createSample = async (
       file.mimetype
     );
 
+     const preview = await createAudioPreview(
+      file.buffer,
+      file.originalname
+    );
+
+    const previewUrl = await uploadAudioPreview(
+      preview.buffer,
+      preview.filename,
+      preview.mimetype
+    );
+
     const category = req.body.category ? JSON.parse(req.body.category) : [];
     const sampleType = req.body.sample_type ? JSON.parse(req.body.sample_type) : [];
     const genres = req.body.genres ? JSON.parse(req.body.genres) : [];
@@ -40,6 +51,7 @@ export const createSample = async (
       name: req.body.name,
       description: req.body.description || null,
       audio_url: audioUrl,
+      preview_url: previewUrl,
       sample_pack_id: samplePackId,
       category,
       sample_type: sampleType,

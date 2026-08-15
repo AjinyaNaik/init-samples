@@ -14,10 +14,26 @@ const samplePackInclude = {
 };
 
 export const create = async (data: CreateSampleData) => {
-  return await Sample.create({
+  const publicSampleAttributes = [
+  "id",
+  "name",
+  "description",
+  "preview_url",
+  "sample_pack_id",
+  "category",
+  "sample_type",
+  "is_selling",
+  "genres",
+  "metadata",
+  "download_count",
+  "created_at",
+  "updated_at",
+];
+  const sample = await Sample.create({
     name: data.name,
     description: data.description ?? null,
     audio_url: data.audio_url,
+    preview_url: data.preview_url,
     sample_pack_id: data.sample_pack_id ?? null,
     category: data.category || [],
     sample_type: data.sample_type || [],
@@ -25,10 +41,30 @@ export const create = async (data: CreateSampleData) => {
     genres: data.genres,
     metadata: data.metadata ?? {},
   });
+
+  return await Sample.findByPk(sample.id, {
+    attributes: publicSampleAttributes,
+    include: [samplePackInclude],
+  });
 };
 
 export const findAll = async () => {
   return await Sample.findAll({
+    attributes: [
+      "id",
+      "name",
+      "description",
+      "preview_url",
+      "sample_pack_id",
+      "category",
+      "sample_type",
+      "is_selling",
+      "genres",
+      "metadata",
+      "download_count",
+      "created_at",
+      "updated_at",
+    ],
     include: [samplePackInclude],
     order: [["created_at", "DESC"]],
   });
@@ -36,6 +72,21 @@ export const findAll = async () => {
 
 export const findById = async (id: number) => {
   return await Sample.findByPk(id, {
+    attributes: [
+      "id",
+      "name",
+      "description",
+      "preview_url",
+      "sample_pack_id",
+      "category",
+      "sample_type",
+      "is_selling",
+      "genres",
+      "metadata",
+      "download_count",
+      "created_at",
+      "updated_at",
+    ],
     include: [samplePackInclude],
   });
 };

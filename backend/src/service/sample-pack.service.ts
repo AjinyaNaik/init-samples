@@ -39,8 +39,9 @@ export const getSamplePackById = async (id: number): Promise<SamplePackWithAssoc
 
   if (samplePack.samples) {
     for (const sample of samplePack.samples) {
+      sample.audio_url = null;
       if (!sample.is_selling) {
-        sample.audio_url = null;
+        sample.preview_url = null;
       }
     }
   }
