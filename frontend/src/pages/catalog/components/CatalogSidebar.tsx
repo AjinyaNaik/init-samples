@@ -12,7 +12,7 @@ interface CatalogSidebarProps {
   sampleTypes: FilterItem[];
   loadingSampleTypes: boolean;
   activeTypes: string[];
-  setActiveTypes: (types: string[]) => void; // Under parent, change toggleType setter wrapper to give child state control
+  setActiveTypes: (types: string[]) => void;
   genres: FilterItem[];
   loadingGenres: boolean;
   selectedGenres: string[];
@@ -55,11 +55,11 @@ export default function CatalogSidebar({
   };
 
   return (
-    <div className="md:col-span-1 flex flex-col gap-6 pr-8">
+    <div className="md:col-span-1 flex flex-col gap-5 pr-6">
       {/* Search Bar */}
-      <div className="relative mb-4">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="relative mb-3">
+        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+          <svg className="h-4.5 w-4.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
@@ -68,27 +68,27 @@ export default function CatalogSidebar({
           placeholder="Search catalog..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 rounded-xl py-3 pl-11 pr-4 focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors placeholder-zinc-500 shadow-sm"
+          className="w-full bg-zinc-900 border border-zinc-800 text-zinc-100 placeholder-zinc-500 rounded-xl py-2.5 pl-10 pr-3.5 text-xs focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-colors shadow-sm"
         />
       </div>
 
       {/* 1. Category Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
-        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Category</h3>
+        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Category</h3>
         {loadingCategories ? (
-          <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
+          <p className="text-[10px] text-zinc-500 px-1 animate-pulse">Loading...</p>
         ) : (
           categories.map((cat) => (
             <button
               key={cat.id}
               onClick={() => {
                 setActiveCategory(cat.name);
-                toggleGenre(""); // Resets selections
+                toggleGenre(""); 
               }}
-              className={`text-left px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${
+              className={`text-left px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
                 activeCategory === cat.name
                   ? "bg-zinc-800 text-zinc-100 shadow-sm"
                   : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
@@ -102,18 +102,18 @@ export default function CatalogSidebar({
 
       {/* 2. Format Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
-        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Format</h3>
+        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Format</h3>
         {["packs", "standalones"].map((format) => (
           <button
             key={format}
             onClick={() => {
               setActiveFormat(format);
-              setActiveTypes([]); // Clear types on format swap to prevent index bleedout
+              setActiveTypes([]); 
             }}
-            className={`text-left px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${
+            className={`text-left px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
               activeFormat === format
                 ? "bg-zinc-800 text-zinc-100 shadow-sm"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
@@ -126,12 +126,12 @@ export default function CatalogSidebar({
 
       {/* 3. Type Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-2 shadow-sm"
+        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
-        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 px-2">Type</h3>
+        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Type</h3>
         {loadingSampleTypes ? (
-          <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
+          <p className="text-[10px] text-zinc-500 px-1 animate-pulse">Loading...</p>
         ) : (
           sampleTypes.map((type) => {
             const isSelected = activeTypes.includes(type.name);
@@ -139,7 +139,7 @@ export default function CatalogSidebar({
               <button
                 key={type.id}
                 onClick={() => handleTypeClick(type.name)}
-                className={`flex items-center justify-between px-4 py-2.5 rounded-lg font-bold transition-all duration-300 capitalize ${
+                className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
                   isSelected
                     ? "bg-zinc-800 text-zinc-100 shadow-sm"
                     : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
@@ -147,7 +147,7 @@ export default function CatalogSidebar({
               >
                 <span>{type.name}</span>
                 {isSelected && (
-                  <svg className="w-5 h-5 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-4 h-4 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 )}
@@ -162,20 +162,20 @@ export default function CatalogSidebar({
         className="border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
-        <h3 className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3 border-b border-zinc-800/80 pb-3 px-2">
+        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2 border-b border-zinc-800/80 pb-2 px-1">
           System Genres
         </h3>
         {loadingGenres ? (
-          <p className="text-xs text-zinc-500 px-2 animate-pulse">Loading...</p>
+          <p className="text-[10px] text-zinc-500 px-1 animate-pulse">Loading...</p>
         ) : (
-          <div className="flex flex-col gap-1 max-h-60 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-1 max-h-52 overflow-y-auto pr-0.5">
             {genres.map((genre) => {
               const isSelected = selectedGenres.includes(genre.name);
               return (
                 <button
                   key={genre.id}
                   onClick={() => toggleGenre(genre.name)}
-                  className={`flex items-center justify-between px-4 py-2 rounded-lg transition-colors text-sm font-semibold text-left ${
+                  className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-semibold text-left transition-all duration-300 ${
                     isSelected
                       ? "bg-zinc-800 text-zinc-100 shadow-sm"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
@@ -183,7 +183,7 @@ export default function CatalogSidebar({
                 >
                   <span>{genre.name}</span>
                   {isSelected && (
-                    <svg className="w-4 h-4 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-3.5 h-3.5 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                   )}
