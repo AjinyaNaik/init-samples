@@ -101,3 +101,40 @@ export const useSamplePackDetail = () => {
 
   return { pack, fetchSamplePackDetail, isLoading, error };
 };
+
+export const useSamplePackAudio = () => {
+  const [audioData, setAudioData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSamplePackAudio = async (id: number) => {
+    setIsLoading(true);
+    setError(null);
+    const token = localStorage.getItem("token");
+
+    try {
+      const response = await fetch(`http://localhost:3000/admin/sample-packs/${id}/audio`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      const json = await response.json();
+
+      if (!response.ok) {
+        throw new Error(json.message || "Failed to load sample pack audio files");
+      }
+
+      setAudioData(json.data);
+      return json.data;
+    } catch (err: any) {
+      setError(err.message || "An unexpected error occurred");
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return { audioData, fetchSamplePackAudio, isLoading, error };
+};

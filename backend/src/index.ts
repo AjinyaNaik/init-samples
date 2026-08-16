@@ -16,7 +16,7 @@ dotenv.config();
 
 const app = express();
 
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+app.use("/uploads", cors(), express.static(path.join(__dirname, "../uploads")));
 
 const port = Number(process.env.PORT) || 3000;
 

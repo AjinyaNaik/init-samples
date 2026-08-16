@@ -83,7 +83,7 @@ export const findSamplePacksByIds = async (
   });
 }
 
-export const findSamplePackAudioById = async (
+export const findOnlySamplePackSampleAudiosById = async (
   packId: number
 ) => {
   return await SamplePack.findByPk(packId, {
@@ -91,7 +91,7 @@ export const findSamplePackAudioById = async (
     include: [
       {
         association: "samples",
-        attributes: ["id", "audio_url"],
+        attributes: ["id", "audio_url", "name"],
       },
     ],
   });

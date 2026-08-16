@@ -106,7 +106,7 @@ export const getSamplePackAudio = async (
   samplePackId: number
 ) => {
   const samplePack =
-    await samplePackRepository.findSamplePackAudioById(
+    await samplePackRepository.findOnlySamplePackSampleAudiosById(
       samplePackId
     );
 
