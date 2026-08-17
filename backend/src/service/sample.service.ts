@@ -90,6 +90,7 @@ export const getFilteredSamples = async (filters: SampleFilterParams) => {
         category: sample.category || [],
         sample_type: sample.sample_type || [],
         genres: sample.genres || [],
+        price: sample.price,
       },
       filters
     );

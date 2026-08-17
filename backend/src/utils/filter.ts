@@ -57,7 +57,7 @@ export const hasOverlap = (
 };
 
 export const matchesFilters = (
-  item: { category: string[]; sample_type: string[]; genres: string[] | null; },
+  item: { category: string[]; sample_type: string[]; genres: string[] | null; price: number | null; },
   filters: {
     category?: string | string[];
     sample_type?: string | string[];
@@ -65,6 +65,8 @@ export const matchesFilters = (
   }
 ): boolean => {
 
+  if (item.price === null) return false;
+  
   return (
     hasOverlap(item.category, filters.category) &&
     hasOverlap(item.sample_type, filters.sample_type) &&

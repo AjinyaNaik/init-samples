@@ -64,6 +64,7 @@ export const findAll = async () => {
       "genres",
       "metadata",
       "download_count",
+      "price",
       "created_at",
       "updated_at",
     ],
