@@ -11,6 +11,7 @@ const CreateSample = () => {
   const [description, setDescription] = useState("");
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [samplePackId, setSamplePackId] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
 
   const [category, setCategory] = useState<string[]>([]);
   const [sampleType, setSampleType] = useState<string[]>([]);
@@ -92,8 +93,17 @@ const CreateSample = () => {
       formData.append("description", description.trim());
     }
 
-    if (samplePackId) {
+    if (samplePackId.trim()) {
       formData.append("sample_pack_id", String(Number(samplePackId)));
+      formData.append("price", "");
+    }
+    else {
+      if (price.trim()) {
+        formData.append("price", String(Number(price)));
+      }
+      else {
+        formData.append("price", "0.00");
+      }
     }
 
     try {
@@ -110,6 +120,7 @@ const CreateSample = () => {
       setGenres([]);
       setCanPreview(false);
       setMetadata("");
+      setPrice("");
 
       const fileInput = document.getElementById("audioFile") as HTMLInputElement;
       if (fileInput) {
@@ -142,7 +153,7 @@ const CreateSample = () => {
           />
         </div>
 
-        {/* Sample Pack ID & canPreview conditional container */}
+        {/* Sample Pack ID & Price / Preview container */}
         <div className="flex flex-col md:flex-row md:items-end gap-5">
           {/* Sample Pack ID */}
           <div className="flex-1">
@@ -162,8 +173,8 @@ const CreateSample = () => {
             </p>
           </div>
 
-          {/* Conditional Can Preview Checkbox */}
-          {samplePackId.trim() !== "" && (
+          {/* Conditional: Show Can Preview if Pack ID is present, otherwise show Price input */}
+          {samplePackId.trim() !== "" ? (
             <div className="flex items-center gap-2 pb-3 shrink-0 transition-opacity duration-300 animate-fade-in">
               <input
                 id="canPreview"
@@ -176,6 +187,21 @@ const CreateSample = () => {
               <label htmlFor="canPreview" className="text-sm font-medium text-gray-700 font-normal cursor-pointer">
                 Can be previewed on site (leave unchecked to lock it)
               </label>
+            </div>
+          ) : (
+            <div className="flex-1 transition-opacity duration-300 animate-fade-in mb-[19px]">
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Price *
+              </label>
+              <input
+                type="number"
+                step="0.01"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                disabled={isLoading}
+                placeholder="0.00"
+                className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+              />
             </div>
           )}
         </div>

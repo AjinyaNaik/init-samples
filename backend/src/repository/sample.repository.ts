@@ -28,6 +28,7 @@ export const create = async (data: CreateSampleData) => {
   "genres",
   "metadata",
   "download_count",
+  "price",
   "created_at",
   "updated_at",
 ];
@@ -42,6 +43,7 @@ export const create = async (data: CreateSampleData) => {
     can_preview: data.can_preview ?? false,
     genres: data.genres,
     metadata: data.metadata ?? {},
+    price: data.price ?? null,
   });
 
   return await Sample.findByPk(sample.id, {

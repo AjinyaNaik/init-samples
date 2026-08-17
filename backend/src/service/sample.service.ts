@@ -64,6 +64,7 @@ export const createSample = async (
     can_preview: data.can_preview ?? false,
     genres: data.genres,
     metadata: data.metadata ?? {},
+    price: data.price ?? null,
   });
 };
 

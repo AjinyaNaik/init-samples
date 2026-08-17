@@ -9,6 +9,7 @@ export interface CreateSampleData {
   can_preview?: boolean;
   genres: string[];
   metadata?: Record<string, any>;
+  price?: number | null;
 }
 
 export interface UpdateSampleData {
@@ -21,6 +22,7 @@ export interface UpdateSampleData {
   can_preview?: boolean;
   genres?: string[];
   metadata?: Record<string, any>;
+  price?: number | null;
 }
 
 export interface SampleFilterParams {
