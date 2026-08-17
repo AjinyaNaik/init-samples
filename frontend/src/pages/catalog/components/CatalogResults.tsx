@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 interface CatalogResultsProps {
-  activeCategory: string;
+  activeCategory: string[];
   activeFormat: string;
   activeTypes: string[];
   selectedGenres: string[];
@@ -52,7 +52,7 @@ export default function CatalogResults({
         <div className="flex justify-between items-center mb-6 border-b border-zinc-800/80 pb-4">
           <h2 className="text-xl font-bold flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-1.5 text-xl">
-              <span className="capitalize">{activeCategory}</span>
+              <span className="capitalize">{activeCategory.join(", ")}</span>
               <span className="capitalize text-zinc-400">{activeFormat}</span>
               <span className="ml-2 px-2.5 py-0.5 bg-zinc-800 text-zinc-400 text-xs rounded-full border border-zinc-700">
                 {results.length} Results
