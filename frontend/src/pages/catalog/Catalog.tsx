@@ -16,7 +16,7 @@ export default function Catalog() {
   const { samplePacks, fetchFilteredSamplePacks, isLoading: loadingPacks } = useFilteredSamplePacks();
   const { samples, fetchFilteredSamples, isLoading: loadingSamples } = useFilteredSamples();
 
-  const [activeCategory, setActiveCategory] = useState<string[]>(["Samples"]);
+  const [activeCategory, setActiveCategory] = useState<string[]>([]);
   const [activeFormat, setActiveFormat] = useState<string>("packs");
 
   const [activeTypes, setActiveTypes] = useState<string[]>([]);
