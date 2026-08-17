@@ -1,16 +1,14 @@
 import * as orderRepository from "../repository/order.repository";
-import {findSamplesByPackId,findStandaloneSamplesByIds} from "../repository/sample.repository";
-import {findSamplePacksByIds, } from "../repository/sample-pack.repository";
-import { CreateSampleOrderData,CreateSamplePackOrderData } from "./dtos/order.dto";
-
-const DUMMY_SAMPLE_PRICE = 100;
+import { findSamplesByPackId, findStandaloneSamplesByIds } from "../repository/sample.repository";
+import { findSamplePacksByIds, } from "../repository/sample-pack.repository";
+import { CreateSampleOrderData, CreateSamplePackOrderData } from "./dtos/order.dto";
 
 export const createOrderSamples = async (
   userId: number,
   data: CreateSampleOrderData
 ) => {
   const sampleIds = data.sample_ids ?? [];
-   if (sampleIds.length === 0) {
+  if (sampleIds.length === 0) {
     throw new Error(
       "At least one sample is required"
     );
@@ -50,10 +48,16 @@ export const createOrderSamples = async (
    * Dummy price for now.
    * Later replace this with sample.price.
    */
-  const totalAmount =
-    DUMMY_SAMPLE_PRICE * samples.length;
 
-  /*
+  let totalAmount = 0;
+
+  for (const s of samples) {
+    if (!s.price && s.price !== null) {
+      totalAmount += s.price
+    }
+  }
+
+  /*  
    * 5. Dummy payment
    */
   const paymentId =
@@ -81,7 +85,7 @@ export const createOrderSamples = async (
       samples.map((sample) => ({
         sample_id: sample.id,
         sample_pack_id: null,
-        price: DUMMY_SAMPLE_PRICE,
+        price: sample.price || 0,
       })),
       transaction
     );
@@ -104,8 +108,6 @@ export const createOrderSamples = async (
     throw error;
   }
 };
-
-
 
 export const getMyPurchasedSamples = async (
   userId: number
@@ -195,8 +197,13 @@ export const createOrderSamplePacks = async (
    * Dummy price for now.
    * Later replace with samplePack.price.
    */
-  const totalAmount =
-    DUMMY_SAMPLE_PRICE * samplePacks.length;
+  let totalAmount = 0;
+
+  for (const s of samplePacks) {
+    if (!s.price && s.price !== null) {
+      totalAmount += s.price;
+    }
+  }
 
   /*
    * 5. Dummy payment
@@ -232,7 +239,7 @@ export const createOrderSamplePacks = async (
       samplePacks.map((samplePack) => ({
         sample_id: null,
         sample_pack_id: samplePack.id,
-        price: DUMMY_SAMPLE_PRICE,
+        price: samplePack.price,
       })),
       transaction
     );

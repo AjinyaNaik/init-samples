@@ -88,16 +88,15 @@ export default function CatalogResults({
               const artworkUrl = activeFormat === "packs"
                 ? (result.cover_image || "")
                 : "/wave-image-fallback.png";
-              const price = "$ Buy";
+              const price = `$ ${(result.price ?? 0).toFixed(2)}`;
               const packName = activeFormat !== "packs" && result.sample_pack ? result.sample_pack.name : null;
 
               return (
                 <div
                   key={result.id}
                   onClick={() => handleRouteToDetail(result.id)}
-                  className={`flex flex-row items-center py-4 px-4 transition-colors duration-200 group rounded-xl cursor-pointer hover:bg-zinc-800/50 ${
-                    index !== results.length - 1 ? "border-b border-zinc-800/40 mb-1" : ""
-                  }`}
+                  className={`flex flex-row items-center py-4 px-4 transition-colors duration-200 group rounded-xl cursor-pointer hover:bg-zinc-800/50 ${index !== results.length - 1 ? "border-b border-zinc-800/40 mb-1" : ""
+                    }`}
                 >
                   <div
                     className="w-[50px] h-[50px] bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-4 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.18)] transition-all duration-305 bg-cover bg-center"
@@ -129,7 +128,7 @@ export default function CatalogResults({
                   </div>
 
                   <div className="flex items-center gap-5">
-                    <span className="font-semibold text-zinc-300 text-xs shrink-0">
+                    <span className="px-2.5 py-1 bg-zinc-800/60 border border-zinc-700 rounded-md font-bold text-zinc-100 text-xs shrink-0 shadow-sm">
                       {price}
                     </span>
                     <button

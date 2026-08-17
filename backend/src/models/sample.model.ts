@@ -14,6 +14,7 @@ interface SampleAttributes {
   genres: string[] | null;
   metadata: Record<string, any>;
   download_count: number;
+  price: number | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -28,17 +29,17 @@ interface SampleCreationAttributes
     | "can_preview"
     | "metadata"
     | "download_count"
+    | "price"
     | "created_at"
     | "updated_at"
-  > {}
+  > { }
 
 class Sample
   extends Model<
     SampleAttributes,
     SampleCreationAttributes
   >
-  implements SampleAttributes
-{
+  implements SampleAttributes {
   declare id: number;
   declare name: string;
   declare description: string | null;
@@ -51,6 +52,7 @@ class Sample
   declare genres: string[] | null;
   declare metadata: Record<string, any>;
   declare download_count: number;
+  declare price: number | null;
 
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
@@ -87,7 +89,7 @@ Sample.init(
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
-    }, 
+    },
     category: {
       type: DataTypes.JSON,
       allowNull: false,
@@ -113,6 +115,11 @@ Sample.init(
       allowNull: false,
       defaultValue: 0,
     },
+    price: {
+      type: DataTypes.DOUBLE,
+      allowNull: true,
+      defaultValue: null
+    }, 
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,
