@@ -8,6 +8,7 @@ interface CreateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  price: number;
 }
 
 interface UpdateSamplePackData {
@@ -17,12 +18,36 @@ interface UpdateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  price: number;
 }
 
-export const create = async (data: CreateSamplePackData) => {
-  return await SamplePack.create(data);
-};
+export const create = async (
+  data: CreateSamplePackData
+) => {
+  const publicSamplePackAttributes = [
+    "id",
+    "name",
+    "description",
+    "cover_image",
+    "category",
+    "sample_type",
+    "genres",
+    "download_count",
+    "price",
+    "created_at",
+    "updated_at",
+  ];
 
+  return await SamplePack.create({
+    name: data.name,
+    description: data.description ?? null,
+    cover_image: data.cover_image ?? null,
+    category: data.category || [],
+    sample_type: data.sample_type || [],
+    genres: data.genres ?? [],
+    price: data.price,
+  },);
+};
 export const findAll = async (): Promise<SamplePackWithAssociatedSamplesFromQuery[]> => {
   return await SamplePack.findAll({
     include: [
@@ -31,7 +56,7 @@ export const findAll = async (): Promise<SamplePackWithAssociatedSamplesFromQuer
       },
     ],
     order: [["created_at", "DESC"]],
-  }) as unknown as SamplePackWithAssociatedSamplesFromQuery[]; 
+  }) as unknown as SamplePackWithAssociatedSamplesFromQuery[];
 };
 
 export const findById = async (id: number): Promise<SamplePackWithAssociatedSamplesFromQuery | null> => {
@@ -42,7 +67,7 @@ export const findById = async (id: number): Promise<SamplePackWithAssociatedSamp
       },
     ],
   });
-  return pack as unknown as SamplePackWithAssociatedSamplesFromQuery | null; 
+  return pack as unknown as SamplePackWithAssociatedSamplesFromQuery | null;
 };
 
 export const update = async (

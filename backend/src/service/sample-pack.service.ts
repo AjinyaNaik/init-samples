@@ -23,6 +23,7 @@ export const createSamplePack = async (
     category: data.category ?? [],
     sample_type: data.sample_type ?? [],
     genres: data.genres ?? [],
+    price: data.price,
   });
 };
 
@@ -58,6 +59,7 @@ export const getFilteredSamplePacks = async (filters: FilterParams) => {
         category: pack.category || [],
         sample_type: pack.sample_type || [],
         genres: pack.genres || [],
+        price: pack.price,
       },
       filters
     );
