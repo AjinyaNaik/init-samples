@@ -6,8 +6,8 @@ import {
   CreationOptional,
 } from "sequelize";
 
-import sequelize from "../config/databse";
-import User from "./User.model";
+import sequelize from "../config/database";
+import User from "./user.model";
 
 export type SellerRequestStatus =
   | "PENDING"

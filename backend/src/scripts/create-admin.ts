@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import sequelize from "../config/databse";
+import sequelize from "../config/database";
 import { createAdmin } from "../service/admin.service";
 
 dotenv.config();
