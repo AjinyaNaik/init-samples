@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { getStoredUser } from "../../utils/auth";
 import { useLogin } from "../../hooks/userHooks";
 import { useMyPurchasedSamples, useMyPurchasedSamplePacks } from "../../hooks/order.hooks";
@@ -12,7 +12,11 @@ type Tab = "packs" | "samples";
 export default function UserDash() {
   const navigate = useNavigate();
   const { logout } = useLogin();
-  const [activeTab, setActiveTab] = useState<Tab>("packs");
+  const [searchParams] = useSearchParams();
+
+  const initialTab = (searchParams.get("tab") as Tab) || "packs";
+  const highlightId = searchParams.get("highlightId");
+  const [activeTab, setActiveTab] = useState<Tab>(initialTab);
 
   const { 
     samplePacks, 
@@ -63,7 +67,6 @@ export default function UserDash() {
         }
       `}</style>
 
-      {/* Back Arrow Header */}
       <div className="max-w-7xl mx-auto mb-6 relative z-10">
         <button
           onClick={() => navigate("/catalog")}
@@ -73,9 +76,7 @@ export default function UserDash() {
         </button>
       </div>
 
-      {/* Main Grid Wrapper */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-12 items-start relative z-10">
-        
         <UserSidebar user={user} logout={logout} />
 
         <UserRightContent
@@ -87,8 +88,8 @@ export default function UserDash() {
           samples={samples}
           loadingSamples={loadingSamples}
           samplesError={samplesError}
+          highlightId={highlightId}
         />
-
       </div>
     </div>
   );

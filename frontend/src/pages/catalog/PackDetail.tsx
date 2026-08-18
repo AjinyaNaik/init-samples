@@ -1,15 +1,34 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSamplePackDetail } from "../../hooks/samplePackHooks";
+import { useCheckoutSamplePacks } from "../../hooks/stripeHooks";
 
 export default function PackDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { pack, fetchSamplePackDetail, isLoading, error } = useSamplePackDetail();
+  const { checkoutSamplePacks, isLoading: isPurchasing, error: purchaseError } = useCheckoutSamplePacks();
 
   useEffect(() => {
     fetchSamplePackDetail(id).catch((err) => console.error(err));
   }, [id]);
+
+  const handlePurchase = async () => {
+    if (!pack?.id) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login?reason=auth_required");
+      return;
+    }
+
+    try {
+      await checkoutSamplePacks([pack.id]);
+    } 
+    catch (err) {
+      console.error("Purchase error:", err);
+    }
+  };
 
   if (isLoading) return <p className="text-zinc-400 text-center pt-32 animate-pulse">Loading pack details...</p>;
   if (error || !pack) return <p className="text-red-500 text-center pt-32">{error || "Sample pack not found."}</p>;
@@ -30,10 +49,10 @@ export default function PackDetail() {
         }
       `}</style>
 
-      {/* Outer Grid is now completely free-standing (no card background) */}
+      {/* Outer Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start">
 
-        {/* Left Column: Standalone, Free-standing Cover Art Aspect (Spans 2/5) */}
+        {/* Left Column: Cover Art Aspect */}
         <div className="md:col-span-3 flex flex-col gap-6 sticky top-28">
           <div
             className="w-full aspect-square bg-zinc-900 border border-zinc-800 rounded-3xl bg-cover bg-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-[1.01] hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]"
@@ -47,10 +66,10 @@ export default function PackDetail() {
           </button>
         </div>
 
-        {/* Right Column: High-End Card Container containing all details and metadata (Spans 3/5) */}
+        {/* Right Column: Pack Details & Purchase Action */}
         <div className="md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 md:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.4)] flex flex-col gap-8">
 
-          {/* Header & Details */}
+          {/* Header & Description */}
           <div>
             <h1
               className="pb-3 mb-4 text-purple-300 tracking-wide font-normal leading-tight break-words"
@@ -71,7 +90,44 @@ export default function PackDetail() {
             </p>
           </div>
 
-          {/* Spec/Metadata list */}
+          {/* Purchase Block (Price + Buy Button) */}
+          <div className="bg-zinc-950/70 border border-zinc-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>
+              <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">
+                Pack Price
+              </span>
+              <span className="text-3xl font-extrabold text-purple-300">
+                {pack.price ? `$${pack.price}` : "Free"}
+              </span>
+            </div>
+
+            <button
+              onClick={handlePurchase}
+              disabled={isPurchasing}
+              className="w-full sm:w-auto px-8 py-3.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-950/60 disabled:text-zinc-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {isPurchasing ? (
+                <>
+                  <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Redirecting to Stripe...</span>
+                </>
+              ) : (
+                <span>Buy Pack Now</span>
+              )}
+            </button>
+          </div>
+
+          {/* Purchase Error Banner */}
+          {purchaseError && (
+            <p className="text-sm text-red-400 bg-red-950/40 border border-red-800/60 p-4 rounded-xl text-center">
+              {purchaseError}
+            </p>
+          )}
+
+          {/* Metadata list */}
           <div className="grid grid-cols-3 gap-4 border-y border-zinc-800/60 py-6">
             <div>
               <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">Categories</span>
@@ -96,7 +152,6 @@ export default function PackDetail() {
               </span>
             </h2>
 
-            {/* Scrollable container with comfortable spacing */}
             <div className="flex flex-col gap-3 max-h-[600px] overflow-y-auto pr-2">
               {pack.samples && pack.samples.length > 0 ? (
                 pack.samples.map((sample: any) => {
@@ -104,10 +159,11 @@ export default function PackDetail() {
                   return (
                     <div
                       key={sample.id}
-                      className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${isLocked
-                        ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
-                        : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
-                        }`}
+                      className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${
+                        isLocked
+                          ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
+                          : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
+                      }`}
                     >
                       <div>
                         <h3 className="font-bold text-sm md:text-base text-zinc-100 flex items-center gap-2">

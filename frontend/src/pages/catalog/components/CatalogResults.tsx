@@ -88,7 +88,7 @@ export default function CatalogResults({
               const artworkUrl = activeFormat === "packs"
                 ? (result.cover_image || "")
                 : "/wave-image-fallback.png";
-              const price = `$ ${(result.price ?? 0).toFixed(2)}`;
+              const price = result.price === 0 ? "FREE" : `$${result.price.toFixed(2)}`;
               const packName = activeFormat !== "packs" && result.sample_pack ? result.sample_pack.name : null;
 
               return (

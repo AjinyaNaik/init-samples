@@ -3,6 +3,7 @@ import OrderItem from "../models/order_item.model";
 import Sample from "../models/sample.model";
 import SamplePack from "../models/sample-pack.model";
 import sequelize from "../config/database";
+import License from "../models/license";
 
 
 
@@ -33,12 +34,25 @@ export const createOrderItems = async (
   }[],
   transaction: any
 ) => {
+  const license = await License.findOne({
+    where: {
+      is_active: true,
+    },
+    order: [["version", "DESC"]],
+    transaction,
+  });
+
+  if (!license) {
+    throw new Error("No active license found");
+  }
+
   return await OrderItem.bulkCreate(
     items.map((item) => ({
       order_id: orderId,
       sample_id: item.sample_id ?? null,
       sample_pack_id: item.sample_pack_id ?? null,
       price: item.price,
+      license_version: license.version,
     })),
     {
       transaction,

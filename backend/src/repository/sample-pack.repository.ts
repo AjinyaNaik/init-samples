@@ -1,4 +1,5 @@
 import SamplePack from "../models/sample-pack.model";
+import Sample from "../models/sample.model";
 import { SamplePackWithAssociatedSamplesFromQuery } from "../service/dtos/sample-pack.dto";
 
 interface CreateSamplePackData {
@@ -119,5 +120,26 @@ export const findOnlySamplePackSampleAudiosById = async (
         attributes: ["id", "audio_url", "name"],
       },
     ],
+  });
+};
+
+export const incrementDownloadCountForSamplePack = async (
+  packId: number,
+  transaction?: any
+) => {
+  await SamplePack.increment("download_count", {
+    by: 1,
+    where: {
+      id: packId,
+    },
+    transaction,
+  });
+
+  await Sample.increment("download_count", {
+    by: 1,
+    where: {
+      sample_pack_id: packId,
+    },
+    transaction,
   });
 };

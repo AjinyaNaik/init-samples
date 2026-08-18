@@ -209,6 +209,9 @@ export const getSampleAudioUrl = async (
     throw new Error("You do not own this sample");
   }
 
+  // Increment the download count for the sample
+  await sampleRepository.incrementDownloadCount(sampleId);
+
   return {
     id: sample.id,
     audio_url: sample.audio_url,
