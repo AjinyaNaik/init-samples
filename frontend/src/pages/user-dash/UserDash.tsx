@@ -5,7 +5,7 @@ import { useLogin } from "../../hooks/userHooks";
 import { useMyPurchasedSamples, useMyPurchasedSamplePacks } from "../../hooks/order.hooks";
 import UserSidebar from "./components/UserSidebar";
 import UserRightContent from "./components/UserRightContent";
-import RetroStarfield from "./components/RetroStarfield"; 
+import RetroStarfield from "../../components/shared/RetroStarfield"; 
 
 type Tab = "packs" | "samples";
 

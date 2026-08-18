@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSampleDetail } from "../../hooks/sampleHooks";
 import { useCheckoutSamples } from "../../hooks/stripeHooks";
+import RetroStarfield from "../../components/shared/RetroStarfield";
 
 export default function SampleDetail() {
   const { id } = useParams();
@@ -35,6 +36,8 @@ export default function SampleDetail() {
   return (
     <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-24 px-8 pb-32">
 
+      <RetroStarfield />
+
       <style>{`
         @keyframes sample-neon-flicker {
           0%, 19%, 21%, 23%, 25%, 20%, 56%, 100% {
@@ -48,13 +51,13 @@ export default function SampleDetail() {
         }
       `}</style>
 
-      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-10 md:p-16 shadow-sm flex flex-col gap-6">
+      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-10 md:p-16 shadow-sm flex flex-col gap-6 relative z-10">
         <button onClick={() => navigate(-1)} className="self-start text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors">
           &larr; Back to Catalog
         </button>
 
         <h1
-          className="text-purple-300 tracking-wide font-normal leading-tight" 
+          className="text-purple-300 tracking-wide font-normal leading-tight"
           style={{
             fontFamily: "'Shrikhand', cursive",
             animation: "sample-neon-flicker 5s infinite alternate",
@@ -67,7 +70,7 @@ export default function SampleDetail() {
             paddingBottom: "30px",
             paddingLeft: "30px",
             paddingRight: "30px",
-            marginLeft: "-30px", 
+            marginLeft: "-30px",
             marginRight: "-30px",
 
             fontSize: sample.name.length <= 12
