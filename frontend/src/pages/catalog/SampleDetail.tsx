@@ -1,15 +1,26 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSampleDetail } from "../../hooks/sampleHooks";
+import { useCheckoutSamples } from "../../hooks/stripeHooks";
 
 export default function SampleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { sample, fetchSampleDetail, isLoading, error } = useSampleDetail();
+  const { checkoutSamples, isLoading: isPurchasing, error: purchaseError } = useCheckoutSamples();
 
   useEffect(() => {
     fetchSampleDetail(id).catch((err) => console.error(err));
   }, [id]);
+
+  const handlePurchase = async () => {
+    if (!sample?.id) return;
+    try {
+      await checkoutSamples([sample.id]);
+    } catch (err) {
+      console.error("Purchase error:", err);
+    }
+  };
 
   if (isLoading) return <p className="text-zinc-400 text-center pt-32 animate-pulse">Loading details...</p>;
   if (error || !sample) return <p className="text-red-500 text-center pt-32">{error || "Sample not found."}</p>;
@@ -30,13 +41,13 @@ export default function SampleDetail() {
         }
       `}</style>
 
-      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-16 shadow-sm">
-        <button onClick={() => navigate(-1)} className="mb-6 text-sm text-purple-400 font-semibold hover:text-purple-300">
+      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-10 md:p-16 shadow-sm flex flex-col gap-6">
+        <button onClick={() => navigate(-1)} className="self-start text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors">
           &larr; Back to Catalog
         </button>
 
         <h1
-          className="mb-4 text-purple-300 tracking-wide font-normal leading-tight" 
+          className="text-purple-300 tracking-wide font-normal leading-tight" 
           style={{
             fontFamily: "'Shrikhand', cursive",
             animation: "sample-neon-flicker 5s infinite alternate",
@@ -64,12 +75,55 @@ export default function SampleDetail() {
           {sample.name}
         </h1>
 
-        <p className="text-zinc-500 mb-6">{sample.description || "No description provided."}</p>
+        <p className="text-zinc-400 text-lg leading-relaxed">{sample.description || "No description provided."}</p>
 
-        <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl mb-8 flex flex-col gap-4">
-          <audio src={sample.preview_url} controls className="w-full" />
+        {/* Audio Player Block */}
+        <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl flex flex-col gap-4">
+          {sample.preview_url ? (
+            <audio src={sample.preview_url} controls className="w-full" />
+          ) : (
+            <p className="text-sm text-zinc-500 italic text-center py-2">Preview audio unavailable.</p>
+          )}
         </div>
 
+        {/* Purchase Block (Price + Buy Button) */}
+        <div className="bg-zinc-950/70 border border-zinc-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">
+              Sample Price
+            </span>
+            <span className="text-3xl font-extrabold text-purple-300">
+              {sample.price ? `$${sample.price}` : "Free"}
+            </span>
+          </div>
+
+          <button
+            onClick={handlePurchase}
+            disabled={isPurchasing}
+            className="w-full sm:w-auto px-8 py-3.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-950/60 disabled:text-zinc-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] flex items-center justify-center gap-2"
+          >
+            {isPurchasing ? (
+              <>
+                <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Redirecting to Stripe...</span>
+              </>
+            ) : (
+              <span>Buy Sample Now</span>
+            )}
+          </button>
+        </div>
+
+        {/* Purchase Error Banner */}
+        {purchaseError && (
+          <p className="text-sm text-red-400 bg-red-950/40 border border-red-800/60 p-4 rounded-xl text-center">
+            {purchaseError}
+          </p>
+        )}
+
+        {/* Metadata List */}
         <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-6">
           <div>
             <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Categories</span>
