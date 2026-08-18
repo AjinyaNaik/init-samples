@@ -15,6 +15,13 @@ export default function SampleDetail() {
 
   const handlePurchase = async () => {
     if (!sample?.id) return;
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login?reason=auth_required");
+      return;
+    }
+
     try {
       await checkoutSamples([sample.id]);
     } catch (err) {
@@ -100,7 +107,7 @@ export default function SampleDetail() {
           <button
             onClick={handlePurchase}
             disabled={isPurchasing}
-            className="w-full sm:w-auto px-8 py-3.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-950/60 disabled:text-zinc-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-8 py-3.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-950/60 disabled:text-zinc-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] flex items-center justify-center gap-2 cursor-pointer"
           >
             {isPurchasing ? (
               <>
