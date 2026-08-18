@@ -10,7 +10,7 @@ export const useCreateSamplePack = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch('http://localhost:3000/admin/sample-packs', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sample-packs`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ export const useFilteredSamplePacks = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/sample-packs/filter?${queryParams.toString()}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sample-packs/filter?${queryParams.toString()}`);
       const json = await response.json();
 
       if (!response.ok) {
@@ -86,7 +86,7 @@ export const useSamplePackDetail = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:3000/admin/sample-packs/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sample-packs/${id}`);
       const json = await response.json();
       if (!response.ok) throw new Error(json.message || "Failed to load pack");
       setPack(json.data);
@@ -113,7 +113,7 @@ export const useSamplePackAudio = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/sample-packs/${id}/audio`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/sample-packs/${id}/audio`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,

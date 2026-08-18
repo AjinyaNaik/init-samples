@@ -18,7 +18,7 @@ export const useLogin = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/auth/login",
+        `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -84,7 +84,7 @@ export const useRegister = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:3000/auth/register",
+        `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
         {
           method: "POST",
           headers: {
