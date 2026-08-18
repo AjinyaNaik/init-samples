@@ -28,7 +28,7 @@ export const useCreateOrderSamples = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:3000/orders/samples",
+        `${import.meta.env.VITE_API_BASE_URL}/orders/samples`,
         {
           method: "POST",
           headers: {
@@ -93,7 +93,7 @@ export const useMyPurchasedSamples = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:3000/orders/my/samples",
+          `${import.meta.env.VITE_API_BASE_URL}/orders/my/samples`,
           {
             method: "GET",
             headers: {
@@ -158,7 +158,7 @@ export const useCreateOrderSamplePacks = () => {
       const token = localStorage.getItem("token");
 
       const response = await fetch(
-        "http://localhost:3000/orders/sample-packs",
+        `${import.meta.env.VITE_API_BASE_URL}/orders/sample-packs`,
         {
           method: "POST",
           headers: {
@@ -228,7 +228,7 @@ export const useMyPurchasedSamplePacks = () => {
         const token = localStorage.getItem("token");
 
         const response = await fetch(
-          "http://localhost:3000/orders/my/sample-packs",
+          `${import.meta.env.VITE_API_BASE_URL}/orders/my/sample-packs`,
           {
             method: "GET",
             headers: {

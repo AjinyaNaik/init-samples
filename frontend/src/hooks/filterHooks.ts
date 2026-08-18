@@ -15,7 +15,7 @@ export const useCategories = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:3000/filters/categories");
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/filters/categories`);
         const json = await response.json();
         if (!response.ok) throw new Error(json.message || "Failed to fetch categories");
         setCategories(json.data || []);
@@ -42,7 +42,7 @@ export const useSampleTypes = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:3000/filters/sample-types");
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/filters/sample-types`);
         const json = await response.json();
         if (!response.ok) throw new Error(json.message || "Failed to fetch sample types");
         setSampleTypes(json.data || []);
@@ -69,7 +69,7 @@ export const useGenres = () => {
       setIsLoading(true);
       setError(null);
       try {
-        const response = await fetch("http://localhost:3000/filters/genres");
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/filters/genres`);
         const json = await response.json();
         if (!response.ok) throw new Error(json.message || "Failed to fetch genres");
         setGenres(json.data || []);
