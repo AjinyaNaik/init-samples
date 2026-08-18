@@ -140,3 +140,10 @@ export const findAudioUrlById = async (
     attributes: ["id", "audio_url"],
   });
 };
+
+export const incrementDownloadCount = async (id: number) => {
+ return await Sample.increment("download_count", {
+    by: 1,
+    where: { id },
+  });
+};
