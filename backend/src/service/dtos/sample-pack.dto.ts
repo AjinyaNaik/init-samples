@@ -18,7 +18,7 @@ export interface UpdateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
-  price: number;
+  price?: number;
 }
 
 export interface FilterParams {
@@ -28,5 +28,5 @@ export interface FilterParams {
 }
 
 export interface SamplePackWithAssociatedSamplesFromQuery extends SamplePack {
-    samples?: Sample[];
-  };
+  samples?: Sample[];
+};
