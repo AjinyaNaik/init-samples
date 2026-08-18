@@ -38,11 +38,6 @@ export default function Catalog() {
     }
   }, [activeCategory, activeFormat, activeTypes, selectedGenres]);
 
-  const toggleType = (type: string) => {
-    setActiveTypes((prev) =>
-      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
-    );
-  };
 
   const toggleGenre = (genre: string) => {
     if (!genre) {

@@ -10,7 +10,7 @@ export const useCreateSample = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch('http://localhost:3000/admin/samples', {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/samples`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -56,7 +56,7 @@ export const useFilteredSamples = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/samples/filter?${queryParams.toString()}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/samples/filter?${queryParams.toString()}`);
       const json = await response.json();
 
       if (!response.ok) {
@@ -87,7 +87,7 @@ export const useSampleDetail = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await fetch(`http://localhost:3000/admin/samples/${id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${id}`);
       const json = await response.json();
       if (!response.ok) throw new Error(json.message || "Failed to load sample");
       setSample(json.data);
@@ -114,7 +114,7 @@ export const useSampleAudioUrl = () => {
     const token = localStorage.getItem("token");
 
     try {
-      const response = await fetch(`http://localhost:3000/admin/samples/${id}/audio`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${id}/audio`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
