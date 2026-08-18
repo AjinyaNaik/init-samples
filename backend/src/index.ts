@@ -7,14 +7,21 @@ import authRoutes from "./routes/auth.routes";
 import sellerRequestRoutes from "./routes/seller_request.routes";
 import sampleRoutes from "./routes/sample.routes";
 import samplePackRoutes from "./routes/sample-pack.routes";
-import filterRoutes from "./routes/filter.routes"; // <-- Import here
+import filterRoutes from "./routes/filter.routes";
 import path from "path";
 import orderRoutes from "./routes/order.routes";
-
+import stripeRoutes from "./routes/stripe.routes";
+import { handleStripeWebhook } from "./controller/stripe.controller";
 
 dotenv.config();
 
 const app = express();
+
+app.post(
+  "/stripe/webhook",
+  express.raw({ type: "application/json" }),
+  handleStripeWebhook
+);
 
 app.use("/uploads", cors(), express.static(path.join(__dirname, "../uploads")));
 
@@ -29,6 +36,7 @@ app.use("/admin/samples", sampleRoutes);
 app.use("/admin/sample-packs", samplePackRoutes);
 app.use("/filters", filterRoutes); 
 app.use("/orders", orderRoutes);
+app.use("/stripe", stripeRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello from the TypeScript Express backend!");
