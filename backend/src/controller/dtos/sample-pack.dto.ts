@@ -4,6 +4,7 @@ export interface CreateSamplePackRequest {
   category?: string;
   sample_type?: string;
   genres?: string;
+  price: string;
 }
 
 export interface UpdateSamplePackRequest {

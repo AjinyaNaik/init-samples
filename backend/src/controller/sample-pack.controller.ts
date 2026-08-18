@@ -45,13 +45,17 @@ export const createSamplePack = async (
       });
     }
 
+    const price = req.body.price ? Number(req.body.price) : 0.00;
+
+
     const payload: CreateSamplePackData = {
       name: req.body.name,
       description: req.body.description || null,
       cover_image: coverUrl,
       category: categories,      
       sample_type: sampleTypes,   
-      genres: genres,             
+      genres: genres,    
+      price: price,         
     };
 
     const samplePack = await samplePackService.createSamplePack(payload);

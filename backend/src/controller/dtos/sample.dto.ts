@@ -7,6 +7,7 @@ export interface CreateSampleRequest {
   can_preview: string;
   genres: string; 
   metadata?: string; 
+  price?: string;
 }
 
 export interface UpdateSampleRequest {
@@ -18,6 +19,7 @@ export interface UpdateSampleRequest {
   can_preview?: string;
   genres?: string;
   metadata?: string;
+  price?: string;
 }
 
 export interface GetFilteredSamplesQuery {

@@ -5,8 +5,8 @@ interface CatalogSidebarProps {
   setSearchQuery: (query: string) => void;
   categories: FilterItem[];
   loadingCategories: boolean;
-  activeCategory: string;
-  setActiveCategory: (cat: string) => void;
+  activeCategory: string[];
+  setActiveCategory: (cats: string[]) => void;
   activeFormat: string;
   setActiveFormat: (format: string) => void;
   sampleTypes: FilterItem[];
@@ -37,7 +37,7 @@ export default function CatalogSidebar({
   selectedGenres,
   toggleGenre,
 }: CatalogSidebarProps) {
-  
+
   const handleTypeClick = (typeName: string) => {
     if (activeFormat === "standalones") {
       if (activeTypes.includes(typeName)) {
@@ -48,10 +48,28 @@ export default function CatalogSidebar({
     } else {
       if (activeTypes.includes(typeName)) {
         setActiveTypes(activeTypes.filter((t) => t !== typeName));
-      } else {
+      } 
+      else {
         setActiveTypes([...activeTypes, typeName]);
       }
     }
+  };
+
+  const handleCategoryClick = (catName: string) => {
+    if (activeFormat === "standalones") {
+      if (activeCategory.includes(catName)) {
+        setActiveCategory([]);
+      } else {
+        setActiveCategory([catName]);
+      }
+    } else {
+      if (activeCategory.includes(catName)) {
+        setActiveCategory(activeCategory.filter((c) => c !== catName));
+      } else {
+        setActiveCategory([...activeCategory, catName]);
+      }
+    }
+    toggleGenre("");
   };
 
   return (
@@ -72,34 +90,6 @@ export default function CatalogSidebar({
         />
       </div>
 
-      {/* 1. Category Filter Card */}
-      <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
-        style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
-      >
-        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Category</h3>
-        {loadingCategories ? (
-          <p className="text-[10px] text-zinc-500 px-1 animate-pulse">Loading...</p>
-        ) : (
-          categories.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => {
-                setActiveCategory(cat.name);
-                toggleGenre(""); 
-              }}
-              className={`text-left px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
-                activeCategory === cat.name
-                  ? "bg-zinc-800 text-zinc-100 shadow-sm"
-                  : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
-              }`}
-            >
-              {cat.name}
-            </button>
-          ))
-        )}
-      </div>
-
       {/* 2. Format Filter Card */}
       <div
         className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
@@ -111,17 +101,51 @@ export default function CatalogSidebar({
             key={format}
             onClick={() => {
               setActiveFormat(format);
-              setActiveTypes([]); 
+              setActiveTypes([]);
+              setActiveCategory([]);
             }}
-            className={`text-left px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
-              activeFormat === format
+            className={`text-left px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${activeFormat === format
                 ? "bg-zinc-800 text-zinc-100 shadow-sm"
                 : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
-            }`}
+              }`}
           >
             {format}
           </button>
         ))}
+      </div>
+
+
+      {/* 1. Category Filter Card */}
+      <div
+        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
+        style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
+      >
+        <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Category</h3>
+        {loadingCategories ? (
+          <p className="text-[10px] text-zinc-500 px-1 animate-pulse">Loading...</p>
+        ) : (
+          categories.map((cat) => {
+            const isSelected = activeCategory.includes(cat.name);
+            return (
+              <button
+                key={cat.id}
+                onClick={() => handleCategoryClick(cat.name)}
+                className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
+                  isSelected
+                    ? "bg-zinc-800 text-zinc-100 shadow-sm"
+                    : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
+                }`}
+              >
+                <span>{cat.name}</span>
+                {isSelected && (
+                  <svg className="w-4 h-4 text-zinc-100" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </button>
+            );
+          })
+        )}
       </div>
 
       {/* 3. Type Filter Card */}
@@ -139,11 +163,10 @@ export default function CatalogSidebar({
               <button
                 key={type.id}
                 onClick={() => handleTypeClick(type.name)}
-                className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${
-                  isSelected
+                className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-bold transition-all duration-300 capitalize ${isSelected
                     ? "bg-zinc-800 text-zinc-100 shadow-sm"
                     : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
-                }`}
+                  }`}
               >
                 <span>{type.name}</span>
                 {isSelected && (
@@ -175,11 +198,10 @@ export default function CatalogSidebar({
                 <button
                   key={genre.id}
                   onClick={() => toggleGenre(genre.name)}
-                  className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-semibold text-left transition-all duration-300 ${
-                    isSelected
+                  className={`flex items-center justify-between px-3 py-1.5 rounded-md text-[13px] font-semibold text-left transition-all duration-300 ${isSelected
                       ? "bg-zinc-800 text-zinc-100 shadow-sm"
                       : "text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50"
-                  }`}
+                    }`}
                 >
                   <span>{genre.name}</span>
                   {isSelected && (

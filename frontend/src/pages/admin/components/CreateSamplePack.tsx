@@ -13,6 +13,7 @@ const CreateSamplePack = () => {
   const [categories, setCategories] = useState<string[]>([]);
   const [sampleTypes, setSampleTypes] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
+  const [price, setPrice] = useState<string>("");
 
   const [coverImage, setCoverImage] = useState<File | null>(null);
 
@@ -67,6 +68,13 @@ const CreateSamplePack = () => {
     formData.append("sample_type", JSON.stringify(sampleTypes));
     formData.append("genres", JSON.stringify(genres));
 
+    if (price.trim()) {
+      formData.append("price", String(Number(price.trim())));
+    }
+    else {
+      formData.append("price", "0.00");
+    }
+
     if (coverImage) {
       formData.append("cover_image", coverImage);
     }
@@ -76,13 +84,13 @@ const CreateSamplePack = () => {
 
       alert("Sample Pack created!");
 
-      // Reset form
       setName("");
       setDescription("");
       setCategories([]);
       setSampleTypes([]);
       setGenres([]);
       setCoverImage(null);
+      setPrice("");
 
       const fileInput = document.getElementById(
         "coverImage"
@@ -282,6 +290,21 @@ const CreateSamplePack = () => {
               ))}
             </div>
           )}
+        </div>
+
+        <div className="flex-1 transition-opacity duration-300 animate-fade-in mb-[19px]">
+          <label className="mb-1 block text-sm font-medium text-gray-700">
+            Price *
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            disabled={isLoading}
+            placeholder="0.00"
+            className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+          />
         </div>
 
         {/* Cover Image */}

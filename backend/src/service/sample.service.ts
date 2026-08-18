@@ -64,6 +64,7 @@ export const createSample = async (
     can_preview: data.can_preview ?? false,
     genres: data.genres,
     metadata: data.metadata ?? {},
+    price: data.price ?? null,
   });
 };
 
@@ -90,6 +91,7 @@ export const getFilteredSamples = async (filters: SampleFilterParams) => {
         category: sample.category || [],
         sample_type: sample.sample_type || [],
         genres: sample.genres || [],
+        price: sample.price,
       },
       filters
     );

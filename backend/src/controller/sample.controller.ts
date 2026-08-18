@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import * as sampleService from "../service/sample.service";
 import { createAudioPreview, uploadAudio, uploadAudioPreview } from "../service/storage.service";
-import { 
-  CreateSampleRequest, 
-  UpdateSampleRequest, 
-  StandardResponse, 
-  GetFilteredSamplesQuery, 
+import {
+  CreateSampleRequest,
+  UpdateSampleRequest,
+  StandardResponse,
+  GetFilteredSamplesQuery,
 } from "./dtos/sample.dto";
 import { CreateSampleData, UpdateSampleData, SampleFilterParams } from "../service/dtos/sample.dto";
 
@@ -29,7 +29,7 @@ export const createSample = async (
       file.mimetype
     );
 
-     const preview = await createAudioPreview(
+    const preview = await createAudioPreview(
       file.buffer,
       file.originalname
     );
@@ -45,6 +45,7 @@ export const createSample = async (
     const genres = req.body.genres ? JSON.parse(req.body.genres) : [];
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : null;
+    const price = req.body.price ? Number(req.body.price) : null;
 
     const payload: CreateSampleData = {
       name: req.body.name,
@@ -56,6 +57,7 @@ export const createSample = async (
       sample_type: sampleType,
       genres,
       metadata,
+      price: price,
     };
 
     const sample = await sampleService.createSample(payload);
@@ -64,7 +66,7 @@ export const createSample = async (
       success: true,
       data: sample,
     });
-  } 
+  }
   catch (error: any) {
     return res.status(400).json({
       success: false,

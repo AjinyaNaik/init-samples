@@ -8,6 +8,7 @@ export interface CreateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  price: number;
 }
 
 export interface UpdateSamplePackData {
@@ -17,6 +18,7 @@ export interface UpdateSamplePackData {
   category?: string[];
   sample_type?: string[];
   genres?: string[] | null;
+  price: number;
 }
 
 export interface FilterParams {
