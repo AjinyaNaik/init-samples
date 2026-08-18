@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useSamplePackDetail } from "../../hooks/samplePackHooks";
 import { useCheckoutSamplePacks } from "../../hooks/stripeHooks";
+import RetroStarfield from "../../components/shared/RetroStarfield";
 
 export default function PackDetail() {
   const { id } = useParams();
@@ -36,6 +37,8 @@ export default function PackDetail() {
   return (
     <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-12 px-8 pb-32">
 
+      <RetroStarfield />
+
       <style>{`
         @keyframes pack-neon-flicker {
           0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
@@ -60,7 +63,7 @@ export default function PackDetail() {
       </div>
 
       {/* Outer Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start relative z-10">
 
         {/* Left Column: Cover Art Aspect */}
         <div className="md:col-span-3 flex flex-col gap-6 sticky top-28">
@@ -164,8 +167,8 @@ export default function PackDetail() {
                     <div
                       key={sample.id}
                       className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${isLocked
-                          ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
-                          : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
+                        ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
+                        : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
                         }`}
                     >
                       <div>
