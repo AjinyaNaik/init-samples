@@ -1,4 +1,7 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
+const PAGE_SIZE = 8;
 
 interface CatalogResultsProps {
   activeCategory: string[];
@@ -18,11 +21,20 @@ export default function CatalogResults({
   isLoading,
 }: CatalogResultsProps) {
   const navigate = useNavigate();
+  const [page, setPage] = useState(1);
+
+  const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
+  const pagedResults = results.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // Reset to page 1 whenever filters or format change
+  useEffect(() => {
+    setPage(1);
+  }, [activeFormat, activeCategory, activeTypes, selectedGenres]);
 
   const handleRouteToDetail = (id: number) => {
     if (activeFormat === "packs") {
       navigate(`/catalog/pack/${id}`);
-    }
+    } 
     else {
       navigate(`/catalog/sample/${id}`);
     }
@@ -45,11 +57,11 @@ export default function CatalogResults({
       `}</style>
 
       <div
-        className="border border-zinc-800 rounded-2xl p-6 md:p-7 shadow-sm h-full flex flex-col"
-        style={{ backgroundColor: "rgba(24, 24, 27, 0.8)" }}
+        className="border border-zinc-800 rounded-2xl p-6 md:p-7 shadow-sm flex flex-col"
+        style={{ backgroundColor: "rgba(24, 24, 27, 0.8)", height: "933px" }}
       >
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 border-b border-zinc-800/80 pb-4">
+        <div className="flex justify-between items-center mb-6 border-b border-zinc-800/80 pb-4 flex-shrink-0">
           <h2 className="text-xl font-bold flex flex-col gap-1">
             <div className="flex flex-wrap items-center gap-1.5 text-xl">
               <span className="capitalize">{activeCategory.join(", ")}</span>
@@ -78,11 +90,11 @@ export default function CatalogResults({
         </div>
 
         {/* Results List */}
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-col flex-grow overflow-y-auto min-h-0">
           {isLoading ? (
             <p className="text-zinc-400 text-sm py-16 text-center animate-pulse">Fetching catalogs...</p>
           ) : (
-            results.map((result, index) => {
+            pagedResults.map((result, index) => {
               const title = result.name || "Untitled";
               const genreLabel = Array.isArray(result.genres) ? result.genres.join(", ") : (result.genre || "Global");
               const artworkUrl = activeFormat === "packs"
@@ -95,13 +107,21 @@ export default function CatalogResults({
                 <div
                   key={result.id}
                   onClick={() => handleRouteToDetail(result.id)}
-                  className={`flex flex-row items-center py-4 px-4 transition-colors duration-200 group rounded-xl cursor-pointer hover:bg-zinc-800/50 ${index !== results.length - 1 ? "border-b border-zinc-800/40 mb-1" : ""
-                    }`}
+                  className={`flex flex-row items-center py-4 px-4 transition-colors duration-200 group rounded-xl cursor-pointer hover:bg-zinc-800/50 ${
+                    index !== pagedResults.length - 1 ? "border-b border-zinc-800/40 mb-1" : ""
+                  }`}
                 >
-                  <div
-                    className="w-[50px] h-[50px] bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-4 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.18)] transition-all duration-305 bg-cover bg-center"
-                    style={artworkUrl ? { backgroundImage: `url(${artworkUrl})` } : undefined}
-                  ></div>
+                  {/* Use <img loading="lazy"> instead of backgroundImage for native lazy loading */}
+                  <div className="w-[50px] h-[50px] bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-4 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.18)] transition-all duration-300 overflow-hidden">
+                    {artworkUrl ? (
+                      <img
+                        src={artworkUrl}
+                        alt={title}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : null}
+                  </div>
 
                   <div className="flex-grow flex flex-col min-w-0 pr-2">
                     <h3 className="font-bold text-[15px] text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 truncate">
@@ -160,6 +180,43 @@ export default function CatalogResults({
             </div>
           )}
         </div>
+
+        {/* Pagination Stepper */}
+        {!isLoading && totalPages > 1 && (
+          <div className="flex items-center justify-between pt-4 mt-4 border-t border-zinc-800/60 flex-shrink-0">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-zinc-400 bg-zinc-800/60 border border-zinc-700 rounded-lg hover:bg-zinc-700 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              ← Prev
+            </button>
+
+            <div className="flex items-center gap-1.5">
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`w-8 h-8 text-xs font-bold rounded-lg transition-all ${
+                    p === page
+                      ? "bg-purple-600 text-white shadow-[0_0_10px_rgba(168,85,247,0.4)]"
+                      : "bg-zinc-800/60 border border-zinc-700 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-200"
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-zinc-400 bg-zinc-800/60 border border-zinc-700 rounded-lg hover:bg-zinc-700 hover:text-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              Next →
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
