@@ -128,5 +128,7 @@ export const getSamplePackAudio = async (
     );
   }
 
+  await samplePackRepository.incrementDownloadCountForSamplePack(samplePackId);
+
   return samplePack;
 };
