@@ -24,7 +24,7 @@ export default function PackDetail() {
 
     try {
       await checkoutSamplePacks([pack.id]);
-    } 
+    }
     catch (err) {
       console.error("Purchase error:", err);
     }
@@ -34,7 +34,7 @@ export default function PackDetail() {
   if (error || !pack) return <p className="text-red-500 text-center pt-32">{error || "Sample pack not found."}</p>;
 
   return (
-    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-24 px-8 pb-32">
+    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-12 px-8 pb-32">
 
       <style>{`
         @keyframes pack-neon-flicker {
@@ -49,6 +49,16 @@ export default function PackDetail() {
         }
       `}</style>
 
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto mb-6 relative z-10">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors py-2 px-4 bg-zinc-900 border border-zinc-800/80 rounded-xl hover:bg-zinc-950 shadow-md cursor-pointer"
+        >
+          &larr; Back to Catalog
+        </button>
+      </div>
+
       {/* Outer Grid */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start">
 
@@ -58,12 +68,6 @@ export default function PackDetail() {
             className="w-full aspect-square bg-zinc-900 border border-zinc-800 rounded-3xl bg-cover bg-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-[1.01] hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]"
             style={pack.cover_image ? { backgroundImage: `url(${pack.cover_image})` } : undefined}
           ></div>
-          <button
-            onClick={() => navigate(-1)}
-            className="text-sm text-purple-400 font-semibold text-center hover:text-purple-300 transition-colors py-3 bg-zinc-900 border border-zinc-800/80 rounded-2xl hover:bg-zinc-900 shadow-md"
-          >
-            &larr; Back to Catalog
-          </button>
         </div>
 
         {/* Right Column: Pack Details & Purchase Action */}
@@ -159,11 +163,10 @@ export default function PackDetail() {
                   return (
                     <div
                       key={sample.id}
-                      className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${
-                        isLocked
+                      className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${isLocked
                           ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
                           : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div>
                         <h3 className="font-bold text-sm md:text-base text-zinc-100 flex items-center gap-2">
