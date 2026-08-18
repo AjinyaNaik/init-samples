@@ -20,6 +20,7 @@ class OrderItem extends Model<
 
   // Price at the time of purchase, in cents
   declare price: number;
+  declare license_version: number;
 
   declare created_at: CreationOptional<Date>;
   declare updated_at: CreationOptional<Date>;
@@ -42,7 +43,7 @@ OrderItem.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    
+
     sample_pack_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -54,6 +55,11 @@ OrderItem.init(
       validate: {
         min: 0,
       },
+    },
+    license_version: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 1,
     },
 
     created_at: {
