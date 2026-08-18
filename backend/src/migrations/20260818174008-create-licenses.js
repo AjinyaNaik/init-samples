@@ -40,6 +40,22 @@ module.exports = {
         defaultValue: Sequelize.NOW,
       },
     });
+    await queryInterface.sequelize.query(`
+      INSERT INTO licenses (
+        version,
+        terms,
+        is_active,
+        created_at,
+        updated_at
+      )
+      VALUES (
+        1,
+        'Standard Royalty-Free License',
+        true,
+        NOW(),
+        NOW()
+      );
+    `);
   },
 
   async down(queryInterface) {
