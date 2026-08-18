@@ -15,8 +15,7 @@ const samplePackInclude = {
   ],
 };
 
-export const create = async (data: CreateSampleData) => {
-  const publicSampleAttributes = [
+const publicSampleAttributes = [
   "id",
   "name",
   "description",
@@ -32,6 +31,8 @@ export const create = async (data: CreateSampleData) => {
   "created_at",
   "updated_at",
 ];
+
+export const create = async (data: CreateSampleData) => {
   const sample = await Sample.create({
     name: data.name,
     description: data.description ?? null,
@@ -54,22 +55,7 @@ export const create = async (data: CreateSampleData) => {
 
 export const findAll = async () => {
   return await Sample.findAll({
-    attributes: [
-      "id",
-      "name",
-      "description",
-      "preview_url",
-      "sample_pack_id",
-      "category",
-      "sample_type",
-      "can_preview",
-      "genres",
-      "metadata",
-      "download_count",
-      "price",
-      "created_at",
-      "updated_at",
-    ],
+    attributes: publicSampleAttributes,
     include: [samplePackInclude],
     order: [["created_at", "DESC"]],
   });
@@ -77,21 +63,7 @@ export const findAll = async () => {
 
 export const findById = async (id: number) => {
   return await Sample.findByPk(id, {
-    attributes: [
-      "id",
-      "name",
-      "description",
-      "preview_url",
-      "sample_pack_id",
-      "category",
-      "sample_type",
-      "can_preview",
-      "genres",
-      "metadata",
-      "download_count",
-      "created_at",
-      "updated_at",
-    ],
+    attributes: publicSampleAttributes,
     include: [samplePackInclude],
   });
 };
@@ -134,6 +106,7 @@ export const findSamplesByIds = async (
     where: {
       id: sampleIds,
     },
+    attributes: publicSampleAttributes,
   });
 };
 
@@ -145,7 +118,7 @@ export const findStandaloneSamplesByIds = async (
       id: sampleIds,
       sample_pack_id: null,
     },
-    attributes: ["id"],
+    attributes: publicSampleAttributes,
   });
 };
 
@@ -156,6 +129,7 @@ export const findSamplesByPackId = async (
     where: {
       sample_pack_id: samplePackId,
     },
+    attributes: publicSampleAttributes,
   });
 };
 
