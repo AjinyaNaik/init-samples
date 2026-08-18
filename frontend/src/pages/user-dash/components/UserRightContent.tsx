@@ -164,7 +164,7 @@ export default function UserRightContent({
             {loadingPacks ? (
               <p className="text-zinc-400 text-center py-20 animate-pulse">Loading acquired packs...</p>
             ) : samplePacks.length > 0 ? (
-              <div className="flex flex-col gap-5">
+              <div className="flex flex-col gap-5 p-1">
                 {samplePacks.map((pack) => {
                   const isPackDownloading = downloadingId === pack.id && packAudioLoading;
                   const isHighlighted = highlightId && Number(highlightId) === pack.id;
@@ -174,7 +174,7 @@ export default function UserRightContent({
                       key={pack.id}
                       className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${
                         isHighlighted
-                          ? "border-purple-500 animate-purchased-highlight"
+                          ? "border-purple-500 animate-purchased-highlight my-2"
                           : "border-zinc-800/85"
                       }`}
                     >
@@ -185,15 +185,17 @@ export default function UserRightContent({
                             style={pack.cover_image ? { backgroundImage: `url(${pack.cover_image})` } : undefined}
                           ></div>
                           <div>
-                            <h3 className="font-bold text-zinc-100 text-lg flex items-center gap-2">
+                            <h3 className="font-bold text-zinc-100 text-lg">
                               {pack.name}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="text-xs text-zinc-500 capitalize">{pack.genres?.join(", ") || "Genres n/a"}</p>
                               {isHighlighted && (
-                                <span className="text-[10px] uppercase tracking-widest bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-full animate-pulse">
+                                <span className="text-[9px] uppercase tracking-widest bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.6)]">
                                   Just Purchased!
                                 </span>
                               )}
-                            </h3>
-                            <p className="text-xs text-zinc-500 capitalize">{pack.genres?.join(", ") || "Genres n/a"}</p>
+                            </div>
                           </div>
                         </div>
 
@@ -259,7 +261,7 @@ export default function UserRightContent({
             {loadingSamples ? (
               <p className="text-zinc-400 text-center py-20 animate-pulse">Loading acquired tracks...</p>
             ) : samples.length > 0 ? (
-              <div className="flex flex-col gap-3 max-h-[380px] overflow-y-auto pr-1">
+              <div className="flex flex-col gap-5 p-1">
                 {samples.map((sample) => {
                   const isTrackDownloading = downloadingId === sample.id && sampleAudioLoading;
                   const isHighlighted = highlightId && Number(highlightId) === sample.id;
@@ -267,33 +269,52 @@ export default function UserRightContent({
                   return (
                     <div
                       key={sample.id}
-                      className={`p-4 bg-zinc-950 border rounded-2xl flex items-center justify-between transition-all duration-300 ${
+                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${
                         isHighlighted
-                          ? "border-purple-500 animate-purchased-highlight"
-                          : "border-zinc-800/80 hover:border-zinc-700"
+                          ? "border-purple-500 animate-purchased-highlight my-2"
+                          : "border-zinc-800/85"
                       }`}
                     >
-                      <div>
-                        <h3 className="font-bold text-zinc-100 flex items-center gap-2">
-                          {sample.name}
-                          {isHighlighted && (
-                            <span className="text-[10px] uppercase tracking-widest bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-full animate-pulse">
-                              Just Purchased!
-                            </span>
-                          )}
-                        </h3>
-                        <p className="text-xs text-zinc-500 capitalize">{sample.sample_type?.join(", ")}</p>
-                      </div>
+                      <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-12 bg-zinc-800 border border-zinc-700 rounded-lg flex items-center justify-center text-purple-400 shrink-0">
+                            <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zM9 10l12-3" />
+                            </svg>
+                          </div>
+                          <div>
+                            <h3 className="font-bold text-zinc-100 text-lg">
+                              {sample.name}
+                            </h3>
+                            <div className="flex items-center gap-2 mt-1">
+                              <p className="text-xs text-zinc-500 capitalize">
+                                {sample.sample_type?.join(", ") || "Standalone Audio Track"}
+                              </p>
+                              {isHighlighted && (
+                                <span className="text-[9px] uppercase tracking-widest bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.6)]">
+                                  Just Purchased!
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
 
-                      <div className="flex items-center gap-4">
-                        <audio src={sample.preview_url ?? undefined} controls className="max-w-[125px] md:max-w-xs" />
                         <button
                           onClick={() => handleDownloadTrack(sample.id, sample.name)}
                           disabled={isTrackDownloading}
-                          className="px-3 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer"
+                          className="px-4 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer"
                         >
-                          {isTrackDownloading ? "..." : "Download"}
+                          {isTrackDownloading ? "Downloading..." : "Download Track"}
                         </button>
+                      </div>
+
+                      <div className="bg-zinc-900/40 p-3 border border-zinc-800/50 rounded-xl flex items-center justify-between gap-4">
+                        <span className="text-xs text-zinc-400 font-semibold px-2">Preview Audio</span>
+                        <audio
+                          src={sample.preview_url ?? undefined}
+                          controls
+                          className="w-full max-w-xs md:max-w-md"
+                        />
                       </div>
                     </div>
                   );
