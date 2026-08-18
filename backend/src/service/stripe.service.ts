@@ -20,13 +20,11 @@ export const createSampleCheckoutSession = async (
     throw new Error("At least one sample is required");
   }
 
-  // Verify samples exist
   const samples = await findStandaloneSamplesByIds(sampleIds);
   if (samples.length !== sampleIds.length) {
     throw new Error("One or more sample IDs are invalid");
   }
 
-  // Verify user doesn't already own any
   const purchasedSamples = await orderRepository.findPurchasedSamplesByUserId(userId);
   const purchasedSampleIds = new Set(purchasedSamples.map((item) => item.sample_id));
   const alreadyOwned = sampleIds.filter((id) => purchasedSampleIds.has(id));
@@ -35,7 +33,6 @@ export const createSampleCheckoutSession = async (
     throw new Error(`You already own sample(s): ${alreadyOwned.join(", ")}`);
   }
 
-  // Format line items (converting dollars to cents)
   const lineItems = samples.map((sample) => ({
     price_data: {
       currency: "usd",
@@ -48,13 +45,11 @@ export const createSampleCheckoutSession = async (
     quantity: 1,
   }));
 
-  // Create Stripe session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
     line_items: lineItems,
-    success_url: `${process.env.FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.FRONTEND_URL}/cart`,
+    success_url: `${process.env.FRONTEND_URL}/dashboard?tab=samples&highlightId=${sampleIds[0]}`, cancel_url: `${process.env.FRONTEND_URL}/catalog`,
     metadata: {
       userId: userId.toString(),
       type: "samples",
@@ -76,13 +71,11 @@ export const createSamplePackCheckoutSession = async (
     throw new Error("At least one sample pack is required");
   }
 
-  // Verify sample packs exist
   const samplePacks = await findSamplePacksByIds(samplePackIds);
   if (samplePacks.length !== samplePackIds.length) {
     throw new Error("One or more sample pack IDs are invalid");
   }
 
-  // Verify user doesn't already own any
   const purchasedSamplePacks = await orderRepository.findPurchasedSamplePacksByUserId(userId);
   const purchasedPackIds = new Set(purchasedSamplePacks.map((item) => item.sample_pack_id));
   const alreadyOwned = samplePackIds.filter((id) => purchasedPackIds.has(id));
@@ -91,7 +84,6 @@ export const createSamplePackCheckoutSession = async (
     throw new Error(`You already own sample pack(s): ${alreadyOwned.join(", ")}`);
   }
 
-  // Format line items
   const lineItems = samplePacks.map((samplePack) => ({
     price_data: {
       currency: "usd",
@@ -104,13 +96,12 @@ export const createSamplePackCheckoutSession = async (
     quantity: 1,
   }));
 
-  // Create Stripe session
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ["card"],
     mode: "payment",
     line_items: lineItems,
-    success_url: `${process.env.FRONTEND_URL}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.FRONTEND_URL}/cart`,
+    success_url: `${process.env.FRONTEND_URL}/dashboard?tab=packs&highlightId=${samplePackIds[0]}`,
+    cancel_url: `${process.env.FRONTEND_URL}/catalog`,
     metadata: {
       userId: userId.toString(),
       type: "sample_packs",
@@ -131,9 +122,9 @@ export const fulfillOrderFromSession = async (session: Stripe.Checkout.Session) 
   const paymentId = (session.payment_intent as string) || session.id;
 
   if (type === "samples") {
-    return await orderService.createOrderSamples(userId, { sample_ids: itemIds });
-  } 
+    return await orderService.createOrderSamples(userId, { sample_ids: itemIds }, paymentId);
+  }
   else if (type === "sample_packs") {
-    return await orderService.createOrderSamplePacks(userId, { sample_pack_ids: itemIds });
+    return await orderService.createOrderSamplePacks(userId, { sample_pack_ids: itemIds }, paymentId);
   }
 };
