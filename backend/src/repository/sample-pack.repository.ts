@@ -1,44 +1,14 @@
 import SamplePack from "../models/sample-pack.model";
 import Sample from "../models/sample.model";
-import { SamplePackWithAssociatedSamplesFromQuery } from "../service/dtos/sample-pack.dto";
-
-interface CreateSamplePackData {
-  name: string;
-  description?: string | null;
-  cover_image?: string | null;
-  category?: string[];
-  sample_type?: string[];
-  genres?: string[] | null;
-  price: number;
-}
-
-interface UpdateSamplePackData {
-  name?: string;
-  description?: string | null;
-  cover_image?: string | null;
-  category?: string[];
-  sample_type?: string[];
-  genres?: string[] | null;
-  price: number;
-}
+import { 
+  CreateSamplePackData, 
+  UpdateSamplePackData, 
+  SamplePackWithAssociatedSamplesFromQuery 
+} from "../service/dtos/sample-pack.dto";
 
 export const create = async (
   data: CreateSamplePackData
 ) => {
-  const publicSamplePackAttributes = [
-    "id",
-    "name",
-    "description",
-    "cover_image",
-    "category",
-    "sample_type",
-    "genres",
-    "download_count",
-    "price",
-    "created_at",
-    "updated_at",
-  ];
-
   return await SamplePack.create({
     name: data.name,
     description: data.description ?? null,
@@ -47,8 +17,9 @@ export const create = async (
     sample_type: data.sample_type || [],
     genres: data.genres ?? [],
     price: data.price,
-  },);
+  });
 };
+
 export const findAll = async (): Promise<SamplePackWithAssociatedSamplesFromQuery[]> => {
   return await SamplePack.findAll({
     include: [
@@ -92,7 +63,6 @@ export const remove = async (id: number) => {
   });
 };
 
-
 export const findSamplePackById = async (
   samplePackId: number
 ) => {
@@ -107,7 +77,7 @@ export const findSamplePacksByIds = async (
       id: samplePackIds,
     },
   });
-}
+};
 
 export const findOnlySamplePackSampleAudiosById = async (
   packId: number
