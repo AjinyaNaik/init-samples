@@ -221,7 +221,7 @@ export default function UserRightContent({
                                   <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize">
                                     {sample.category?.length > 0 && (
                                       <span className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300">
-                                        {sample.category.map(cat => cat.replace(/s$/, '')).join(", ")}
+                                        {sample.category.map((cat: string) => cat.replace(/s$/, '')).join(", ")}
                                       </span>
                                     )}
                                     {sample.sample_type?.length > 0 && (
@@ -301,7 +301,7 @@ export default function UserRightContent({
                             <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize -ml-0.75">
                               {sample.category?.length > 0 && (
                                 <span className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300">
-                                  {sample.category.map(cat => cat.replace(/s$/, '')).join(", ")}
+                                  {sample.category.map((cat: string) => cat.replace(/s$/, '')).join(", ")}
                                 </span>
                               )}
                               {sample.sample_type?.length > 0 && (
