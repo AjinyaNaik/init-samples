@@ -126,9 +126,12 @@ export const useSampleAudioUrl = () => {
       if (!response.ok) {
         throw new Error(json.message || "Failed to retrieve authorized audio URL");
       }
-
-      setAudioUrl(json.data);
-      return json.data;
+      const audioUrl = json.data.audio_url;
+      if (!audioUrl || typeof audioUrl !== "string") {
+        throw new Error("Invalid audio URL returned by server.");
+      }
+      setAudioUrl(audioUrl);
+      return audioUrl;
     } catch (err: any) {
       setError(err.message || "An unexpected error occurred");
       throw err;
