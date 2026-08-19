@@ -5,9 +5,6 @@ import SamplePack from "../models/sample-pack.model";
 import sequelize from "../config/database";
 import License from "../models/license";
 
-
-
-
 export const createOrder = async (
   userId: number,
   totalAmount: number,
