@@ -136,21 +136,19 @@ export default function UserRightContent({
       <div className="flex border-b border-zinc-800/80 bg-zinc-950/20">
         <button
           onClick={() => setActiveTab("packs")}
-          className={`flex-1 p-5 text-center font-bold transition-all duration-300 ${
-            activeTab === "packs"
-              ? "border-b-2 border-purple-500 text-purple-400 bg-purple-950/10"
-              : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
-          }`}
+          className={`flex-1 p-5 text-center font-bold transition-all duration-300 ${activeTab === "packs"
+            ? "border-b-2 border-purple-500 text-purple-400 bg-purple-950/10"
+            : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
+            }`}
         >
           My Packs
         </button>
         <button
           onClick={() => setActiveTab("samples")}
-          className={`flex-1 p-5 text-center font-bold transition-all duration-300 ${
-            activeTab === "samples"
-              ? "border-b-2 border-purple-500 text-purple-400 bg-purple-950/10"
-              : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
-          }`}
+          className={`flex-1 p-5 text-center font-bold transition-all duration-300 ${activeTab === "samples"
+            ? "border-b-2 border-purple-500 text-purple-400 bg-purple-950/10"
+            : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
+            }`}
         >
           My Tracks
         </button>
@@ -172,11 +170,10 @@ export default function UserRightContent({
                   return (
                     <div
                       key={pack.id}
-                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${
-                        isHighlighted
-                          ? "border-purple-500 animate-purchased-highlight my-2"
-                          : "border-zinc-800/85"
-                      }`}
+                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
+                        ? "border-purple-500 animate-purchased-highlight my-2"
+                        : "border-zinc-800/85"
+                        }`}
                     >
                       <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
                         <div className="flex items-center gap-4">
@@ -215,24 +212,40 @@ export default function UserRightContent({
                             return (
                               <div
                                 key={sample.id}
-                                className="bg-zinc-900/40 p-3 border border-zinc-800/50 rounded-xl flex items-center justify-between hover:border-zinc-800 transition-colors gap-4"
+                                className="bg-zinc-900/40 p-3.5 border border-zinc-800/50 rounded-xl flex items-center justify-between hover:border-zinc-800/80 transition-all gap-4"
                               >
-                                <div>
-                                  <h4 className="font-bold text-sm text-zinc-200">{sample.name}</h4>
-                                  <p className="text-[10px] text-zinc-500 capitalize mt-0.5">{sample.sample_type?.join(", ")}</p>
+                                {/* Left: Track Metadata */}
+                                <div className="flex flex-col gap-1 min-w-0 pr-2">
+                                  <h4 className="font-semibold text-sm text-zinc-100 truncate">{sample.name}</h4>
+
+                                  <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize">
+                                    {sample.category?.length > 0 && (
+                                      <span className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300">
+                                        {sample.category.map(cat => cat.replace(/s$/, '')).join(", ")}
+                                      </span>
+                                    )}
+                                    {sample.sample_type?.length > 0 && (
+                                      <span>{sample.sample_type.join(", ")}</span>
+                                    )}
+                                    {sample.genres?.length > 0 && (
+                                      <span className="text-zinc-500">
+                                        {sample.sample_type?.length > 0 && "•"} {sample.genres.join(", ")}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
 
-                                <div className="flex items-center gap-4 flex-shrink-0 min-w-[280px] md:min-w-[340px] justify-end">
+                                {/* Right: Audio & Download Action */}
+                                <div className="flex items-center gap-3 flex-shrink-0">
                                   <audio
                                     src={sample.preview_url ?? undefined}
                                     controls
-                                    className="w-[140px] md:w-[220px] flex-shrink-0"
-                                    style={{ transform: "scale(0.9)", transformOrigin: "right center" }}
+                                    className="w-[130px] md:w-[200px] h-8 flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
                                   />
                                   <button
                                     onClick={() => handleDownloadTrack(sample.id, sample.name)}
                                     disabled={isTrackDownloading}
-                                    className="px-3 py-1.5 text-[10px] font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer shrink-0"
+                                    className="px-3.5 py-1.5 text-[11px] font-medium text-purple-200 bg-purple-950/30 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-lg transition-all duration-200 active:scale-95 disabled:opacity-50 cursor-pointer flex-shrink-0"
                                   >
                                     {isTrackDownloading ? "..." : "Download"}
                                   </button>
@@ -269,11 +282,10 @@ export default function UserRightContent({
                   return (
                     <div
                       key={sample.id}
-                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${
-                        isHighlighted
-                          ? "border-purple-500 animate-purchased-highlight my-2"
-                          : "border-zinc-800/85"
-                      }`}
+                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
+                        ? "border-purple-500 animate-purchased-highlight my-2"
+                        : "border-zinc-800/85"
+                        }`}
                     >
                       <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
                         <div className="flex items-center gap-4">
@@ -286,10 +298,20 @@ export default function UserRightContent({
                             <h3 className="font-bold text-zinc-100 text-lg">
                               {sample.name}
                             </h3>
-                            <div className="flex items-center gap-2 mt-1">
-                              <p className="text-xs text-zinc-500 capitalize">
-                                {sample.sample_type?.join(", ") || "Standalone Audio Track"}
-                              </p>
+                            <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize -ml-0.75">
+                              {sample.category?.length > 0 && (
+                                <span className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300">
+                                  {sample.category.map(cat => cat.replace(/s$/, '')).join(", ")}
+                                </span>
+                              )}
+                              {sample.sample_type?.length > 0 && (
+                                <span>{sample.sample_type.join(", ")}</span>
+                              )}
+                              {sample.genres?.length > 0 && (
+                                <span className="text-zinc-500">
+                                  {sample.sample_type?.length > 0 && "•"} {sample.genres.join(", ")}
+                                </span>
+                              )}
                               {isHighlighted && (
                                 <span className="text-[9px] uppercase tracking-widest bg-purple-500 text-white font-extrabold px-2 py-0.5 rounded-full animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.6)]">
                                   Just Purchased!
