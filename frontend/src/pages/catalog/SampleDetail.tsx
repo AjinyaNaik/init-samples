@@ -134,7 +134,7 @@ export default function SampleDetail() {
         )}
 
         {/* Metadata List */}
-        <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-6">
+        <div className="grid grid-cols-3 gap-4 border-t border-zinc-800 pt-6">
           <div>
             <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Categories</span>
             <span className="font-semibold text-zinc-200 capitalize">{sample.category?.join(", ") || "n/a"}</span>
@@ -142,6 +142,10 @@ export default function SampleDetail() {
           <div>
             <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Type/Instrument</span>
             <span className="font-semibold text-zinc-200 capitalize">{sample.sample_type?.join(", ") || "n/a"}</span>
+          </div>
+          <div>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Genres</span>
+            <span className="font-semibold text-zinc-200 capitalize">{sample.genres?.join(", ") || "n/a"}</span>
           </div>
         </div>
       </div>
