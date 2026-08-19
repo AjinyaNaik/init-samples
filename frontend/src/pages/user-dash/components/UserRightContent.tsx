@@ -15,6 +15,8 @@ interface UserRightContentProps {
   highlightId?: string | null;
 }
 
+const LICENSE_URL = "https://naxqhdcoiedkdsebuazw.supabase.co/storage/v1/object/public/covers/LICENSE.txt";
+
 export default function UserRightContent({
   activeTab,
   setActiveTab,
@@ -30,141 +32,145 @@ export default function UserRightContent({
   const { fetchSampleAudioUrl, isLoading: sampleAudioLoading } = useSampleAudioUrl();
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
+  const getAudioExtension = (url: string): string => {
+    try {
+      const pathname = new URL(url).pathname;
+      const extension = pathname.split(".").pop()?.toLowerCase();
 
-const getAudioExtension = (url: string): string => {
-  try {
-    const pathname = new URL(url).pathname;
-    const extension = pathname.split(".").pop()?.toLowerCase();
+      if (extension === "wav") return "wav";
+      if (extension === "mp3") return "mp3";
 
-    if (extension === "wav") return "wav";
-    if (extension === "mp3") return "mp3";
-
-    // Default to mp3 if the URL doesn't have a recognizable extension
-    return "mp3";
-  } catch {
-    return "mp3";
-  }
-};
-
-const handleDownloadFile = async (url: string, filename: string) => {
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error("Failed to download audio file.");
+      return "mp3";
+    } catch {
+      return "mp3";
     }
- console.log("Response URL:", response.url);
-    console.log("Status:", response.status);
-    console.log("Content-Type:", response.headers.get("content-type"));
-    console.log("Content-Length:", response.headers.get("content-length"));
+  };
 
-
-
-    const blob = await response.blob();
-
-    const blobUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = blobUrl;
-    link.setAttribute("download", filename);
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.URL.revokeObjectURL(blobUrl);
-  } catch {
-    window.open(url, "_blank");
-  }
-};
-
-const handleDownloadPack = async (
-  packId: number,
-  packName: string
-) => {
-  setDownloadingId(packId);
-
-  try {
-    const data = await fetchSamplePackAudio(packId);
-
-    if (!data.samples || data.samples.length === 0) {
-      alert("This pack contains no downloadable audio files.");
-      return;
+  const fetchAndAddLicense = async (zip: JSZip) => {
+    try {
+      const response = await fetch(LICENSE_URL);
+      if (response.ok) {
+        const blob = await response.blob();
+        zip.file("LICENSE.txt", blob);
+      }
+    } catch (err) {
+      console.warn("Could not attach license file to zip:", err);
     }
+  };
 
-    const zip = new JSZip();
+  const handleDownloadPack = async (
+    packId: number,
+    packName: string
+  ) => {
+    setDownloadingId(packId);
 
-    for (const sample of data.samples) {
-      if (!sample.audio_url) continue;
+    try {
+      const data = await fetchSamplePackAudio(packId);
 
-      const response = await fetch(sample.audio_url);
-
-      if (!response.ok) {
-        throw new Error(`Failed to download ${sample.name || "track"}`);
+      if (!data.samples || data.samples.length === 0) {
+        alert("This pack contains no downloadable audio files.");
+        return;
       }
 
-      const blob = await response.blob();
+      const zip = new JSZip();
 
-      const resolvedSampleName = sample.name || "Track";
-      const extension = getAudioExtension(sample.audio_url);
+      // Attach the license file to the zip
+      await fetchAndAddLicense(zip);
 
-      zip.file(
-        `${packName}/${resolvedSampleName}.${extension}`,
-        blob
-      );
+      for (const sample of data.samples) {
+        if (!sample.audio_url) continue;
+
+        const response = await fetch(sample.audio_url);
+
+        if (!response.ok) {
+          throw new Error(`Failed to download ${sample.name || "track"}`);
+        }
+
+        const blob = await response.blob();
+
+        const resolvedSampleName = sample.name || "Track";
+        const extension = getAudioExtension(sample.audio_url);
+
+        zip.file(
+          `${packName}/${resolvedSampleName}.${extension}`,
+          blob
+        );
+      }
+
+      const zipContent = await zip.generateAsync({
+        type: "blob",
+      });
+
+      const blobUrl = window.URL.createObjectURL(zipContent);
+
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.setAttribute("download", `${packName}.zip`);
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+
+      alert(`${packName}.zip compiled and downloaded successfully!`);
     }
-
-    const zipContent = await zip.generateAsync({
-      type: "blob",
-    });
-
-    const blobUrl = window.URL.createObjectURL(zipContent);
-
-    const link = document.createElement("a");
-    link.href = blobUrl;
-    link.setAttribute("download", `${packName}.zip`);
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.URL.revokeObjectURL(blobUrl);
-
-    alert(`${packName}.zip compiled and downloaded successfully!`);
-  } catch (err: any) {
-    alert("Download failed: " + err.message);
-  } finally {
-    setDownloadingId(null);
-  }
-};
-
-const handleDownloadTrack = async (
-  sampleId: number,
-  sampleName: string
-) => {
-  setDownloadingId(sampleId);
-
-  try {
-    const audioUrl = await fetchSampleAudioUrl(sampleId);
-
-    if (!audioUrl) {
-      throw new Error("Download URL could not be resolved.");
+    catch (err: any) {
+      alert("Download failed: " + err.message);
     }
+    finally {
+      setDownloadingId(null);
+    }
+  };
 
-    const extension = getAudioExtension(audioUrl);
+  const handleDownloadTrack = async (
+    sampleId: number,
+    sampleName: string
+  ) => {
+    setDownloadingId(sampleId);
 
-    await handleDownloadFile(
-      audioUrl,
-      `${sampleName}.${extension}`
-    );
-  } catch (err: any) {
-    alert("Download failed: " + err.message);
-  } finally {
-    setDownloadingId(null);
-  }
-};
+    try {
+      const audioUrl = await fetchSampleAudioUrl(sampleId);
 
+      if (!audioUrl) {
+        throw new Error("Download URL could not be resolved.");
+      }
 
+      const response = await fetch(audioUrl);
+      if (!response.ok) {
+        throw new Error("Failed to download audio file.");
+      }
+
+      const audioBlob = await response.blob();
+      const extension = getAudioExtension(audioUrl);
+
+      const zip = new JSZip();
+
+      // Attach the license file and the audio track into a zip bundle
+      await fetchAndAddLicense(zip);
+      zip.file(`${sampleName}.${extension}`, audioBlob);
+
+      const zipContent = await zip.generateAsync({
+        type: "blob",
+      });
+
+      const blobUrl = window.URL.createObjectURL(zipContent);
+      const link = document.createElement("a");
+
+      link.href = blobUrl;
+      link.setAttribute("download", `${sampleName}.zip`);
+
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (err: any) {
+      alert("Download failed: " + err.message);
+    } finally {
+      setDownloadingId(null);
+    }
+  };
 
   return (
     <div
@@ -280,7 +286,6 @@ const handleDownloadTrack = async (
                                 key={sample.id}
                                 className="bg-zinc-900/40 p-3.5 border border-zinc-800/50 rounded-xl flex items-center justify-between hover:border-zinc-800/80 transition-all gap-4"
                               >
-                                {/* Left: Track Metadata */}
                                 <div className="flex flex-col gap-1 min-w-0 pr-2">
                                   <h4 className="font-semibold text-sm text-zinc-100 truncate">{sample.name}</h4>
 
@@ -301,7 +306,6 @@ const handleDownloadTrack = async (
                                   </div>
                                 </div>
 
-                                {/* Right: Audio & Download Action */}
                                 <div className="flex items-center gap-3 flex-shrink-0">
                                   <audio
                                     src={sample.preview_url ?? undefined}
@@ -357,7 +361,7 @@ const handleDownloadTrack = async (
                         <div className="flex items-center gap-4">
                           <div className="w-14 h-12 bg-zinc-800 border border-zinc-700 rounded-lg flex items-center justify-center text-purple-400 shrink-0">
                             <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zM9 10l12-3" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2Z9 10l12-3" />
                             </svg>
                           </div>
                           <div>
