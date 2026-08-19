@@ -15,7 +15,7 @@ interface UserRightContentProps {
   highlightId?: string | null;
 }
 
-const LICENSE_URL = "https://naxqhdcoiedkdsebuazw.supabase.co/storage/v1/object/public/covers/LICENSE.txt";
+const LICENSE_URL = "https://naxqhdcoiedkdsebuazw.supabase.co/storage/v1/object/public/license/LICENSE.txt";
 
 export default function UserRightContent({
   activeTab,
