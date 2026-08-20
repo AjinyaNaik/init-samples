@@ -46,6 +46,7 @@ export const createSample = async (
     const metadata = req.body.metadata ? JSON.parse(req.body.metadata) : {};
     const samplePackId = req.body.sample_pack_id ? Number(req.body.sample_pack_id) : null;
     const price = req.body.price ? Number(req.body.price) : null;
+    const canPreview = req.body.can_preview ? Boolean(req.body.can_preview) : false;
 
     const payload: CreateSampleData = {
       name: req.body.name,
@@ -58,6 +59,7 @@ export const createSample = async (
       genres,
       metadata,
       price: price,
+      can_preview: canPreview,
     };
 
     const sample = await sampleService.createSample(payload);

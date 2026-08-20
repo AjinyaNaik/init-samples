@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 8;
+const PAGE_SIZE = 5; // Adjusted to fit the slightly smaller items
 
 interface CatalogResultsProps {
   activeCategory: string[];
@@ -54,7 +54,8 @@ export default function CatalogResults({
             opacity: 0.55;
           }
         }
-      `}</style>
+      `}
+      </style>
 
       <div
         className="border border-zinc-800 rounded-2xl p-6 md:p-7 shadow-sm flex flex-col"
@@ -107,12 +108,13 @@ export default function CatalogResults({
                 <div
                   key={result.id}
                   onClick={() => handleRouteToDetail(result.id)}
-                  className={`flex flex-row items-center py-4 px-4 transition-colors duration-200 group rounded-xl cursor-pointer hover:bg-zinc-800/50 ${
-                    index !== pagedResults.length - 1 ? "border-b border-zinc-800/40 mb-1" : ""
+                  /* Slightly scaled down padding and gap */
+                  className={`flex flex-row items-center py-5 px-5 transition-colors duration-200 group rounded-2xl cursor-pointer hover:bg-zinc-800/50 ${
+                    index !== pagedResults.length - 1 ? "border-b border-zinc-800/40 mb-2" : ""
                   }`}
                 >
-                  {/* Use <img loading="lazy"> instead of backgroundImage for native lazy loading */}
-                  <div className="w-[50px] h-[50px] bg-zinc-800 border border-zinc-700 rounded-lg shrink-0 mr-4 group-hover:border-purple-400/50 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.18)] transition-all duration-300 overflow-hidden">
+                  {/* Thumbnail Scaled to 80px x 80px */}
+                  <div className="w-[80px] h-[80px] bg-zinc-800 border border-zinc-700 rounded-xl shrink-0 mr-5 group-hover:border-purple-400/50 group-hover:shadow-[0_0_20px_rgba(167,139,250,0.18)] transition-all duration-300 overflow-hidden">
                     {artworkUrl ? (
                       <img
                         src={artworkUrl}
@@ -123,17 +125,18 @@ export default function CatalogResults({
                     ) : null}
                   </div>
 
-                  <div className="flex-grow flex flex-col min-w-0 pr-2">
-                    <h3 className="font-bold text-[15px] text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 truncate">
+                  <div className="flex-grow flex flex-col min-w-0 pr-4">
+                    {/* Title Text set to text-lg */}
+                    <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 truncate">
                       {title}
                     </h3>
-                    <p className="text-zinc-500 text-xs mt-0.5 flex flex-wrap items-center gap-1 leading-none">
+                    <p className="text-zinc-400 text-xs mt-1 flex flex-wrap items-center gap-1.5 leading-snug">
                       <span>{genreLabel}</span>
                       {packName && (
-                        <span className="text-zinc-500 font-normal ml-0.5">
+                        <span className="text-zinc-500 font-normal">
                           &bull; Part of{" "}
                           <span
-                            className="text-purple-300 transition-all duration-300 tracking-wide text-[9px] px-0.5 hover:text-purple-400"
+                            className="text-purple-300 transition-all duration-300 tracking-wide text-xs px-1 hover:text-purple-400"
                             style={{
                               fontFamily: "'Shrikhand', cursive",
                               animation: "neon-flicker 4s infinite alternate"
@@ -148,15 +151,17 @@ export default function CatalogResults({
                   </div>
 
                   <div className="flex items-center gap-5">
-                    <span className="px-2.5 py-1 bg-zinc-800/60 border border-zinc-700 rounded-md font-bold text-zinc-100 text-xs shrink-0 shadow-sm">
+                    {/* Price Pill */}
+                    <span className="px-3 py-1 bg-zinc-800/60 border border-zinc-700 rounded-lg font-bold text-zinc-100 text-xs shrink-0 shadow-sm">
                       {price}
                     </span>
+                    {/* Preview Button */}
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
                         handleRouteToDetail(result.id);
                       }}
-                      className="px-5 py-2 bg-zinc-800 text-zinc-100 rounded-md text-xs font-medium transition-all duration-300 transform active:scale-95 hover:scale-105 hover:bg-purple-600 hover:text-white hover:shadow-[0_0_10px_rgba(168,85,247,0.35)] cursor-pointer hidden md:block"
+                      className="px-5 py-2 bg-zinc-800 text-zinc-100 rounded-lg text-xs font-semibold transition-all duration-300 transform active:scale-95 hover:scale-105 hover:bg-purple-600 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.35)] cursor-pointer hidden md:block"
                     >
                       Preview
                     </button>

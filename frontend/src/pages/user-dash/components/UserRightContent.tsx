@@ -310,6 +310,8 @@ export default function UserRightContent({
                                   <audio
                                     src={sample.preview_url ?? undefined}
                                     controls
+                                    controlsList="nodownload"
+                                    onContextMenu={(e) => e.preventDefault()}
                                     className="w-[130px] md:w-[200px] h-8 flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
                                   />
                                   <button
@@ -405,6 +407,8 @@ export default function UserRightContent({
                         <audio
                           src={sample.preview_url ?? undefined}
                           controls
+                          controlsList="nodownload"
+                          onContextMenu={(e) => e.preventDefault()}
                           className="w-full max-w-xs md:max-w-md"
                         />
                       </div>

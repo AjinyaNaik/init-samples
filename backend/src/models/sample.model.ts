@@ -15,6 +15,7 @@ interface SampleAttributes {
   metadata: Record<string, any>;
   download_count: number;
   price: number | null;
+  pack_rank: number | null;
   created_at: Date;
   updated_at: Date;
 }
@@ -30,6 +31,7 @@ interface SampleCreationAttributes
     | "metadata"
     | "download_count"
     | "price"
+    | "pack_rank"
     | "created_at"
     | "updated_at"
   > { }
@@ -53,7 +55,7 @@ class Sample
   declare metadata: Record<string, any>;
   declare download_count: number;
   declare price: number | null;
-
+  declare pack_rank: number | null;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 }
@@ -120,6 +122,11 @@ Sample.init(
       allowNull: true,
       defaultValue: null
     }, 
+    pack_rank: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      defaultValue: 1
+    },  
     created_at: {
       type: DataTypes.DATE,
       allowNull: false,

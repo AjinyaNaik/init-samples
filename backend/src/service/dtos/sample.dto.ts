@@ -6,7 +6,7 @@ export interface CreateSampleData {
   sample_pack_id?: number | null;
   category: string[];
   sample_type: string[];
-  can_preview?: boolean;
+  can_preview: boolean;
   genres: string[];
   metadata?: Record<string, any>;
   price?: number | null;
