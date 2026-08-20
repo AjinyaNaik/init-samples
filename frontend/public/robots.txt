@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /catalog
+
+Disallow: /dashboard
+Disallow: /checkout
+Disallow: /login
+
+Sitemap: https://initsamples.com/sitemap.xml
