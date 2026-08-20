@@ -194,8 +194,7 @@ export default function PackDetail() {
                           <span className="text-xs tracking-wider uppercase text-purple-300">Buy Pack to Play</span>
                         </div>
                       ) : (
-
-                        <audio src={`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${sample.id}/preview`} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="max-w-[185px] md:max-w-xs" />
+                        <audio src={sample.preview_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="w-[200px] sm:w-[220px] md:w-[260px] shrink-0" />
                       )}
                     </div>
                   );

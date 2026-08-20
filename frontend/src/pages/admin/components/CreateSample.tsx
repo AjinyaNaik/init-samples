@@ -18,7 +18,7 @@ const CreateSample = () => {
   const [sampleType, setSampleType] = useState<string[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
 
-  const [canPreview, setCanPreview] = useState(false);
+  const [canPreview, setCanPreview] = useState(true);
   const [metadata, setMetadata] = useState("");
 
   const { createSample, isLoading, error } = useCreateSample();
@@ -121,7 +121,7 @@ const CreateSample = () => {
       setCategory([]);
       setSampleType([]);
       setGenres([]);
-      setCanPreview(false);
+      setCanPreview(true);
       setMetadata("");
       setPrice("");
 
