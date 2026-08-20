@@ -8,6 +8,7 @@ export interface CreateSampleRequest {
   genres: string; 
   metadata?: string; 
   price?: string;
+  rank?: string;
 }
 
 export interface UpdateSampleRequest {

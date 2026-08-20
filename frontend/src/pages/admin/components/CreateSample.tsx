@@ -12,6 +12,7 @@ const CreateSample = () => {
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [samplePackId, setSamplePackId] = useState<string>("");
   const [price, setPrice] = useState<string>("");
+  const [rank, setRank] = useState<string>("");
 
   const [category, setCategory] = useState<string[]>([]);
   const [sampleType, setSampleType] = useState<string[]>([]);
@@ -96,6 +97,7 @@ const CreateSample = () => {
     if (samplePackId.trim()) {
       formData.append("sample_pack_id", String(Number(samplePackId)));
       formData.append("price", "");
+      formData.append("rank", String(Number(rank)));
     }
     else {
       if (price.trim()) {
@@ -104,6 +106,7 @@ const CreateSample = () => {
       else {
         formData.append("price", "0.00");
       }
+      formData.append("rank", "");
     }
 
     try {
@@ -187,6 +190,18 @@ const CreateSample = () => {
               <label htmlFor="canPreview" className="text-sm font-medium text-gray-700 font-normal cursor-pointer">
                 Can be previewed on site (leave unchecked to lock it)
               </label>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                Rank *
+              </label>
+              <input
+                type="number"
+                step="1"
+                value={rank}
+                onChange={(e) => setRank(e.target.value)}
+                disabled={isLoading}
+                placeholder="1"
+                className="w-full rounded border border-gray-300 p-2 focus:border-blue-500 focus:outline-none disabled:bg-gray-100"
+              />
             </div>
           ) : (
             <div className="flex-1 transition-opacity duration-300 animate-fade-in mb-[19px]">

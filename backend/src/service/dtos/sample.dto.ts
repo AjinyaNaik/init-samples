@@ -10,6 +10,7 @@ export interface CreateSampleData {
   genres: string[];
   metadata?: Record<string, any>;
   price?: number | null;
+  pack_rank?: number | null;
 }
 
 export interface UpdateSampleData {

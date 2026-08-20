@@ -65,6 +65,7 @@ export const createSample = async (
     genres: data.genres,
     metadata: data.metadata ?? {},
     price: data.price ?? null,
+    pack_rank: data.pack_rank ?? null,
   });
 };
 
