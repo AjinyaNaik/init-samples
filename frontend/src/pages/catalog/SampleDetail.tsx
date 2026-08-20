@@ -90,7 +90,13 @@ export default function SampleDetail() {
         {/* Audio Player Block */}
         <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl flex flex-col gap-4">
           {sample.preview_url ? (
-            <audio src={sample.preview_url} controls className="w-full" />
+            <audio
+              src={sample.preview_url}
+              controls
+              controlsList="nodownload"
+              onContextMenu={(e) => e.preventDefault()}
+              className="w-full"
+            />
           ) : (
             <p className="text-sm text-zinc-500 italic text-center py-2">Preview audio unavailable.</p>
           )}

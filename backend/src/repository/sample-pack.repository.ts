@@ -36,6 +36,8 @@ export const findById = async (id: number): Promise<SamplePackWithAssociatedSamp
     include: [
       {
         association: "samples",
+        separate: true,
+        order: [["pack_rank", "ASC"]],
       },
     ],
   });

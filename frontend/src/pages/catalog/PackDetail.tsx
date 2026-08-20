@@ -159,17 +159,20 @@ export default function PackDetail() {
               </span>
             </h2>
 
-            <div className="flex flex-col gap-3 max-h-[600px] overflow-y-auto pr-2">
+            {/* Removed max-h and overflow-y-auto so this list grows freely, expanding the right column */}
+            <div className="flex flex-col gap-3">
               {pack.samples && pack.samples.length > 0 ? (
                 pack.samples.map((sample: any) => {
                   const isLocked = sample.preview_url === null;
                   return (
                     <div
                       key={sample.id}
-                      className={`p-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${isLocked
-                        ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
-                        : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
-                        }`}
+                      /* Added h-20 (fixed height) and flex-shrink-0 to maintain consistent size */
+                      className={`h-20 flex-shrink-0 px-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${
+                        isLocked
+                          ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
+                          : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
+                      }`}
                     >
                       <div>
                         <h3 className="font-bold text-sm md:text-base text-zinc-100 flex items-center gap-2">
@@ -193,7 +196,7 @@ export default function PackDetail() {
                           <span className="text-xs tracking-wider uppercase text-purple-300">Buy Pack to Play</span>
                         </div>
                       ) : (
-                        <audio src={sample.preview_url} controls className="max-w-[185px] md:max-w-xs" />
+                        <audio src={sample.preview_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="max-w-[185px] md:max-w-xs" />
                       )}
                     </div>
                   );
