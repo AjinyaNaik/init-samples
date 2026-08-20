@@ -308,7 +308,7 @@ export default function UserRightContent({
 
                                 <div className="flex items-center justify-between md:justify-end gap-3 flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-zinc-800/40">
                                   <audio
-                                    src={sample.preview_url ?? undefined}
+                                    src={`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${sample.id}/preview`}
                                     controls
                                     controlsList="nodownload"
                                     onContextMenu={(e) => e.preventDefault()}
@@ -405,7 +405,7 @@ export default function UserRightContent({
                       <div className="bg-zinc-900/40 p-3 border border-zinc-800/50 rounded-xl flex items-center max-md:flex-col max-md:items-start justify-between gap-3">
                         <span className="text-xs text-zinc-400 font-semibold px-2">Preview Audio</span>
                         <audio
-                          src={sample.preview_url ?? undefined}
+                          src={`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${sample.id}/preview`}
                           controls
                           controlsList="nodownload"
                           onContextMenu={(e) => e.preventDefault()}
