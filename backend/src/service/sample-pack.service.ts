@@ -38,12 +38,6 @@ export const getSamplePackById = async (id: number): Promise<SamplePackWithAssoc
     throw new Error("Sample pack not found");
   }
 
-  if (samplePack.samples) {
-    for (const sample of samplePack.samples) {
-      sample.audio_url = null;
-    }
-  }
-
   return samplePack;
 };
 
