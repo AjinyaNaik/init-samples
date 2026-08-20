@@ -45,6 +45,7 @@ export const create = async (data: CreateSampleData) => {
     genres: data.genres,
     metadata: data.metadata ?? {},
     price: data.price ?? null,
+    pack_rank: data.pack_rank ?? null,
   });
 
   return await Sample.findByPk(sample.id, {
