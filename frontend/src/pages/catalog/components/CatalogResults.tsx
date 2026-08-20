@@ -125,8 +125,8 @@ export default function CatalogResults({
                   </div>
 
                   <div className="flex-grow flex flex-col min-w-0 pr-4">
-                    {/* Title Text set to text-lg */}
-                    <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 truncate">
+                    {/* Title Text set to wrap nicely on mobile */}
+                    <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 break-words">
                       {title}
                     </h3>
                     <p className="text-zinc-400 text-xs mt-1 flex flex-wrap items-center gap-1.5 leading-snug">
@@ -151,7 +151,7 @@ export default function CatalogResults({
 
                   <div className="flex items-center gap-5">
                     {/* Price Pill */}
-                    <span className="px-3 py-1 bg-zinc-800/60 border border-zinc-700 rounded-lg font-bold text-zinc-100 text-xs shrink-0 shadow-sm">
+                    <span className="px-5 py-2.5 bg-zinc-800/60 border border-zinc-700 rounded-xl font-extrabold text-zinc-100 text-sm shrink-0 shadow-sm">
                       {price}
                     </span>
                     {/* Preview Button */}
@@ -160,7 +160,7 @@ export default function CatalogResults({
                         e.stopPropagation();
                         handleRouteToDetail(result.id);
                       }}
-                      className="px-5 py-2 bg-zinc-800 text-zinc-100 rounded-lg text-xs font-semibold transition-all duration-300 transform active:scale-95 hover:scale-105 hover:bg-purple-600 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.35)] cursor-pointer hidden md:block"
+                      className="px-8 py-3.5 bg-zinc-800 text-zinc-100 rounded-xl text-sm font-bold transition-all duration-300 transform active:scale-95 hover:scale-105 hover:bg-purple-600 hover:text-white hover:shadow-[0_0_20px_rgba(168,85,247,0.4)] cursor-pointer hidden md:block"
                     >
                       Preview
                     </button>
