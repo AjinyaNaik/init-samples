@@ -218,3 +218,13 @@ export const getSampleAudioUrl = async (
     audio_url: sample.audio_url,
   };
 };
+
+export const getSamplePreviewAudio = async (id: number) => {
+  const previewUrl = await sampleRepository.getPreviewUrl(id);
+
+  if (!previewUrl) {
+    throw new Error("Preview audio not found");
+  }
+
+  return previewUrl;
+};

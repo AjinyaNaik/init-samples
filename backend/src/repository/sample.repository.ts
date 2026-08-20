@@ -148,3 +148,11 @@ export const incrementDownloadCount = async (id: number) => {
     where: { id },
   });
 };
+
+export const getPreviewUrl = async (id: number) => {
+  const sample = await Sample.findByPk(id, {
+    attributes: ["preview_url"],
+  });
+
+  return sample?.preview_url ?? null;
+};

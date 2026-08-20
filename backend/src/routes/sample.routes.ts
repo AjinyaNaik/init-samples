@@ -10,6 +10,7 @@ import {
   deleteSample,
   getFilteredSamples,
   getSampleAudioUrl, 
+  getSamplePreviewAudio
 } from "../controller/sample.controller";
 
 const router = Router();
@@ -25,6 +26,7 @@ router.post(
   uploadAudioMiddleware, 
   createSample
 );
+router.get("/:id/preview", getSamplePreviewAudio);
 router.get(
   "/:id/audio",
   authMiddleware,
