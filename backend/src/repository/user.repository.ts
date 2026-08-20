@@ -8,6 +8,14 @@ export async function findUserByEmail(email: string) {
   });
 }
 
+export async function findUserById(id: number) {
+  return User.findOne({
+    where: {
+      id,
+    },
+  });
+}
+
 export async function findAdmin() {
   return User.findOne({
     where: {

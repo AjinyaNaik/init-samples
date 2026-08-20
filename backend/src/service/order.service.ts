@@ -1,7 +1,9 @@
 import * as orderRepository from "../repository/order.repository";
 import { findStandaloneSamplesByIds } from "../repository/sample.repository";
 import { findSamplePacksByIds } from "../repository/sample-pack.repository";
+import { findUserById } from "../repository/user.repository";
 import { CreateSampleOrderData, CreateSamplePackOrderData } from "./dtos/order.dto";
+import { sendOrderReceiptEmail } from "./email.service";
 
 export const createOrderSamples = async (
   userId: number,
@@ -10,8 +12,8 @@ export const createOrderSamples = async (
 ) => {
   const sampleIds = data.sample_ids ?? [];
   const samples = await findStandaloneSamplesByIds(sampleIds);
+  const user = await findUserById(userId);
 
-  // Convert prices to cents for INTEGER column storage
   let totalAmountCents = 0;
   for (const s of samples) {
     if (s.price) {
@@ -41,6 +43,22 @@ export const createOrderSamples = async (
 
     await transaction.commit();
 
+    // Map samples to match ReceiptItem[] strictly
+    const receiptItems = samples.map((s) => ({
+      name: s.name,
+      price: s.price ?? 0,
+    }));
+
+    if (user?.email) {
+      await sendOrderReceiptEmail({
+        to: user.email,
+        username: user.username,
+        orderId: order.id.toString(),
+        items: receiptItems,
+        totalAmount: totalAmountCents / 100,
+      });
+    }
+
     return {
       order,
       payment_id: finalPaymentId,
@@ -60,6 +78,7 @@ export const createOrderSamplePacks = async (
 ) => {
   const samplePackIds = data.sample_pack_ids ?? [];
   const samplePacks = await findSamplePacksByIds(samplePackIds);
+  const user = await findUserById(userId);
 
   // Convert prices to cents for INTEGER column storage
   let totalAmountCents = 0;
@@ -90,6 +109,23 @@ export const createOrderSamplePacks = async (
     );
 
     await transaction.commit();
+
+    // Map sample packs and include their inner samples for the receipt
+    const receiptItems = samplePacks.map((sp: any) => ({
+      name: sp.name,
+      price: sp.price ?? 0,
+      samples: sp.samples ? sp.samples.map((sample: any) => ({ name: sample.name })) : [],
+    }));
+
+    if (user?.email) {
+      await sendOrderReceiptEmail({
+        to: user.email,
+        username: user.username,
+        orderId: order.id.toString(),
+        items: receiptItems,
+        totalAmount: totalAmountCents / 100,
+      });
+    }
 
     return {
       order,

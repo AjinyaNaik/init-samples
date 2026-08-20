@@ -98,6 +98,13 @@ export const findSamplePacksByIds = async (
     where: {
       id: samplePackIds,
     },
+    include: [
+      {
+        association: "samples",
+          attributes: ["name"],
+        separate:true
+      },
+    ],
   });
 };
 
