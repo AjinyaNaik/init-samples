@@ -125,7 +125,7 @@ export default function Landing() {
                         }}
                         style={{ perspective: 1000, transformOrigin: "top" }}
                     >
-                        init samples
+                        Init Samples
                     </motion.h2>
                 </motion.div>
 
