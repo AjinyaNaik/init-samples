@@ -66,7 +66,7 @@ export const generateOrderReceiptHtml = ({
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Order Receipt - Init Samples</title>
       </head>
-      <body style="background-color: #09090b; color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 40px 20px;">
+      <body style="background-color: #f4f4f5; color: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 40px 20px;">
         
         <!-- Outer Wrapper Table for Email Client Centering -->
         <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #09090b; border: 1px solid rgba(82, 82, 91, 0.3); border-radius: 24px; overflow: hidden;">
