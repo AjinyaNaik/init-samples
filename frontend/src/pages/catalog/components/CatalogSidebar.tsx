@@ -73,9 +73,9 @@ export default function CatalogSidebar({
   };
 
   return (
-    <div className="md:col-span-1 flex flex-col gap-5 pr-6">
+    <div className="w-full md:col-span-1 flex flex-col gap-5 md:pr-0">
       {/* Search Bar */}
-      <div className="relative mb-3">
+      <div className="relative mb-1">
         <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
           <svg className="h-4.5 w-4.5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -92,7 +92,7 @@ export default function CatalogSidebar({
 
       {/* 2. Format Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
+        className="w-full border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Format</h3>
@@ -117,7 +117,7 @@ export default function CatalogSidebar({
 
       {/* 1. Category Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
+        className="w-full border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Category</h3>
@@ -150,7 +150,7 @@ export default function CatalogSidebar({
 
       {/* 3. Type Filter Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
+        className="w-full border border-zinc-800 rounded-xl p-4 flex flex-col gap-1.5 shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-1 px-1">Type</h3>
@@ -182,7 +182,7 @@ export default function CatalogSidebar({
 
       {/* 4. Genre List Card */}
       <div
-        className="border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm"
+        className="w-full border border-zinc-800 rounded-xl p-4 flex flex-col shadow-sm"
         style={{ backgroundColor: "rgba(24, 24, 27, 0.92)" }}
       >
         <h3 className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2 border-b border-zinc-800/80 pb-2 px-1">

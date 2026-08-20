@@ -222,11 +222,11 @@ export default function UserRightContent({
             : "text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/20"
             }`}
         >
-          My Tracks
+          My Samples
         </button>
       </div>
 
-      <div className="p-8 pt-2 flex flex-col flex-grow">
+      <div className="p-8 max-md:p-4 pt-2 flex flex-col flex-grow">
         {activeTab === "packs" ? (
           <div className="flex flex-col flex-grow">
             {packsError && <p className="text-red-500 text-center py-10">{packsError}</p>}
@@ -242,19 +242,19 @@ export default function UserRightContent({
                   return (
                     <div
                       key={pack.id}
-                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
+                      className={`p-5 max-md:p-4 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
                         ? "border-purple-500 animate-purchased-highlight my-2"
                         : "border-zinc-800/85"
                         }`}
                     >
-                      <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
-                        <div className="flex items-center gap-4">
+                      <div className="flex items-center max-md:flex-col max-md:items-start justify-between gap-4 pb-3 border-b border-zinc-900">
+                        <div className="flex items-center gap-4 min-w-0 flex-1 w-full">
                           <div
                             className="w-14 h-12 bg-zinc-800 border border-zinc-700 rounded-lg bg-cover bg-center shrink-0"
                             style={pack.cover_image ? { backgroundImage: `url(${pack.cover_image})` } : undefined}
                           ></div>
-                          <div>
-                            <h3 className="font-bold text-zinc-100 text-lg">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-bold text-zinc-100 text-lg break-all whitespace-normal">
                               {pack.name}
                             </h3>
                             <div className="flex items-center gap-2 mt-1">
@@ -271,7 +271,7 @@ export default function UserRightContent({
                         <button
                           onClick={() => handleDownloadPack(pack.id, pack.name)}
                           disabled={isPackDownloading}
-                          className="px-4 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer"
+                          className="px-4 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer max-md:w-full text-center shrink-0"
                         >
                           {isPackDownloading ? "Downloading..." : "Download Pack"}
                         </button>
@@ -284,10 +284,10 @@ export default function UserRightContent({
                             return (
                               <div
                                 key={sample.id}
-                                className="bg-zinc-900/40 p-3.5 border border-zinc-800/50 rounded-xl flex items-center justify-between hover:border-zinc-800/80 transition-all gap-4"
+                                className="bg-zinc-900/40 p-3.5 border border-zinc-800/50 rounded-xl flex flex-col md:flex-row md:items-center justify-between hover:border-zinc-800/80 transition-all gap-3 md:gap-4"
                               >
-                                <div className="flex flex-col gap-1 min-w-0 pr-2">
-                                  <h4 className="font-semibold text-sm text-zinc-100 truncate">{sample.name}</h4>
+                                <div className="flex flex-col gap-1 min-w-0 flex-1 pr-2">
+                                  <h4 className="font-semibold text-sm text-zinc-100 break-all whitespace-normal">{sample.name}</h4>
 
                                   <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize">
                                     {sample.category?.length > 0 && (
@@ -306,13 +306,13 @@ export default function UserRightContent({
                                   </div>
                                 </div>
 
-                                <div className="flex items-center gap-3 flex-shrink-0">
+                                <div className="flex items-center justify-between md:justify-end gap-3 flex-shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-zinc-800/40">
                                   <audio
                                     src={sample.preview_url ?? undefined}
                                     controls
                                     controlsList="nodownload"
                                     onContextMenu={(e) => e.preventDefault()}
-                                    className="w-[130px] md:w-[200px] h-8 flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
+                                    className="w-[140px] md:w-[200px] h-8 flex-shrink-0 opacity-80 hover:opacity-100 transition-opacity"
                                   />
                                   <button
                                     onClick={() => handleDownloadTrack(sample.id, sample.name)}
@@ -326,7 +326,7 @@ export default function UserRightContent({
                             );
                           })
                         ) : (
-                          <p className="text-zinc-600 text-xs py-4 text-center">No tracks uploaded to this pack yet.</p>
+                          <p className="text-zinc-600 text-xs py-4 text-center">No samples uploaded to this pack yet.</p>
                         )}
                       </div>
                     </div>
@@ -344,7 +344,7 @@ export default function UserRightContent({
             {samplesError && <p className="text-red-500 text-center py-10">{samplesError}</p>}
 
             {loadingSamples ? (
-              <p className="text-zinc-400 text-center py-20 animate-pulse">Loading acquired tracks...</p>
+              <p className="text-zinc-400 text-center py-20 animate-pulse">Loading acquired samples...</p>
             ) : samples.length > 0 ? (
               <div className="flex flex-col gap-5 p-1">
                 {samples.map((sample) => {
@@ -354,23 +354,23 @@ export default function UserRightContent({
                   return (
                     <div
                       key={sample.id}
-                      className={`p-5 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
+                      className={`p-5 max-md:p-4 bg-zinc-950 border rounded-2xl flex flex-col gap-4 shadow-sm transition-all ${isHighlighted
                         ? "border-purple-500 animate-purchased-highlight my-2"
                         : "border-zinc-800/85"
                         }`}
                     >
-                      <div className="flex items-center justify-between pb-3 border-b border-zinc-900">
-                        <div className="flex items-center gap-4">
+                      <div className="flex items-center max-md:flex-col max-md:items-start justify-between gap-4 pb-3 border-b border-zinc-900">
+                        <div className="flex items-center gap-4 min-w-0 flex-1 w-full">
                           <div className="w-14 h-12 bg-zinc-800 border border-zinc-700 rounded-lg flex items-center justify-center text-purple-400 shrink-0">
                             <svg className="w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2zm12 0c0 1.105-1.343 2-3 2s-3-.895-3-2 .895-2 3-2 3 .895 3 2Z9 10l12-3" />
                             </svg>
                           </div>
-                          <div>
-                            <h3 className="font-bold text-zinc-100 text-lg">
+                          <div className="min-w-0 flex-1">
+                            <h3 className="font-bold text-zinc-100 text-lg break-all whitespace-normal">
                               {sample.name}
                             </h3>
-                            <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize -ml-0.75">
+                            <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 capitalize -ml-0.75 mt-1">
                               {sample.category?.length > 0 && (
                                 <span className="bg-zinc-800/60 px-1.5 py-0.5 rounded text-zinc-300">
                                   {sample.category.map((cat: string) => cat.replace(/s$/, '')).join(", ")}
@@ -396,13 +396,13 @@ export default function UserRightContent({
                         <button
                           onClick={() => handleDownloadTrack(sample.id, sample.name)}
                           disabled={isTrackDownloading}
-                          className="px-4 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer"
+                          className="px-4 py-2 text-xs font-bold text-purple-300 bg-purple-950/20 border border-purple-800/40 hover:bg-purple-600 hover:text-white rounded-xl transition-all duration-300 transform active:scale-95 disabled:opacity-50 cursor-pointer max-md:w-full text-center shrink-0"
                         >
-                          {isTrackDownloading ? "Downloading..." : "Download Track"}
+                          {isTrackDownloading ? "Downloading..." : "Download Sample"}
                         </button>
                       </div>
 
-                      <div className="bg-zinc-900/40 p-3 border border-zinc-800/50 rounded-xl flex items-center justify-between gap-4">
+                      <div className="bg-zinc-900/40 p-3 border border-zinc-800/50 rounded-xl flex items-center max-md:flex-col max-md:items-start justify-between gap-3">
                         <span className="text-xs text-zinc-400 font-semibold px-2">Preview Audio</span>
                         <audio
                           src={sample.preview_url ?? undefined}
@@ -418,7 +418,7 @@ export default function UserRightContent({
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-20 text-zinc-500 flex-grow">
-                <p className="text-sm">You haven't acquired any premium standalone tracks yet.</p>
+                <p className="text-sm">You haven't acquired any premium standalone samples yet.</p>
               </div>
             )}
           </div>
