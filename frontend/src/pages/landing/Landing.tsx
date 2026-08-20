@@ -1,16 +1,41 @@
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { getStoredUser } from '../../utils/auth';
+import { useFilteredSamplePacks } from '../../hooks/samplePackHooks';
 
 export default function Landing() {
     const user = getStoredUser();
+    const { samplePacks, fetchFilteredSamplePacks, isLoading, error } = useFilteredSamplePacks();
+    
+    // Track failed image loads to gracefully fall back
+    const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+        const loadTrendingPacks = async () => {
+            try {
+                await fetchFilteredSamplePacks({});
+            } catch (err) {
+                console.error("Failed to load trending packs", err);
+            }
+        };
+
+        loadTrendingPacks();
+    }, []);
+
+    const packs = Array.isArray(samplePacks) ? samplePacks : (samplePacks as any)?.packs || [];
+    const displayedPacks = packs.slice(0, 6);
+
+    const handleImageError = (packId: string) => {
+        setImageErrors(prev => ({ ...prev, [packId]: true }));
+    };
 
     return (
         <div
             className="w-full min-h-screen text-zinc-50 bg-zinc-950 bg-center md:bg-top bg-no-repeat bg-cover md:bg-[length:95%_100%] py-6 md:py-12 px-4 md:px-8"
             style={{
-                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.7), rgba(9, 9, 11, 0.85)), url(/landing-page-2.png)',
+                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/landing-page-2.png)',
             }}
         >
             <Helmet>
@@ -93,7 +118,7 @@ export default function Landing() {
             {/* Hero Section */}
             <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 text-center pt-20 pb-12 md:-mt-14">
 
-                {/* Eye-Catching Social Proof Badge (Smaller on mobile, full size on desktop) */}
+                {/* Eye-Catching Social Proof Badge */}
                 <motion.div
                     className="mb-6 relative group cursor-default transform-gpu px-3.5 py-1.5 sm:px-5 sm:py-2 rounded-full bg-gradient-to-r from-purple-950/80 via-zinc-900/90 to-purple-950/80 border border-purple-500/40 backdrop-blur-md shadow-[0_0_25px_rgba(168,85,247,0.25)]"
                     style={{ willChange: "transform" }}
@@ -122,7 +147,7 @@ export default function Landing() {
                     </motion.span>
                 </motion.div>
 
-                {/* Animated Neon Header - Larger on mobile (text-5xl) while preserving desktop scaling (md:text-7xl) */}
+                {/* Animated Neon Header */}
                 <motion.h1
                     className="text-5xl sm:text-5xl md:text-7xl max-w-5xl mb-6 text-purple-300 leading-tight z-10 px-2 transform-gpu"
                     style={{ fontFamily: "'Shrikhand', cursive", willChange: "transform, opacity, text-shadow" }}
@@ -201,32 +226,90 @@ export default function Landing() {
                     <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8">Trending Packs</h2>
 
                     <div className="flex flex-col w-full border-t border-zinc-500/80">
-                        {[1, 2, 3, 4, 5, 6].map((item) => (
-                            <div
-                                key={item}
-                                className="flex flex-row items-center cursor-pointer py-3.5 px-2 border-b border-zinc-500/80 hover:bg-zinc-100/10 transition-colors duration-200 group w-full gap-3 sm:gap-4"
-                            >
-                                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-zinc-400/20 rounded shrink-0"></div>
+                        {isLoading && displayedPacks.length === 0 ? (
+                            <div className="py-8 text-center text-zinc-400 text-sm">Loading trending packs...</div>
+                        ) : error ? (
+                            <div className="py-8 text-center text-red-400 text-sm">Failed to load trending packs.</div>
+                        ) : displayedPacks.length > 0 ? (
+                            displayedPacks.map((pack: any) => {
+                                const packId = pack.id || pack._id;
+                                const artworkUrl = pack.cover_image || "";
+                                const hasError = imageErrors[packId];
 
-                                <div className="flex-grow flex flex-col sm:flex-row sm:items-center min-w-0 pr-2">
-                                    <span className="font-bold text-sm sm:text-base text-zinc-100 w-auto sm:w-32 sm:mr-4">
-                                        Volume {item}
-                                    </span>
-                                    <span className="text-zinc-400 text-xs sm:text-sm line-clamp-1 sm:truncate">
-                                        150+ royalty-free loops, heavy 808s, and meticulously crafted melodies.
-                                    </span>
-                                </div>
+                                return (
+                                    <Link
+                                        key={packId}
+                                        to={`/catalog/pack/${packId}`}
+                                        className="flex flex-row items-center py-4 px-5 transition-colors duration-200 group rounded-2xl cursor-pointer hover:bg-zinc-800/50 border-b border-zinc-800/40 mb-1.5"
+                                    >
+                                        {/* Thumbnail Scaled to 80px x 80px */}
+                                        <div className="w-[80px] h-[80px] bg-zinc-800 border border-zinc-700 rounded-xl shrink-0 mr-5 group-hover:border-purple-400/50 group-hover:shadow-[0_0_20px_rgba(167,139,250,0.18)] transition-all duration-300 overflow-hidden flex items-center justify-center">
+                                            {artworkUrl && !hasError ? (
+                                                <img
+                                                    src={artworkUrl}
+                                                    alt={pack.name || "Pack"}
+                                                    loading="lazy"
+                                                    onError={() => handleImageError(packId)}
+                                                    className="w-full h-full object-cover"
+                                                />
+                                            ) : (
+                                                <span className="text-lg font-bold text-purple-300">
+                                                    {pack.name?.charAt(0)?.toUpperCase() || 'P'}
+                                                </span>
+                                            )}
+                                        </div>
 
-                                <div className="shrink-0 text-emerald-400 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
-                                    <span className="text-xs font-semibold uppercase tracking-wider hidden sm:inline">
-                                        View
-                                    </span>
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                                    </svg>
+                                        <div className="flex-grow flex flex-col min-w-0 pr-4">
+                                            <h3 className="font-bold text-lg text-zinc-100 group-hover:text-purple-400 transition-colors duration-200 break-words">
+                                                {pack.name}
+                                            </h3>
+                                            <p className="text-zinc-400 text-xs mt-1 flex flex-wrap items-center gap-1.5 leading-snug line-clamp-1">
+                                                {pack.description || `${pack.genre || 'Royalty-free'} sample pack featuring professional loops and melodies.`}
+                                            </p>
+                                        </div>
+
+                                        <div className="shrink-0 text-emerald-400 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                            <span className="text-xs font-semibold uppercase tracking-wider hidden sm:inline">
+                                                View
+                                            </span>
+                                            <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                            </svg>
+                                        </div>
+                                    </Link>
+                                );
+                            })
+                        ) : (
+                            // Fallback mock items if no packs are returned yet from API
+                            [1, 2, 3, 4, 5, 6].map((item) => (
+                                <div
+                                    key={item}
+                                    className="flex flex-row items-center py-4 px-5 transition-colors duration-200 group rounded-2xl cursor-pointer hover:bg-zinc-800/50 border-b border-zinc-800/40 mb-1.5"
+                                >
+                                    <div className="w-[80px] h-[80px] bg-zinc-800 border border-zinc-700 rounded-xl shrink-0 mr-5 flex items-center justify-center text-purple-300 font-bold">
+                                        V{item}
+                                    </div>
+
+                                    <div className="flex-grow flex flex-col min-w-0 pr-4">
+                                        <h3 className="font-bold text-lg text-zinc-100">
+                                            Volume {item}
+                                        </h3>
+                                        <p className="text-zinc-400 text-xs mt-1">
+                                            150+ royalty-free loops, heavy 808s, and meticulously crafted melodies.
+                                        </p>
+                                    </div>
+
+                                    <div className="shrink-0 text-emerald-400 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                        <span className="text-xs font-semibold uppercase tracking-wider hidden sm:inline">
+                                            View
+                                        </span>
+                                        <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                                        </svg>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))
+                        )}
                     </div>
                 </div>
 
