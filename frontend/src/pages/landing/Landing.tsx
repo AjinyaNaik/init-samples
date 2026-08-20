@@ -81,7 +81,7 @@ export default function Landing() {
             </Helmet>
 
             {/* Top Left Branding Text (Init Samples) */}
-            <div className="absolute top-5 left-5 sm:left-10 z-50 flex items-center">
+            <div className="absolute top-5 left-5 sm:left-10 z-50 flex items-center ml-2">
                 <motion.span
                     className="text-base sm:text-xl text-zinc-50 font-semibold tracking-wider cursor-default transform-gpu"
                     style={{ willChange: "transform, opacity" }}
@@ -94,7 +94,7 @@ export default function Landing() {
             </div>
 
             {/* Top Right Navigation / Account Icon */}
-            <div className="absolute top-5 right-5 sm:right-10 z-50 flex items-center gap-4">
+            <div className="absolute top-5 right-5 sm:right-10 z-50 flex items-center gap-4 mr-2">
                 {user ? (
                     <Link
                         to="/dashboard"
@@ -116,7 +116,7 @@ export default function Landing() {
             </div>
 
             {/* Hero Section */}
-            <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 text-center pt-20 pb-12 md:-mt-14">
+            <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 text-center pt-20 pb-12 -mt-2 md:-mt-14">
 
                 {/* Eye-Catching Social Proof Badge */}
                 <motion.div
