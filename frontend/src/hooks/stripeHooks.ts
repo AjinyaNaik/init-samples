@@ -38,7 +38,6 @@ export const useCheckoutSamples = () => {
     } 
     catch (err: any) {
       setError(err.message || "An unexpected error occurred");
-      console.error("Stripe Checkout Error:", err);
       throw err;
     } 
     finally {
@@ -93,7 +92,6 @@ export const useCheckoutSamplePacks = () => {
     } 
     catch (err: any) {
       setError(err.message || "An unexpected error occurred");
-      console.error("Stripe Checkout Error:", err);
       throw err;
     } 
     finally {
