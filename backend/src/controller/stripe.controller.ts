@@ -8,10 +8,11 @@ export const createSampleCheckoutSession = async (
 ) => {
   try {
     const userId = req.user!.id;
+    const userEmail = req.user!.email;
     const { sample_ids } = req.body;
 
     const result = await stripeService.createSampleCheckoutSession(
-      userId,
+      userId, userEmail,
       sample_ids
     );
 
@@ -33,10 +34,11 @@ export const createSamplePackCheckoutSession = async (
 ) => {
   try {
     const userId = req.user!.id;
+    const userEmail = req.user!.email;
     const { sample_pack_ids } = req.body;
 
     const result = await stripeService.createSamplePackCheckoutSession(
-      userId,
+      userId, userEmail,
       sample_pack_ids
     );
 
