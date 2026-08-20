@@ -162,7 +162,7 @@ export default function PackDetail() {
             <div className="flex flex-col gap-3">
               {pack.samples && pack.samples.length > 0 ? (
                 pack.samples.map((sample: any) => {
-                  const isLocked = sample.preview_url === null;
+                  const isLocked = !sample.can_preview;
                   return (
                     <div
                       key={sample.id}

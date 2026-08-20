@@ -19,7 +19,6 @@ const publicSampleAttributes = [
   "id",
   "name",
   "description",
-  "preview_url",
   "sample_pack_id",
   "category",
   "sample_type",

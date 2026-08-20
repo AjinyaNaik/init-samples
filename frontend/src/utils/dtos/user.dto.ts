@@ -20,7 +20,7 @@ export interface PurchasedSample {
   id: number;
   name: string;
   description: string | null;
-  preview_url: string | null;
+ can_preview: boolean;
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];

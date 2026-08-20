@@ -220,6 +220,12 @@ export const getSampleAudioUrl = async (
 };
 
 export const getSamplePreviewAudio = async (id: number) => {
+  const sample = await sampleRepository.findById(id);
+
+  if (!sample || !sample.can_preview) {
+    throw new Error("Preview audio not found");
+  }
+
   const previewUrl = await sampleRepository.getPreviewUrl(id);
 
   if (!previewUrl) {
