@@ -5,6 +5,7 @@ import { UserRole } from "../models/user.model";
 interface JwtPayload {
   userId: number;
   role: UserRole;
+  email: string;
 }
 
 export function authMiddleware(
@@ -37,6 +38,7 @@ export function authMiddleware(
     req.user = {
       id: decoded.userId,
       role: decoded.role,
+      email: decoded.email
     };
 
     next();

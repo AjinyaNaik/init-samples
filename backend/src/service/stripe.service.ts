@@ -14,6 +14,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 
 export const createSampleCheckoutSession = async (
   userId: number,
+  userEmail: string,
   sampleIds: number[]
 ) => {
   if (sampleIds.length === 0) {
@@ -49,6 +50,7 @@ export const createSampleCheckoutSession = async (
     payment_method_types: ["card"],
     mode: "payment",
     line_items: lineItems,
+    customer_email: userEmail,
     success_url: `${process.env.FRONTEND_URL}/dashboard?tab=samples&highlightId=${sampleIds[0]}`, cancel_url: `${process.env.FRONTEND_URL}/catalog`,
     metadata: {
       userId: userId.toString(),
@@ -65,6 +67,7 @@ export const createSampleCheckoutSession = async (
 
 export const createSamplePackCheckoutSession = async (
   userId: number,
+  userEmail: string,
   samplePackIds: number[]
 ) => {
   if (samplePackIds.length === 0) {
@@ -100,6 +103,7 @@ export const createSamplePackCheckoutSession = async (
     payment_method_types: ["card"],
     mode: "payment",
     line_items: lineItems,
+    customer_email: userEmail,
     success_url: `${process.env.FRONTEND_URL}/dashboard?tab=packs&highlightId=${samplePackIds[0]}`,
     cancel_url: `${process.env.FRONTEND_URL}/catalog`,
     metadata: {

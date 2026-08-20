@@ -75,6 +75,7 @@ export async function loginUser(email: string, password: string) {
     {
       userId: user.id,
       role: user.role,
+      email: user.email
     },
     secret,
     {
