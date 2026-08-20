@@ -6,6 +6,24 @@ import {
   SamplePackWithAssociatedSamplesFromQuery 
 } from "../service/dtos/sample-pack.dto";
 
+
+const publicPackSampleAttributes = [
+  "id",
+  "name",
+  "description",
+  "sample_pack_id",
+  "category",
+  "sample_type",
+  "can_preview",
+  "genres",
+  "metadata",
+  "download_count",
+  "price",
+  "pack_rank",
+  "created_at",
+  "updated_at",
+]; 
+
 export const create = async (
   data: CreateSamplePackData
 ) => {
@@ -25,6 +43,7 @@ export const findAll = async (): Promise<SamplePackWithAssociatedSamplesFromQuer
     include: [
       {
         association: "samples",
+         attributes: publicPackSampleAttributes,
       },
     ],
     order: [["created_at", "DESC"]],
@@ -36,6 +55,7 @@ export const findById = async (id: number): Promise<SamplePackWithAssociatedSamp
     include: [
       {
         association: "samples",
+         attributes: publicPackSampleAttributes,
         separate: true,
         order: [["pack_rank", "ASC"]],
       },

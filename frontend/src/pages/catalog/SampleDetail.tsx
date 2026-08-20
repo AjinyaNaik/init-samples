@@ -89,9 +89,9 @@ export default function SampleDetail() {
 
         {/* Audio Player Block */}
         <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl flex flex-col gap-4">
-          {sample.preview_url ? (
+          {sample.can_preview ? (
             <audio
-              src={sample.preview_url}
+              src={`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${sample.id}/preview`}
               controls
               controlsList="nodownload"
               onContextMenu={(e) => e.preventDefault()}

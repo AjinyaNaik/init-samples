@@ -19,7 +19,6 @@ const publicSampleAttributes = [
   "id",
   "name",
   "description",
-  "preview_url",
   "sample_pack_id",
   "category",
   "sample_type",
@@ -147,4 +146,12 @@ export const incrementDownloadCount = async (id: number) => {
     by: 1,
     where: { id },
   });
+};
+
+export const getPreviewUrl = async (id: number) => {
+  const sample = await Sample.findByPk(id, {
+    attributes: ["preview_url"],
+  });
+
+  return sample?.preview_url ?? null;
 };
