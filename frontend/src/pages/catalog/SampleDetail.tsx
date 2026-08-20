@@ -34,7 +34,7 @@ export default function SampleDetail() {
   if (error || !sample) return <p className="text-red-500 text-center pt-32">{error || "Sample not found."}</p>;
 
   return (
-    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-24 px-8 pb-32">
+    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-8 sm:pt-24 px-4 sm:px-8 pb-32">
 
       <RetroStarfield />
 
@@ -51,41 +51,40 @@ export default function SampleDetail() {
         }
       `}</style>
 
-      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-10 md:p-16 shadow-sm flex flex-col gap-6 relative z-10">
-        <button onClick={() => navigate(-1)} className="self-start text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors">
+      {/* Back Button */}
+      <div className="max-w-4xl mx-auto mb-6 relative z-10">
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-sm text-purple-400 font-semibold hover:text-purple-300 transition-colors py-2 px-4 bg-zinc-900 border border-zinc-800/80 rounded-xl hover:bg-zinc-950 shadow-md cursor-pointer"
+        >
           &larr; Back to Catalog
         </button>
+      </div>
 
-        <h1
-          className="text-purple-300 tracking-wide font-normal leading-tight"
-          style={{
-            fontFamily: "'Shrikhand', cursive",
-            animation: "sample-neon-flicker 5s infinite alternate",
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            width: "100%",
+      <div className="max-w-4xl mx-auto bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-10 md:p-16 shadow-[0_15px_40px_rgba(0,0,0,0.4)] flex flex-col gap-8 relative z-10">
 
-            paddingTop: "30px",
-            paddingBottom: "30px",
-            paddingLeft: "30px",
-            paddingRight: "30px",
-            marginLeft: "-30px",
-            marginRight: "-30px",
-
-            fontSize: sample.name.length <= 12
-              ? "calc(2.5rem + 1.7vw)"
-              : sample.name.length <= 20
-                ? "calc(1.8rem + 1.4vw)"
-                : sample.name.length <= 30
-                  ? "calc(1.4rem + 1vw)"
-                  : "calc(1.1rem + 0.7vw)"
-          }}
-        >
-          {sample.name}
-        </h1>
-
-        <p className="text-zinc-400 text-lg leading-relaxed">{sample.description || "No description provided."}</p>
+        {/* Title & Description */}
+        <div>
+          <h1
+            className="pb-3 mb-4 text-purple-300 tracking-wide font-normal leading-tight break-words"
+            style={{
+              fontFamily: "'Shrikhand', cursive",
+              animation: "sample-neon-flicker 5s infinite alternate",
+              fontSize: sample.name.length <= 12
+                ? "calc(2.7rem + 1.7vw)"
+                : sample.name.length <= 20
+                  ? "calc(2.0rem + 1.4vw)"
+                  : sample.name.length <= 30
+                    ? "calc(1.5rem + 1.2vw)"
+                    : "calc(1.2rem + 0.9vw)"
+            }}
+          >
+            {sample.name}
+          </h1>
+          <p className="text-zinc-400 text-base sm:text-lg leading-relaxed font-normal">
+            {sample.description || "No description provided."}
+          </p>
+        </div>
 
         {/* Audio Player Block */}
         <div className="bg-zinc-950 p-4 border border-zinc-800 rounded-2xl flex flex-col gap-4">
@@ -103,8 +102,8 @@ export default function SampleDetail() {
         </div>
 
         {/* Purchase Block (Price + Buy Button) */}
-        <div className="bg-zinc-950/70 border border-zinc-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
+        <div className="bg-zinc-950/70 border border-zinc-800 p-5 sm:p-6 rounded-2xl flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 text-center sm:text-left">
+          <div className="w-full sm:w-auto">
             <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">
               Sample Price
             </span>
@@ -140,18 +139,18 @@ export default function SampleDetail() {
         )}
 
         {/* Metadata List */}
-        <div className="grid grid-cols-3 gap-4 border-t border-zinc-800 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-zinc-800/60 pt-6">
           <div>
-            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Categories</span>
-            <span className="font-semibold text-zinc-200 capitalize">{sample.category?.join(", ") || "n/a"}</span>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">Categories</span>
+            <span className="font-bold text-zinc-200 text-sm capitalize">{sample.category?.join(", ") || "n/a"}</span>
           </div>
           <div>
-            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Type/Instrument</span>
-            <span className="font-semibold text-zinc-200 capitalize">{sample.sample_type?.join(", ") || "n/a"}</span>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">Type/Instrument</span>
+            <span className="font-bold text-zinc-200 text-sm capitalize">{sample.sample_type?.join(", ") || "n/a"}</span>
           </div>
           <div>
-            <span className="text-xs text-zinc-500 uppercase tracking-widest block mb-1">Genres</span>
-            <span className="font-semibold text-zinc-200 capitalize">{sample.genres?.join(", ") || "n/a"}</span>
+            <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">Genres</span>
+            <span className="font-bold text-zinc-200 text-sm capitalize">{sample.genres?.join(", ") || "n/a"}</span>
           </div>
         </div>
       </div>
