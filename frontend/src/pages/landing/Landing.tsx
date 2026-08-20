@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import { getStoredUser } from '../../utils/auth';
 
 export default function Landing() {
@@ -12,6 +13,47 @@ export default function Landing() {
                 backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/landing-page-2.png)',
             }}
         >
+            <Helmet>
+                <title>Init Samples | Free & Premium Royalty-Free Audio Samples</title>
+                <meta name="description"
+                    content="High-quality, royalty-free audio samples and loops designed for modern music producers. 100% human-recorded, no AI samples. Elevate your beats today."
+                />
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content="Init Samples | Free & Premium Royalty-Free Audio Samples" />
+                <meta property="og:description" content="High-quality, royalty-free audio samples and loops designed for modern music producers. 100% human-recorded, no AI samples. Elevate your beats today." />
+                <meta property="og:image" content="https://initsamples.com/logo.png" />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:type" content="image/png" />
+                <meta property="og:url" content="https://initsamples.com" />
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:image" content="https://initsamples.com/logo.png" />
+                <link rel="canonical" href="https://initsamples.com" />
+                <script type="application/ld+json">
+                    {JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "WebSite",
+                        "@id": "https://initsamples.com",
+                        "name": "Init Samples",
+                        "image": "https://initsamples.com/logo.png",
+                        "url": "https://initsamples.com",
+                        "description": "Royalty-free audio samples, loops, and sound packs for modern music producers.",
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Init Samples",
+                            "logo": {
+                                "@type": "ImageObject",
+                                "url": "https://initsamples.com/logo.png"
+                            }
+                        },
+                        "potentialAction": {
+                            "@type": "SearchAction",
+                            "target": "https://initsamples.com/catalog?search={search_term_string}",
+                            "query-input": "required name=search_term_string"
+                        }
+                    })}
+                </script>
+            </Helmet>
 
             <div className="absolute top-6 right-10 mr-[2%] z-50 flex items-center gap-4">
                 {user ? (
@@ -40,7 +82,6 @@ export default function Landing() {
                 <motion.div
                     className="mb-8 relative group cursor-default"
                     initial={{ opacity: 0, scale: 0.8 }}
-                    // Combine the entry animation and the infinite floating animation
                     animate={{
                         opacity: 1,
                         scale: 1,
@@ -48,7 +89,7 @@ export default function Landing() {
                     transition={{
                         opacity: { duration: 0.6 },
                         scale: { duration: 0.6 },
-                        y: { duration: 4, repeat: Infinity, ease: "easeInOut" } // Smooth continuous float
+                        y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
                     }}
                 >
                     {/* Sparkle 1 (Top Left) */}
@@ -102,13 +143,13 @@ export default function Landing() {
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
                             "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
-                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7", // Bright surge
+                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7",
                             "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7"
                         ]
                     }}
                     transition={{
-                        y: { duration: 0.8, delay: 0.1, ease: "easeOut" }, // Control the initial drop
-                        opacity: { duration: 5, repeat: Infinity, ease: "linear", delay: 0.8 }, // Start flickering after drop-in
+                        y: { duration: 0.8, delay: 0.1, ease: "easeOut" },
+                        opacity: { duration: 5, repeat: Infinity, ease: "linear", delay: 0.8 },
                         textShadow: { duration: 5, repeat: Infinity, ease: "linear", delay: 0.8 }
                     }}
                 >
@@ -137,9 +178,9 @@ export default function Landing() {
                         whileTap={{ scale: 0.95 }}
                         animate={{
                             boxShadow: [
-                                "0px 0px 0px 0px rgba(168, 85, 247, 0)", // Purple transparent
-                                "0px 0px 25px 8px rgba(168, 85, 247, 0.5)", // Purple glow (purple-500)
-                                "0px 0px 0px 0px rgba(168, 85, 247, 0)"  // Purple transparent
+                                "0px 0px 0px 0px rgba(168, 85, 247, 0)",
+                                "0px 0px 25px 8px rgba(168, 85, 247, 0.5)",
+                                "0px 0px 0px 0px rgba(168, 85, 247, 0)"
                             ]
                         }}
                         transition={{
@@ -161,7 +202,7 @@ export default function Landing() {
 
             {/* Placeholder Content to allow scrolling */}
             <section className="py-16 px-8 max-w-7xl mx-auto space-y-24">
-                {/* Popular Packs List - Inbox Style */}
+                {/* Popular Packs List */}
                 <div className="flex flex-col items-start w-full">
                     <h2 className="text-4xl md:text-5xl font-bold mb-8">Trending Packs</h2>
 
@@ -171,10 +212,8 @@ export default function Landing() {
                                 key={item}
                                 className="flex flex-row items-center cursor-pointer py-3 px-2 border-b border-zinc-500/80 hover:bg-zinc-100/10 transition-colors duration-200 group w-full"
                             >
-                                {/* Tiny Thumbnail */}
                                 <div className="w-10 h-10 bg-zinc-400/20 rounded shrink-0 mr-4"></div>
 
-                                {/* Text Content - Inline */}
                                 <div className="flex-grow flex flex-col md:flex-row md:items-center min-w-0 pr-4">
                                     <span className="font-bold whitespace-nowrap text-zinc-100 w-32 md:mr-4">
                                         Volume {item}
@@ -184,7 +223,6 @@ export default function Landing() {
                                     </span>
                                 </div>
 
-                                {/* Hover Action Indicator */}
                                 <div className="shrink-0 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
                                     <span className="text-xs font-semibold uppercase tracking-wider hidden md:inline">
                                         View
@@ -216,7 +254,6 @@ export default function Landing() {
                                 We are building a dedicated platform for sound designers to share their craft. Soon, you will be able to easily submit, distribute, and monetize your own premium sample packs directly through us.
                             </p>
 
-                            {/* Click to learn more link */}
                             <a href="#" className="mt-auto text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center transition-colors w-fit group text-lg">
                                 Click to learn more
                                 <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -233,9 +270,7 @@ export default function Landing() {
                         "For bedroom and studio producers that want quality samples to elevate their craft."
                     </p>
                 </div>
-
             </section>
-
         </div>
     )
 }

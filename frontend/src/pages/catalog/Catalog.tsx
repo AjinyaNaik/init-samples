@@ -7,6 +7,7 @@ import CatalogSidebar from "./components/CatalogSidebar";
 import CatalogResults from "./components/CatalogResults";
 import { Link } from "react-router-dom";
 import { getStoredUser } from '../../utils/auth';
+import { Helmet } from "react-helmet-async";
 
 export default function Catalog() {
   const { categories, isLoading: loadingCategories } = useCategories();
@@ -67,6 +68,12 @@ export default function Catalog() {
         backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/catalog-page-1.png)',
       }}
     >
+
+      <Helmet>
+        <title>Audio Sample Catalog | Free & Premium Loops | Init Samples</title>
+        <meta name="description" content="Browse our library of high-quality, royalty-free audio samples, loops, and sound packs for music producers." />
+        <link rel="canonical" href="https://initsamples.com/catalog" />
+      </Helmet>
 
       <div className="max-w-7xl mx-auto">
 
