@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const PAGE_SIZE = 5; // Adjusted to fit the slightly smaller items
+const PAGE_SIZE = 6; // 6 items per page
 
 interface CatalogResultsProps {
   activeCategory: string[];
@@ -90,8 +90,8 @@ export default function CatalogResults({
           </h2>
         </div>
 
-        {/* Results List */}
-        <div className="flex flex-col flex-grow overflow-y-auto min-h-0">
+        {/* Results List - Optimized padding to prevent clipping */}
+        <div className="flex flex-col flex-grow overflow-hidden min-h-0">
           {isLoading ? (
             <p className="text-zinc-400 text-sm py-16 text-center animate-pulse">Fetching catalogs...</p>
           ) : (
@@ -108,9 +108,8 @@ export default function CatalogResults({
                 <div
                   key={result.id}
                   onClick={() => handleRouteToDetail(result.id)}
-                  /* Slightly scaled down padding and gap */
-                  className={`flex flex-row items-center py-5 px-5 transition-colors duration-200 group rounded-2xl cursor-pointer hover:bg-zinc-800/50 ${
-                    index !== pagedResults.length - 1 ? "border-b border-zinc-800/40 mb-2" : ""
+                  className={`flex flex-row items-center py-4 px-5 transition-colors duration-200 group rounded-2xl cursor-pointer hover:bg-zinc-800/50 ${
+                    index !== pagedResults.length - 1 ? "border-b border-zinc-800/40 mb-1.5" : ""
                   }`}
                 >
                   {/* Thumbnail Scaled to 80px x 80px */}
