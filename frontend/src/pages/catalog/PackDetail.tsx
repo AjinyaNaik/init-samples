@@ -35,7 +35,7 @@ export default function PackDetail() {
   if (error || !pack) return <p className="text-red-500 text-center pt-32">{error || "Sample pack not found."}</p>;
 
   return (
-    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-12 px-8 pb-32">
+    <div className="min-h-screen text-zinc-50 bg-zinc-950 pt-8 sm:pt-12 px-4 sm:px-8 pb-32">
 
       <RetroStarfield />
 
@@ -63,10 +63,10 @@ export default function PackDetail() {
       </div>
 
       {/* Outer Grid */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-12 items-start relative z-10">
+      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-6 gap-8 md:gap-12 items-start relative z-10">
 
         {/* Left Column: Cover Art Aspect */}
-        <div className="md:col-span-3 flex flex-col gap-6 sticky top-28">
+        <div className="md:col-span-3 flex flex-col gap-6 md:sticky md:top-28 z-20">
           <div
             className="w-full aspect-square bg-zinc-900 border border-zinc-800 rounded-3xl bg-cover bg-center shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-transform duration-500 hover:scale-[1.01] hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]"
             style={pack.cover_image ? { backgroundImage: `url(${pack.cover_image})` } : undefined}
@@ -74,7 +74,7 @@ export default function PackDetail() {
         </div>
 
         {/* Right Column: Pack Details & Purchase Action */}
-        <div className="md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-3xl p-8 md:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.4)] flex flex-col gap-8">
+        <div className="md:col-span-3 bg-zinc-900 border border-zinc-800 rounded-3xl p-5 sm:p-8 md:p-10 shadow-[0_15px_40px_rgba(0,0,0,0.4)] flex flex-col gap-8">
 
           {/* Header & Description */}
           <div>
@@ -84,21 +84,21 @@ export default function PackDetail() {
                 fontFamily: "'Shrikhand', cursive",
                 animation: "pack-neon-flicker 5s infinite alternate",
                 fontSize: pack.name.length <= 12
-                  ? "calc(2.7rem + 1.7vw)"
+                  ? "calc(3.2rem + 1.8vw)"
                   : pack.name.length <= 20
-                    ? "calc(2.0rem + 1.4vw)"
-                    : "calc(1.5rem + 1.2vw)",
+                    ? "calc(2.4rem + 1.4vw)"
+                    : "calc(1.8rem + 1.0vw)",
               }}
             >
               {pack.name}
             </h1>
-            <p className="text-zinc-400 text-lg leading-relaxed font-normal">
+            <p className="text-zinc-400 text-base sm:text-lg leading-relaxed font-normal">
               {pack.description || "No description provided for this pack."}
             </p>
           </div>
 
           {/* Purchase Block (Price + Buy Button) */}
-          <div className="bg-zinc-950/70 border border-zinc-800 p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="bg-zinc-950/70 border border-zinc-800 p-5 sm:p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
             <div>
               <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">
                 Pack Price
@@ -135,7 +135,7 @@ export default function PackDetail() {
           )}
 
           {/* Metadata list */}
-          <div className="grid grid-cols-3 gap-4 border-y border-zinc-800/60 py-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-y border-zinc-800/60 py-6">
             <div>
               <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">Categories</span>
               <span className="font-bold text-zinc-200 text-sm capitalize">{pack.category?.join(", ") || "n/a"}</span>
@@ -152,33 +152,31 @@ export default function PackDetail() {
 
           {/* Tracklist Block */}
           <div>
-            <h2 className="text-2xl font-bold mb-6 text-zinc-100 flex items-center justify-between">
+            <h2 className="text-xl sm:text-2xl font-bold mb-6 text-zinc-100 flex items-center justify-between">
               <span>Pack Contents</span>
               <span className="text-sm font-normal text-zinc-500">
                 {pack.samples?.length || 0} tracks
               </span>
             </h2>
 
-            {/* Removed max-h and overflow-y-auto so this list grows freely, expanding the right column */}
             <div className="flex flex-col gap-3">
               {pack.samples && pack.samples.length > 0 ? (
                 pack.samples.map((sample: any) => {
-                  const isLocked = sample.preview_url === null;
+                  const isLocked = !sample.can_preview;
                   return (
                     <div
                       key={sample.id}
-                      /* Added h-20 (fixed height) and flex-shrink-0 to maintain consistent size */
-                      className={`h-20 flex-shrink-0 px-4 border rounded-2xl flex items-center justify-between transition-all duration-300 relative overflow-hidden ${
+                      className={`p-4 sm:px-4 sm:py-3 sm:min-h-[5rem] flex-shrink-0 border rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-300 relative overflow-hidden ${
                         isLocked
                           ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
                           : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
                       }`}
                     >
-                      <div>
-                        <h3 className="font-bold text-sm md:text-base text-zinc-100 flex items-center gap-2">
+                      <div className="min-w-0 flex-1 pr-2">
+                        <h3 className="font-bold text-sm md:text-base text-zinc-100 flex flex-wrap items-center gap-2 break-words">
                           {sample.name}
                           {isLocked && (
-                            <span className="text-[9px] uppercase font-bold tracking-widest bg-purple-950/80 text-purple-300 border border-purple-800/40 px-2 py-0.5 rounded-full">
+                            <span className="text-[9px] uppercase font-bold tracking-widest bg-purple-950/80 text-purple-300 border border-purple-800/40 px-2 py-0.5 rounded-full shrink-0">
                               Locked
                             </span>
                           )}
@@ -189,14 +187,15 @@ export default function PackDetail() {
                       </div>
 
                       {isLocked ? (
-                        <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-850/50 rounded-xl px-4 py-2 text-zinc-400 text-sm font-semibold cursor-default">
+                        <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-850/50 rounded-xl px-4 py-2 text-zinc-400 text-sm font-semibold cursor-default self-start sm:self-auto shrink-0">
                           <svg className="w-4 h-4 text-purple-400 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                           </svg>
                           <span className="text-xs tracking-wider uppercase text-purple-300">Buy Pack to Play</span>
                         </div>
                       ) : (
-                        <audio src={sample.preview_url} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="max-w-[185px] md:max-w-xs" />
+
+                        <audio src={`${import.meta.env.VITE_API_BASE_URL}/admin/samples/${sample.id}/preview`} controls controlsList="nodownload" onContextMenu={(e) => e.preventDefault()} className="max-w-[185px] md:max-w-xs" />
                       )}
                     </div>
                   );

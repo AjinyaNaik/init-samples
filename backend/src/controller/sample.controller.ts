@@ -288,3 +288,46 @@ export const getSampleAudioUrl = async (
     });
   }
 };
+
+// only to stream preview urls
+export const getSamplePreviewAudio = async (
+  req: Request,
+  res: Response
+) => {
+  try {
+    const previewUrl = await sampleService.getSamplePreviewAudio(
+      Number(req.params.id)
+    );
+
+    const response = await fetch(previewUrl);
+
+    if (!response.ok || !response.body) {
+      return res.status(404).json({
+        message: "Preview audio file not found",
+      });
+    }
+
+    const contentType = response.headers.get("content-type");
+    const contentLength = response.headers.get("content-length");
+
+    if (contentType) {
+      res.setHeader("Content-Type", contentType);
+    }
+
+    if (contentLength) {
+      res.setHeader("Content-Length", contentLength);
+    }
+
+    res.setHeader("Accept-Ranges", "bytes");
+
+    const { Readable } = await import("stream");
+
+    Readable.fromWeb(response.body as any).pipe(res);
+  } catch (error) {
+    console.error("Preview streaming error:", error);
+
+    return res.status(404).json({
+      message: "Preview audio not found",
+    });
+  }
+};

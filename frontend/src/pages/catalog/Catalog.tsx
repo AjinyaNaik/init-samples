@@ -62,15 +62,16 @@ export default function Catalog() {
 
   return (
     <div
-      className="w-full min-h-screen text-zinc-50 pt-24 px-8 pb-32 bg-zinc-950 bg-top bg-no-repeat"
+      className="w-full min-h-screen text-zinc-50 bg-zinc-950 bg-center md:bg-top bg-no-repeat bg-cover md:bg-[length:95%_100%] py-6 md:py-12 px-4 md:px-8"
       style={{
-        backgroundImage: "linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.8)), url(/catalog-page-1.png)",
-        backgroundSize: "1300px 1300px",
+        backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/catalog-page-1.png)',
       }}
     >
+
       <div className="max-w-7xl mx-auto">
 
-        <div className="absolute top-6 right-10 mr-[2%] z-50 flex items-center gap-4">
+        {/* Top bar header for Auth/Dashboard links */}
+        <div className="flex justify-end items-center mb-6 md:absolute md:top-6 md:right-10 md:mr-[2%] z-50">
           {user ? (
             <Link
               to="/dashboard"
@@ -92,7 +93,7 @@ export default function Catalog() {
         </div>
 
         <motion.h1
-          className="text-6xl md:text-7xl pb-4 mb-8 text-center md:text-left text-purple-300"
+          className="text-5xl sm:text-6xl md:text-7xl pb-4 mb-8 text-center md:text-left text-purple-300 leading-tight"
           style={{ fontFamily: "'Shrikhand', cursive" }}
           animate={{
             opacity: [1, 0.4, 1, 1, 0.2, 1, 1],
@@ -115,7 +116,8 @@ export default function Catalog() {
           The Init Catalog
         </motion.h1>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        {/* Main grid layout with full width constraints on mobile */}
+        <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
 
           <CatalogSidebar
             searchQuery={searchQuery}

@@ -33,7 +33,6 @@ export interface PublicSampleResponseData {
   id: number;
   name: string;
   description: string | null;
-  preview_url: string | null;
   sample_pack_id: number | null;
   category: string[];
   sample_type: string[];

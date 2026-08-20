@@ -7,10 +7,9 @@ export default function Landing() {
 
     return (
         <div
-            className="w-full text-zinc-50 bg-zinc-950 bg-top bg-no-repeat"
+            className="w-full min-h-screen text-zinc-50 bg-zinc-950 bg-center md:bg-top bg-no-repeat bg-cover md:bg-[length:95%_100%]"
             style={{
                 backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/landing-page-2.png)',
-                backgroundSize: '95% 100%'
             }}
         >
 
@@ -200,20 +199,20 @@ export default function Landing() {
                 </div>
 
                 {/* Sell Your Samples Section */}
-                <div className="flex flex-col items-start text-left pb-24 mt-20 w-full">
+                <div className="flex flex-col items-start text-left pb-24 mt-20 w-full px-4 md:px-0">
                     <h2 className="text-4xl md:text-5xl font-bold mb-12">Sell Your Samples</h2>
 
-                    <div className="bg-zinc-900/40 w-1/2 p-10 md:p-14 rounded-3xl backdrop-blur-sm border border-zinc-800/30 flex flex-col md:flex-row items-center gap-8 shadow-2xl">
+                    <div className="bg-zinc-900/40 w-full md:w-1/2 p-6 md:p-14 rounded-3xl backdrop-blur-sm border border-zinc-800/30 flex flex-col md:flex-row items-center gap-8 shadow-2xl">
                         <div className="flex-grow w-full">
-                            <div className="flex items-center gap-4 mb-4">
-                                <h3 className="text-3xl font-bold text-purple-400">
+                            <div className="flex flex-wrap items-center gap-3 mb-4">
+                                <h3 className="text-2xl md:text-3xl font-bold text-purple-400">
                                     Join the Community
                                 </h3>
                                 <span className="px-3 py-1 bg-zinc-800 text-zinc-300 text-xs font-bold rounded uppercase tracking-widest border border-zinc-700">
                                     Coming Soon
                                 </span>
                             </div>
-                            <p className="text-zinc-400 text-lg md:text-xl leading-relaxed mb-8">
+                            <p className="text-zinc-400 text-base md:text-xl leading-relaxed mb-8">
                                 We are building a dedicated platform for sound designers to share their craft. Soon, you will be able to easily submit, distribute, and monetize your own premium sample packs directly through us.
                             </p>
 
