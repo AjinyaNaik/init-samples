@@ -8,9 +8,9 @@ export default function Landing() {
 
     return (
         <div
-            className="w-full min-h-screen text-zinc-50 bg-zinc-950 bg-center md:bg-top bg-no-repeat bg-cover md:bg-[length:95%_100%]"
+            className="w-full min-h-screen text-zinc-50 bg-zinc-950 bg-center bg-no-repeat bg-cover overflow-x-hidden"
             style={{
-                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.6), rgba(9, 9, 11, 0.7)), url(/landing-page-2.png)',
+                backgroundImage: 'linear-gradient(rgba(9, 9, 11, 0.7), rgba(9, 9, 11, 0.85)), url(/landing-page-2.png)',
             }}
         >
             <Helmet>
@@ -55,12 +55,13 @@ export default function Landing() {
                 </script>
             </Helmet>
 
-            <div className="absolute top-6 right-10 mr-[2%] z-50 flex items-center gap-4">
+            {/* Top Navigation / Account Icon */}
+            <div className="absolute top-5 right-5 sm:right-10 z-50 flex items-center gap-4">
                 {user ? (
                     <Link
                         to="/dashboard"
                         title={`Go to ${user.username}'s Dashboard`}
-                        className="w-11 h-11 rounded-full bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 flex items-center justify-center text-purple-300 hover:text-white transition-all duration-300 hover:shadow-[0_0_15px_rgba(168,85,247,0.45)] hover:scale-105 active:scale-95 cursor-pointer"
+                        className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 flex items-center justify-center text-purple-300 hover:text-white transition-all duration-300 hover:shadow-[0_0_15px_rgba(168,85,247,0.45)] hover:scale-105 active:scale-95 cursor-pointer"
                     >
                         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -69,7 +70,7 @@ export default function Landing() {
                 ) : (
                     <Link
                         to="/login"
-                        className="px-5 py-2.5 text-sm font-bold text-purple-200 bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] rounded-full transition-all duration-300"
+                        className="px-4 py-2 sm:px-5 sm:py-2.5 text-xs sm:text-sm font-bold text-purple-200 bg-purple-500/20 border border-purple-400/40 hover:bg-purple-500/40 hover:text-white hover:shadow-[0_0_15px_rgba(168,85,247,0.4)] rounded-full transition-all duration-300"
                     >
                         Login
                     </Link>
@@ -77,24 +78,22 @@ export default function Landing() {
             </div>
 
             {/* Hero Section */}
-            <section className="min-h-screen flex flex-col items-center justify-center p-8 text-center mt-[-4rem]">
-                {/* Floating, Shining Badge with Sparkles */}
+            <section className="min-h-screen flex flex-col items-center justify-center px-4 sm:px-8 text-center pt-20 pb-12">
+                {/* Floating Badge */}
                 <motion.div
-                    className="mb-8 relative group cursor-default"
+                    className="mb-6 relative group cursor-default transform-gpu"
+                    style={{ willChange: "transform" }}
                     initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{
-                        opacity: 1,
-                        scale: 1,
-                    }}
+                    animate={{ opacity: 1, scale: 1 }}
                     transition={{
                         opacity: { duration: 0.6 },
                         scale: { duration: 0.6 },
                         y: { duration: 4, repeat: Infinity, ease: "easeInOut" }
                     }}
                 >
-                    {/* Sparkle 1 (Top Left) */}
                     <motion.svg
-                        className="absolute -top-8 -left-4 text-purple-400 w-5 h-5 pointer-events-none"
+                        className="absolute -top-7 -left-3 text-purple-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none transform-gpu"
+                        style={{ willChange: "transform, opacity" }}
                         viewBox="0 0 24 24" fill="currentColor"
                         animate={{ scale: [0.5, 1.2, 0.5], opacity: [0.3, 1, 0.3], rotate: [0, 45, 90] }}
                         transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
@@ -102,9 +101,9 @@ export default function Landing() {
                         <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                     </motion.svg>
 
-                    {/* Sparkle 2 (Bottom Right) */}
                     <motion.svg
-                        className="absolute -bottom-2 -right-3 text-emerald-400 w-4 h-4 pointer-events-none"
+                        className="absolute -bottom-2 -right-3 text-emerald-400 w-3.5 h-3.5 sm:w-4 sm:h-4 pointer-events-none transform-gpu"
+                        style={{ willChange: "transform, opacity" }}
                         viewBox="0 0 24 24" fill="currentColor"
                         animate={{ scale: [0.8, 1.5, 0.8], opacity: [0.4, 0.9, 0.4], rotate: [0, -45, -90] }}
                         transition={{ duration: 3.2, delay: 1, repeat: Infinity, ease: "easeInOut" }}
@@ -112,39 +111,33 @@ export default function Landing() {
                         <path d="M12 0L14.59 9.41L24 12L14.59 14.59L12 24L9.41 14.59L0 12L9.41 9.41L12 0Z" />
                     </motion.svg>
 
-                    {/* Roll-in Eyebrow Text */}
                     <motion.h2
-                        className="mb-4 text-lg md:text-xl text-zinc-50 font-medium"
+                        className="mb-2 text-base sm:text-xl text-zinc-50 font-medium tracking-wide transform-gpu"
+                        style={{ willChange: "transform, opacity" }}
                         initial={{ opacity: 0, y: -40, rotateX: -90 }}
                         animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                        transition={{
-                            duration: 0.8,
-                            type: "spring",
-                            bounce: 0.4,
-                            delay: 0.1
-                        }}
-                        style={{ perspective: 1000, transformOrigin: "top" }}
+                        transition={{ duration: 0.8, type: "spring", bounce: 0.4, delay: 0.1 }}
                     >
                         Init Samples
                     </motion.h2>
                 </motion.div>
 
-                {/* Animated Neon Header */}
+                {/* Animated Neon Header - Scaled larger */}
                 <motion.h1
-                    className="text-5xl md:text-7xl max-w-5xl mb-6 text-purple-300 line-height-tight leading-[1.1] z-10"
-                    style={{ fontFamily: "'Shrikhand', cursive" }}
+                    className="text-4xl sm:text-6xl md:text-8xl max-w-6xl mb-6 text-purple-300 leading-tight z-10 px-2 transform-gpu"
+                    style={{ fontFamily: "'Shrikhand', cursive", willChange: "transform, opacity, text-shadow" }}
                     initial={{ opacity: 0, y: -30 }}
                     animate={{
                         opacity: [1, 0.4, 1, 1, 0.2, 1, 1],
                         y: 0,
                         textShadow: [
-                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
-                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
-                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
-                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7",
-                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7, 0 0 0px #a855f7",
-                            "0 0 10px #fff, 0 0 20px #fff, 0 0 40px #d8b4fe, 0 0 80px #a855f7, 0 0 120px #a855f7",
-                            "0 0 5px #fff, 0 0 10px #fff, 0 0 20px #d8b4fe, 0 0 40px #a855f7, 0 0 80px #a855f7"
+                            "0 0 4px #fff, 0 0 8px #fff, 0 0 15px #d8b4fe, 0 0 30px #a855f7",
+                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7",
+                            "0 0 4px #fff, 0 0 8px #fff, 0 0 15px #d8b4fe, 0 0 30px #a855f7",
+                            "0 0 4px #fff, 0 0 8px #fff, 0 0 15px #d8b4fe, 0 0 30px #a855f7",
+                            "0 0 0px #fff, 0 0 0px #fff, 0 0 0px #d8b4fe, 0 0 0px #a855f7",
+                            "0 0 8px #fff, 0 0 15px #fff, 0 0 30px #d8b4fe, 0 0 60px #a855f7",
+                            "0 0 4px #fff, 0 0 8px #fff, 0 0 15px #d8b4fe, 0 0 30px #a855f7"
                         ]
                     }}
                     transition={{
@@ -158,7 +151,8 @@ export default function Landing() {
 
                 {/* Animated Paragraph */}
                 <motion.p
-                    className="text-lg md:text-xl text-zinc-300 max-w-2xl mb-10"
+                    className="text-sm sm:text-base md:text-xl text-zinc-300 max-w-2xl mb-8 px-4 leading-relaxed transform-gpu"
+                    style={{ willChange: "opacity" }}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.8, delay: 0.3 }}
@@ -167,32 +161,31 @@ export default function Landing() {
                     <strong>NO AI SAMPLES.</strong> All content is human-recorded and produced by professional sound designers.
                 </motion.p>
 
-                {/* Animated Button */}
+                {/* Call to Action Button */}
                 <motion.div
+                    className="transform-gpu"
+                    style={{ willChange: "transform, opacity" }}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.6 }}
                 >
                     <motion.div
+                        className="rounded-full inline-block transform-gpu"
+                        style={{ willChange: "transform, box-shadow" }}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         animate={{
                             boxShadow: [
                                 "0px 0px 0px 0px rgba(168, 85, 247, 0)",
-                                "0px 0px 25px 8px rgba(168, 85, 247, 0.5)",
+                                "0px 0px 20px 6px rgba(168, 85, 247, 0.4)",
                                 "0px 0px 0px 0px rgba(168, 85, 247, 0)"
                             ]
                         }}
-                        transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                        className="rounded-full inline-block"
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
                     >
                         <Link
                             to="/catalog"
-                            className="inline-block px-8 py-4 bg-zinc-100 text-zinc-900 font-bold rounded-full hover:bg-purple-400 hover:text-zinc-900 transition-colors duration-300 relative"
+                            className="inline-block px-7 py-3.5 sm:px-8 sm:py-4 bg-zinc-100 text-zinc-900 text-sm sm:text-base font-bold rounded-full hover:bg-purple-400 hover:text-zinc-900 transition-colors duration-300 relative shadow-lg"
                         >
                             Browse Catalog
                         </Link>
@@ -200,34 +193,35 @@ export default function Landing() {
                 </motion.div>
             </section>
 
-            {/* Placeholder Content to allow scrolling */}
-            <section className="py-16 px-8 max-w-7xl mx-auto space-y-24">
-                {/* Popular Packs List */}
+            {/* Main Content Sections */}
+            <section className="py-12 px-4 sm:px-8 max-w-7xl mx-auto space-y-16 sm:space-y-24">
+                
+                {/* Trending Packs List */}
                 <div className="flex flex-col items-start w-full">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-8">Trending Packs</h2>
+                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-6 sm:mb-8">Trending Packs</h2>
 
                     <div className="flex flex-col w-full border-t border-zinc-500/80">
                         {[1, 2, 3, 4, 5, 6].map((item) => (
                             <div
                                 key={item}
-                                className="flex flex-row items-center cursor-pointer py-3 px-2 border-b border-zinc-500/80 hover:bg-zinc-100/10 transition-colors duration-200 group w-full"
+                                className="flex flex-row items-center cursor-pointer py-3.5 px-2 border-b border-zinc-500/80 hover:bg-zinc-100/15 transition-colors duration-200 group w-full gap-3 sm:gap-4"
                             >
-                                <div className="w-10 h-10 bg-zinc-400/20 rounded shrink-0 mr-4"></div>
+                                <div className="w-9 h-9 sm:w-10 sm:h-10 bg-zinc-400/20 rounded shrink-0"></div>
 
-                                <div className="flex-grow flex flex-col md:flex-row md:items-center min-w-0 pr-4">
-                                    <span className="font-bold whitespace-nowrap text-zinc-100 w-32 md:mr-4">
+                                <div className="flex-grow flex flex-col sm:flex-row sm:items-center min-w-0 pr-2">
+                                    <span className="font-bold text-sm sm:text-base text-zinc-100 w-auto sm:w-32 sm:mr-4">
                                         Volume {item}
                                     </span>
-                                    <span className="text-zinc-300 text-sm truncate">
+                                    <span className="text-zinc-400 text-xs sm:text-sm line-clamp-1 sm:truncate">
                                         150+ royalty-free loops, heavy 808s, and meticulously crafted melodies.
                                     </span>
                                 </div>
 
-                                <div className="shrink-0 text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
-                                    <span className="text-xs font-semibold uppercase tracking-wider hidden md:inline">
+                                <div className="shrink-0 text-emerald-400 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-opacity flex items-center">
+                                    <span className="text-xs font-semibold uppercase tracking-wider hidden sm:inline">
                                         View
                                     </span>
-                                    <svg className="w-5 h-5 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-0.5 sm:ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                                     </svg>
                                 </div>
@@ -237,26 +231,26 @@ export default function Landing() {
                 </div>
 
                 {/* Sell Your Samples Section */}
-                <div className="flex flex-col items-start text-left pb-24 mt-20 w-full px-4 md:px-0">
-                    <h2 className="text-4xl md:text-5xl font-bold mb-12">Sell Your Samples</h2>
+                <div className="flex flex-col items-start text-left pb-12 sm:pb-24 mt-10 w-full">
+                    <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-8 sm:mb-12">Sell Your Samples</h2>
 
-                    <div className="bg-zinc-900/40 w-full md:w-1/2 p-6 md:p-14 rounded-3xl backdrop-blur-sm border border-zinc-800/30 flex flex-col md:flex-row items-center gap-8 shadow-2xl">
+                    <div className="bg-zinc-900/50 w-full md:w-1/2 p-6 sm:p-10 md:p-14 rounded-2xl sm:rounded-3xl backdrop-blur-sm border border-zinc-800/40 flex flex-col gap-6 shadow-xl">
                         <div className="flex-grow w-full">
-                            <div className="flex flex-wrap items-center gap-3 mb-4">
-                                <h3 className="text-2xl md:text-3xl font-bold text-purple-400">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
+                                <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-purple-400">
                                     Join the Community
                                 </h3>
-                                <span className="px-3 py-1 bg-zinc-800 text-zinc-300 text-xs font-bold rounded uppercase tracking-widest border border-zinc-700">
+                                <span className="px-2.5 py-0.5 bg-zinc-800 text-zinc-300 text-[10px] sm:text-xs font-bold rounded uppercase tracking-widest border border-zinc-700">
                                     Coming Soon
                                 </span>
                             </div>
-                            <p className="text-zinc-400 text-base md:text-xl leading-relaxed mb-8">
+                            <p className="text-zinc-300 text-sm sm:text-base md:text-lg leading-relaxed mb-6 sm:mb-8">
                                 We are building a dedicated platform for sound designers to share their craft. Soon, you will be able to easily submit, distribute, and monetize your own premium sample packs directly through us.
                             </p>
 
-                            <a href="#" className="mt-auto text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center transition-colors w-fit group text-lg">
+                            <a href="#" className="mt-auto text-purple-400 hover:text-purple-300 font-semibold inline-flex items-center transition-colors w-fit group text-base sm:text-lg">
                                 Click to learn more
-                                <svg className="w-5 h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 ml-2 transform group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
                             </a>
@@ -265,8 +259,8 @@ export default function Landing() {
                 </div>
 
                 {/* Mission Statement */}
-                <div className="flex flex-col items-center text-center pb-32">
-                    <p className="text-2xl md:text-4xl font-semibold italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-emerald-400 leading-relaxed max-w-4xl mx-auto px-4">
+                <div className="flex flex-col items-center text-center pb-20 sm:pb-32 px-2">
+                    <p className="text-lg sm:text-2xl md:text-4xl font-semibold italic text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-emerald-400 leading-relaxed max-w-4xl mx-auto">
                         "For bedroom and studio producers that want quality samples to elevate their craft."
                     </p>
                 </div>
