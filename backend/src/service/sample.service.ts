@@ -1,6 +1,6 @@
 import * as sampleRepository from "../repository/sample.repository";
 import * as samplePackRepository from "../repository/sample-pack.repository";
-import { userOwnsSample} from "../repository/order.repository";  
+import { userOwnsSample } from "../repository/order.repository";
 import {
   CreateSampleData,
   UpdateSampleData,
@@ -85,7 +85,7 @@ export const getSampleById = async (id: number) => {
 
 export const getFilteredSamples = async (filters: SampleFilterParams) => {
   const samples = await sampleRepository.findAll();
-  
+
   return samples.filter((sample: any) => {
     return matchesFilters(
       {
@@ -194,7 +194,7 @@ export const getSampleAudioUrl = async (
   sampleId: number
 ) => {
   const sample =
-    await sampleRepository.findAudioUrlById(sampleId);
+    await sampleRepository.findAudioUrlAndPriceById(sampleId);
 
   if (!sample) {
     throw new Error("Sample not found");
@@ -206,7 +206,7 @@ export const getSampleAudioUrl = async (
       sampleId
     );
 
-  if (!ownsSample) {
+  if (!ownsSample && sample.price !== 0) {
     throw new Error("You do not own this sample");
   }
 

@@ -133,11 +133,11 @@ export const findSamplesByPackId = async (
   });
 };
 
-export const findAudioUrlById = async (
+export const findAudioUrlAndPriceById = async (
   id: number
 ) => {
   return await Sample.findByPk(id, {
-    attributes: ["id", "audio_url"],
+    attributes: ["id", "audio_url", "price"],
   });
 };
 

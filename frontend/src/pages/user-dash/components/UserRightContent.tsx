@@ -1,7 +1,7 @@
 import { useSamplePackAudio } from "../../../hooks/samplePackHooks";
 import { useSampleAudioUrl } from "../../../hooks/sampleHooks";
 import { useState } from "react";
-import JSZip from "jszip";
+import { downloadTrackAsZip, downloadPackAsZip } from "../../../utils/downloadHelpers";
 
 interface UserRightContentProps {
   activeTab: "packs" | "samples";
@@ -14,8 +14,6 @@ interface UserRightContentProps {
   samplesError: string | null;
   highlightId?: string | null;
 }
-
-const LICENSE_URL = "https://naxqhdcoiedkdsebuazw.supabase.co/storage/v1/object/public/license/LICENSE.txt";
 
 export default function UserRightContent({
   activeTab,
@@ -32,32 +30,6 @@ export default function UserRightContent({
   const { fetchSampleAudioUrl, isLoading: sampleAudioLoading } = useSampleAudioUrl();
   const [downloadingId, setDownloadingId] = useState<number | null>(null);
 
-  const getAudioExtension = (url: string): string => {
-    try {
-      const pathname = new URL(url).pathname;
-      const extension = pathname.split(".").pop()?.toLowerCase();
-
-      if (extension === "wav") return "wav";
-      if (extension === "mp3") return "mp3";
-
-      return "mp3";
-    } catch {
-      return "mp3";
-    }
-  };
-
-  const fetchAndAddLicense = async (zip: JSZip) => {
-    try {
-      const response = await fetch(LICENSE_URL);
-      if (response.ok) {
-        const blob = await response.blob();
-        zip.file("LICENSE.txt", blob);
-      }
-    } catch (err) {
-      console.warn("Could not attach license file to zip:", err);
-    }
-  };
-
   const handleDownloadPack = async (
     packId: number,
     packName: string
@@ -65,54 +37,7 @@ export default function UserRightContent({
     setDownloadingId(packId);
 
     try {
-      const data = await fetchSamplePackAudio(packId);
-
-      if (!data.samples || data.samples.length === 0) {
-        alert("This pack contains no downloadable audio files.");
-        return;
-      }
-
-      const zip = new JSZip();
-
-      // Attach the license file to the zip
-      await fetchAndAddLicense(zip);
-
-      for (const sample of data.samples) {
-        if (!sample.audio_url) continue;
-
-        const response = await fetch(sample.audio_url);
-
-        if (!response.ok) {
-          throw new Error(`Failed to download ${sample.name || "track"}`);
-        }
-
-        const blob = await response.blob();
-
-        const resolvedSampleName = sample.name || "Track";
-        const extension = getAudioExtension(sample.audio_url);
-
-        zip.file(
-          `${packName}/${resolvedSampleName}.${extension}`,
-          blob
-        );
-      }
-
-      const zipContent = await zip.generateAsync({
-        type: "blob",
-      });
-
-      const blobUrl = window.URL.createObjectURL(zipContent);
-
-      const link = document.createElement("a");
-      link.href = blobUrl;
-      link.setAttribute("download", `${packName}.zip`);
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      window.URL.revokeObjectURL(blobUrl);
-
+      await downloadPackAsZip(packId, packName, fetchSamplePackAudio);
       alert(`${packName}.zip compiled and downloaded successfully!`);
     }
     catch (err: any) {
@@ -130,44 +55,12 @@ export default function UserRightContent({
     setDownloadingId(sampleId);
 
     try {
-      const audioUrl = await fetchSampleAudioUrl(sampleId);
-
-      if (!audioUrl) {
-        throw new Error("Download URL could not be resolved.");
-      }
-
-      const response = await fetch(audioUrl);
-      if (!response.ok) {
-        throw new Error("Failed to download audio file.");
-      }
-
-      const audioBlob = await response.blob();
-      const extension = getAudioExtension(audioUrl);
-
-      const zip = new JSZip();
-
-      // Attach the license file and the audio track into a zip bundle
-      await fetchAndAddLicense(zip);
-      zip.file(`${sampleName}.${extension}`, audioBlob);
-
-      const zipContent = await zip.generateAsync({
-        type: "blob",
-      });
-
-      const blobUrl = window.URL.createObjectURL(zipContent);
-      const link = document.createElement("a");
-
-      link.href = blobUrl;
-      link.setAttribute("download", `${sampleName}.zip`);
-
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (err: any) {
+      await downloadTrackAsZip(sampleId, sampleName, fetchSampleAudioUrl);
+    } 
+    catch (err: any) {
       alert("Download failed: " + err.message);
-    } finally {
+    } 
+    finally {
       setDownloadingId(null);
     }
   };
