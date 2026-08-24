@@ -6,7 +6,7 @@ import {
 } from "./dtos/sample-pack.dto";
 import { matchesFilters } from "../utils/filter";
 import { SamplePackWithAssociatedSamplesFromQuery } from "./dtos/sample-pack.dto";
-import {userOwnsSamplePack} from "../repository/order.repository";
+import { userOwnsSamplePack } from "../repository/order.repository";
 
 export const createSamplePack = async (
   data: CreateSamplePackData
@@ -33,7 +33,7 @@ export const getAllSamplePacks = async () => {
 
 export const getSamplePackById = async (id: number): Promise<SamplePackWithAssociatedSamplesFromQuery> => {
   const samplePack = await samplePackRepository.findById(id);
-  
+
   if (!samplePack) {
     throw new Error("Sample pack not found");
   }
@@ -113,10 +113,8 @@ export const getSamplePackAudio = async (
       samplePackId
     );
 
-  if (!ownsPack) {
-    throw new Error(
-      "You do not own this sample pack"
-    );
+  if (!ownsPack && samplePack.price !== 0) {
+    throw new Error("You do not own this sample pack");
   }
 
   await samplePackRepository.incrementDownloadCountForSamplePack(samplePackId);
