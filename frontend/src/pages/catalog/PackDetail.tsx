@@ -1,18 +1,40 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSamplePackDetail } from "../../hooks/samplePackHooks";
 import { useCheckoutSamplePacks } from "../../hooks/stripeHooks";
 import RetroStarfield from "../../components/shared/RetroStarfield";
+import { useSamplePackAudio } from "../../hooks/samplePackHooks";
+import { downloadPackAsZip } from "../../utils/downloadHelpers";
 
 export default function PackDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { pack, fetchSamplePackDetail, isLoading, error } = useSamplePackDetail();
   const { checkoutSamplePacks, isLoading: isPurchasing, error: purchaseError } = useCheckoutSamplePacks();
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { fetchSamplePackAudio } = useSamplePackAudio();
+
 
   useEffect(() => {
     fetchSamplePackDetail(id).catch((err) => console.error(err));
   }, [id]);
+
+  const isFree = !pack?.price || pack.price === 0;
+
+  const handlePackDownload = async () => {
+    if (!pack?.id) return;
+
+    setIsDownloading(true);
+    try {
+      await downloadPackAsZip(pack.id, pack.name, fetchSamplePackAudio);
+    }
+    catch (err: any) {
+      alert("Download failed: " + err.message);
+    }
+    finally {
+      setIsDownloading(false);
+    }
+  };
 
   const handlePurchase = async () => {
     if (!pack?.id) return;
@@ -20,6 +42,11 @@ export default function PackDetail() {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login?reason=auth_required");
+      return;
+    }
+
+    if (isFree) {
+      await handlePackDownload();
       return;
     }
 
@@ -97,20 +124,20 @@ export default function PackDetail() {
             </p>
           </div>
 
-          {/* Purchase Block (Price + Buy Button) */}
-          <div className="bg-zinc-950/70 border border-zinc-800 p-5 sm:p-6 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
+          {/* Purchase Block (Price + Buy/Download Button) */}
+          <div className="bg-zinc-950/70 border border-zinc-800 p-5 sm:p-6 rounded-2xl flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4 text-center sm:text-left">
+            <div className="w-full sm:w-auto">
               <span className="text-xs text-zinc-500 uppercase tracking-widest font-semibold block mb-1">
                 Pack Price
               </span>
               <span className="text-3xl font-extrabold text-purple-300">
-                {pack.price ? `$${pack.price}` : "Free"}
+                {!isFree ? `$${pack.price}` : "Free"}
               </span>
             </div>
 
             <button
               onClick={handlePurchase}
-              disabled={isPurchasing}
+              disabled={isPurchasing || isDownloading}
               className="w-full sm:w-auto px-8 py-3.5 bg-purple-600 hover:bg-purple-500 disabled:bg-purple-950/60 disabled:text-zinc-500 text-white font-bold rounded-xl transition-all shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] flex items-center justify-center gap-2 cursor-pointer"
             >
               {isPurchasing ? (
@@ -121,8 +148,18 @@ export default function PackDetail() {
                   </svg>
                   <span>Redirecting to Stripe...</span>
                 </>
+              ) : isDownloading ? (
+                <>
+                  <svg className="w-5 h-5 animate-spin text-white" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  <span>Preparing Zip...</span>
+                </>
+              ) : isFree ? (
+                <span>Download Sample Pack</span>
               ) : (
-                <span>Buy Pack Now</span>
+                <span>Buy Sample Pack Now</span>
               )}
             </button>
           </div>
@@ -166,11 +203,10 @@ export default function PackDetail() {
                   return (
                     <div
                       key={sample.id}
-                      className={`p-4 sm:px-4 sm:py-3 sm:min-h-[5rem] flex-shrink-0 border rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-300 relative overflow-hidden ${
-                        isLocked
+                      className={`p-4 sm:px-4 sm:py-3 sm:min-h-[5rem] flex-shrink-0 border rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all duration-300 relative overflow-hidden ${isLocked
                           ? "bg-zinc-950/40 border-zinc-805/40 opacity-60 hover:opacity-85"
                           : "bg-zinc-950 border-zinc-800/80 hover:border-zinc-700"
-                      }`}
+                        }`}
                     >
                       <div className="min-w-0 flex-1 pr-2">
                         <h3 className="font-bold text-sm md:text-base text-zinc-100 flex flex-wrap items-center gap-2 break-words">
