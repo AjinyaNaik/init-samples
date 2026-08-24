@@ -183,7 +183,7 @@ export default function Landing() {
                     transition={{ duration: 0.8, delay: 0.3 }}
                 >
                     High-quality, <strong>ROYALTY-FREE</strong> audio samples and loops designed for modern music producers.
-                    <strong>NO AI SAMPLES.</strong> All content is human-recorded and produced by professional sound designers.
+                    <strong> NO AI SAMPLES.</strong> All content is human-recorded and produced by professional sound designers.
                 </motion.p>
 
                 {/* Call to Action Button */}
