@@ -46,34 +46,34 @@ export default function Landing() {
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content="Init Samples | Free & Premium Royalty-Free Audio Samples" />
                 <meta property="og:description" content="High-quality, royalty-free audio samples and loops designed for modern music producers. 100% human-recorded, no AI samples. Elevate your beats today." />
-                <meta property="og:image" content="https://initsamples.com/logo.png" />
+                <meta property="og:image" content="https://www.initsamples.com/logo.png" />
                 <meta property="og:image:width" content="1200" />
                 <meta property="og:image:height" content="630" />
                 <meta property="og:image:type" content="image/png" />
-                <meta property="og:url" content="https://initsamples.com" />
+                <meta property="og:url" content="https://www.initsamples.com" />
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta name="twitter:image" content="https://initsamples.com/logo.png" />
-                <link rel="canonical" href="https://initsamples.com" />
+                <meta name="twitter:image" content="https://www.initsamples.com/logo.png" />
+                <link rel="canonical" href="https://www.initsamples.com" />
                 <script type="application/ld+json">
                     {JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "WebSite",
-                        "@id": "https://initsamples.com",
+                        "@id": "https://www.initsamples.com",
                         "name": "Init Samples",
-                        "image": "https://initsamples.com/logo.png",
-                        "url": "https://initsamples.com",
+                        "image": "https://www.initsamples.com/logo.png",
+                        "url": "https://www.initsamples.com",
                         "description": "Royalty-free audio samples, loops, and sound packs for modern music producers.",
                         "publisher": {
                             "@type": "Organization",
                             "name": "Init Samples",
                             "logo": {
                                 "@type": "ImageObject",
-                                "url": "https://initsamples.com/logo.png"
+                                "url": "https://www.initsamples.com/logo.png"
                             }
                         },
                         "potentialAction": {
                             "@type": "SearchAction",
-                            "target": "https://initsamples.com/catalog?search={search_term_string}",
+                            "target": "https://www.initsamples.com/catalog?search={search_term_string}",
                             "query-input": "required name=search_term_string"
                         }
                     })}

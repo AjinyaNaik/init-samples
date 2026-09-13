@@ -3,7 +3,7 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://initsamples.com/</loc>
+    <loc>https://www.initsamples.com/</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
@@ -11,7 +11,7 @@
 
   <!-- Catalog / Sample Packs Page -->
   <url>
-    <loc>https://initsamples.com/catalog</loc>
+    <loc>https://www.initsamples.com/catalog</loc>
     <lastmod>2026-08-20</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
