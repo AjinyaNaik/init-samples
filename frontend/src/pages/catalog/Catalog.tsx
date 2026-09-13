@@ -72,7 +72,7 @@ export default function Catalog() {
       <Helmet>
         <title>Audio Sample Catalog | Free & Premium Loops | Init Samples</title>
         <meta name="description" content="Browse our library of high-quality, royalty-free audio samples, loops, and sound packs for music producers." />
-        <link rel="canonical" href="https://initsamples.com/catalog" />
+        <link rel="canonical" href="https://www.initsamples.com/catalog" />
       </Helmet>
 
       <div className="max-w-7xl mx-auto">
